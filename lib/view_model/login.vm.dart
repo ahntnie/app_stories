@@ -9,4 +9,5 @@ class LoginViewModel extends BaseViewModel {
     Navigator.push(
         viewContext, MaterialPageRoute(builder: (context) => const OTPPage()));
   }
+  
 }
