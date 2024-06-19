@@ -1,4 +1,4 @@
-import 'package:app_stories/views/otp.page.dart';
+import 'package:app_stories/views/authentication/otp.page.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

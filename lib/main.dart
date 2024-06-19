@@ -1,9 +1,12 @@
 import 'package:app_stories/firebase_options.dart';
-import 'package:app_stories/views/input.page.dart';
-import 'package:app_stories/views/start.page.dart';
-import 'package:app_stories/views/users.page.dart';
+import 'package:app_stories/views/test/input.page.dart';
+import 'package:app_stories/views/splash/splash.page.dart';
+import 'package:app_stories/views/test/users.page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'views/home/home.page.dart';
+import 'widget/base_page.dart';
 
 //import 'views/home.page.dart';
 
@@ -29,11 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => InputPage(),
-        '/users': (context) => UsersPage(),
-      },
+      home: const SplashPage(),
     );
   }
 }
