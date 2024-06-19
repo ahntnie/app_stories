@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import '../view_model/input.vm.dart';
+import '../../view_model/input.vm.dart';
 
 class InputPage extends StatelessWidget {
   @override

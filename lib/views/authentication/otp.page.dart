@@ -1,5 +1,6 @@
 import 'package:app_stories/styles/font.dart';
 import 'package:app_stories/styles/img.dart';
+import 'package:app_stories/views/home/home.page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -240,7 +241,13 @@ class _OTPPageState extends State<OTPPage> {
                         SizedBox(
                             height: MediaQuery.of(context).size.height * 0.15),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()),
+                                (router) => false);
+                          },
                           style: ButtonStyle(
                               minimumSize: WidgetStateProperty.all<Size>(
                                 Size.fromHeight(

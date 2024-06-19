@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
-import 'login.page.dart';
+import '../authentication/login.page.dart';
 
-class StartPage extends StatefulWidget {
-  const StartPage({super.key});
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
 
   @override
-  State<StartPage> createState() => _StartPageState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _StartPageState extends State<StartPage> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import '../view_model/users.vm.dart';
+import '../../view_model/users.vm.dart';
 
 class UsersPage extends StatelessWidget {
   @override
