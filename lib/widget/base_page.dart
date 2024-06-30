@@ -31,6 +31,16 @@ class _BasePageState extends State<BasePage> {
         backgroundColor: AppColor.primary,
         appBar: AppBar(
           toolbarHeight: 100,
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
           backgroundColor: AppColor.darkPrimary,
           title: widget.showLogo
               ? Row(
