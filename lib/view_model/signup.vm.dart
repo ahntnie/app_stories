@@ -89,7 +89,7 @@ class SignUpViewModel extends BaseViewModel {
           'age': 1,
         };
         final apiService = ApiService();
-        await apiService.postRequest(API.user, formData);
+        await apiService.postRequestUser(Api.user, formData);
       }
     } catch (e) {
       print('Error: ${e.toString()}');

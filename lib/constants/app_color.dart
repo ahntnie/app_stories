@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 class AppColor {
   AppColor._();
-
   static const Color primary = Color(0xff07162D);
   static const Color darkPrimary = Color(0xff000000);
   static const Color colorAppbar = Color(0xff0E1621);

@@ -31,7 +31,7 @@ class ProfileViewModel extends BaseViewModel {
       if (firebaseUser != null) {
         setBusy(true);
         String uid = firebaseUser.uid;
-        Response infoResponse = await apiService.getRequest('${API.user}/$uid');
+        Response infoResponse = await apiService.getRequest('${Api.user}/$uid');
 
         _currentUserData = infoResponse.data;
 
@@ -93,8 +93,8 @@ class ProfileViewModel extends BaseViewModel {
 
                             Navigator.of(context).pop();
                             String uid = firebaseUser!.uid;
-                            await apiService.patchRequest(
-                                '${API.user}/$uid',
+                            await apiService.patchRequestUser(
+                                '${Api.user}/$uid',
                                 jsonEncode(
                                     {'username': changeNameController.text}));
                             _currentUserData!['username'] =
@@ -218,8 +218,8 @@ class ProfileViewModel extends BaseViewModel {
           User? firebaseUser = _auth.currentUser;
           if (firebaseUser != null) {
             String uid = firebaseUser.uid;
-            await apiService.patchRequest(
-                '${API.user}/$uid', jsonEncode({'age': 18}));
+            await apiService.patchRequestUser(
+                '${Api.user}/$uid', jsonEncode({'age': 18}));
             _currentUserData!['age'] = 18;
             notifyListeners();
             Navigator.of(viewContext).pop();
@@ -230,8 +230,8 @@ class ProfileViewModel extends BaseViewModel {
           if (firebaseUser != null) {
             String uid = firebaseUser.uid;
 
-            await apiService.patchRequest(
-                '${API.user}/$uid', jsonEncode({'age': 1}));
+            await apiService.patchRequestUser(
+                '${Api.user}/$uid', jsonEncode({'age': 1}));
             _currentUserData!['age'] = 1;
             notifyListeners();
             Navigator.of(viewContext).pop();

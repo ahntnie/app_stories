@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 
 class ApiService {
-  final Dio dio = Dio();
+  final Dio dio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 10), // 10 giây
+    receiveTimeout: const Duration(seconds: 10), // 10 giây
+  ));
 
   ApiService() {
     dio.options.headers = {
@@ -90,7 +93,7 @@ class ApiService {
     }
   }
 
-  Future<Response> postRequest(String url, Map<String, dynamic> data) async {
+  Future<Response> postRequestUser(String url, Map<String, dynamic> data) async {
     try {
       final formData = FormData.fromMap(data);
       Response response = await dio.post(
@@ -117,7 +120,7 @@ class ApiService {
     }
   }
 
-  Future<Response> patchRequest(String url, String data) async {
+  Future<Response> patchRequestUser(String url, String data) async {
     try {
       Response response = await dio.patch(
         url,
@@ -139,7 +142,71 @@ class ApiService {
       throw Exception('PATCH request error: $e');
     }
   }
+Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
+    try {
+      Response response;
+      if (data != null) {
+        final formData = FormData.fromMap(data);
+        response = await dio.patch(
+          url,
+          data: formData,
+          options: Options(
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500; // Allow all status codes below 500
+            },
+          ),
+        );
+        response = await _handleRedirect(response, formData);
+      } else {
+        response = await dio.patch(
+          url,
+          options: Options(
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500; // Allow all status codes below 500
+            },
+          ),
+        );
+      }
 
+      return response;
+    } catch (e) {
+      throw Exception('PATCH request error: $e');
+    }
+  }
+  Future<Response> postRequest(
+    String url,
+    FormData data,
+  ) async {
+    try {
+      // Gửi yêu cầu POST ban đầu
+      Response response = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500; // Cho phép tất cả các mã trạng thái dưới 500
+          },
+        ),
+      );
+      response = await _handleRedirect(response, data);
+      return response;
+    } catch (e) {
+      throw Exception('POST request error: $e');
+    }
+  }
   Future<Response> deleteRequest(String url,
       {Map<String, dynamic>? data}) async {
     try {
