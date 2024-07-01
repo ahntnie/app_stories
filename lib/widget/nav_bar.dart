@@ -21,8 +21,8 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
     return BottomNavigationBar(
       backgroundColor: AppColor.darkPrimary,
       currentIndex: widget.currentIndex,
-      fixedColor: Colors.red,
-      unselectedItemColor: Colors.white,
+      fixedColor: AppColor.selectColor,
+      unselectedItemColor: AppColor.extraColor,
       onTap: (index) async {
         await widget.onTabSelected(index);
       },

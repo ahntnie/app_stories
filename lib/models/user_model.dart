@@ -1,22 +1,38 @@
-class User {
+class Users {
   String id;
   String name;
   String email;
+  DateTime birthDate;
+  String password;
+  String photoURL;
+  String role;
+  Users(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.birthDate,
+      required this.password,
+      required this.photoURL,
+      required this.role});
 
-  User({required this.id, required this.name, required this.email});
-
-  factory User.fromMap(Map<String, dynamic> data, String documentId) {
-    return User(
-      id: documentId,
-      name: data['name'] ?? '',
-      email: data['email'] ?? '',
-    );
+  factory Users.fromJson(Map<String, dynamic> data) {
+    return Users(
+        id: data['user_id'] ?? '',
+        name: data['username'] ?? '',
+        email: data['email'] ?? '',
+        birthDate: data['birth_date'] ?? 1,
+        password: data['password'] ?? '',
+        role: data['role'] ?? '',
+        photoURL: data['photoURL'] ?? '');
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'username': name,
       'email': email,
+      'birth_date': birthDate.toString(),
+      'password': password,
+      'role': role,
     };
   }
 }

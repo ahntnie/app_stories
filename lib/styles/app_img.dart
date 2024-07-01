@@ -6,4 +6,5 @@ class Img {
   static String imgGG = "assets/gg.png";
   static String imgLogo = 'assets/ic_logo.png';
   static String imgBook = 'assets/ic_book.png';
+  static String imgAVT = 'assets/avt.png'; // test
 }

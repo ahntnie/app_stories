@@ -1,4 +1,8 @@
-import 'package:app_stories/styles/img.dart';
+import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
+import 'package:app_stories/styles/app_img.dart';
+
+import 'package:app_stories/views/home/home.page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,14 +25,27 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _navigateToNextScreen() async {
-    await Future.delayed(const Duration(seconds: 7), () {
-      // Tải ảnh trong 3 giây
-      precacheImage(const AssetImage('assets/imgStart.png'), context);
-    });
-    // Chuyển sang màn hình tiếp theo
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-    );
+    if (AppSP.get(AppSPKey.user_info) != null) {
+      await Future.delayed(const Duration(seconds: 2), () {
+        // Tải ảnh trong 3 giây
+        precacheImage(const AssetImage('assets/imgStart.png'), context);
+      });
+      // Chuyển sang màn hình tiếp theo
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    } else {
+      await Future.delayed(const Duration(seconds: 2), () {
+        // Tải ảnh trong 3 giây
+        precacheImage(const AssetImage('assets/imgStart.png'), context);
+      });
+      // Chuyển sang màn hình tiếp theo
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+      // }
+      // print(AppSP.get(ProfileViewModel().user!.email));
+    }
   }
 
   @override
