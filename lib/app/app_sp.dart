@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_stories/app/di.dart';
+import 'package:app_stories/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSP {
@@ -69,6 +70,13 @@ class AppSP {
   static Future<void> storeItem(String key, dynamic value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, jsonEncode(value));
+  }
+
+  /// users
+  static Future<void> saveUser(Users? user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String string_user = jsonEncode(user!.toJson());
+    await prefs.setString('Users', string_user);
   }
 
   /// Delete item

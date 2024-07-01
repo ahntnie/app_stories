@@ -1,35 +1,38 @@
-class User {
-  int userId;
-  String username;
-  String password;
+class Users {
+  String id;
+  String name;
   String email;
-  DateTime createdAt;
+  DateTime birthDate;
+  String password;
+  String photoURL;
+  String role;
+  Users(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.birthDate,
+      required this.password,
+      required this.photoURL,
+      required this.role});
 
-  User({
-    required this.userId,
-    required this.username,
-    required this.password,
-    required this.email,
-    required this.createdAt,
-  });
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      userId: json['user_id'],
-      username: json['username'],
-      password: json['password'],
-      email: json['email'],
-      createdAt: DateTime.parse(json['created_at']),
-    );
+  factory Users.fromJson(Map<String, dynamic> data) {
+    return Users(
+        id: data['user_id'] ?? '',
+        name: data['username'] ?? '',
+        email: data['email'] ?? '',
+        birthDate: data['birth_date'] ?? 1,
+        password: data['password'] ?? '',
+        role: data['role'] ?? '',
+        photoURL: data['photoURL'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'user_id': userId,
-      'username': username,
-      'password': password,
+      'username': name,
       'email': email,
-      'created_at': createdAt.toIso8601String(),
+      'birth_date': birthDate.toString(),
+      'password': password,
+      'role': role,
     };
   }
 }

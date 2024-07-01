@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 
 class ApiService {
@@ -16,7 +14,7 @@ class ApiService {
 
   Future<Response> _handleRedirect(Response response, FormData formData) async {
     if (response.statusCode == 302) {
-      print('Vào trường hợp 302');
+      print('vo 302');
       final newUrl = response.headers['location']?.first;
       if (newUrl != null) {
         response = await dio.post(
@@ -25,6 +23,28 @@ class ApiService {
           options: Options(
             headers: {
               'Content-Type': 'multipart/form-data',
+              'ngrok-skip-browser-warning': 'true'
+            },
+          ),
+        );
+      } else {
+        throw Exception('No redirection URL found');
+      }
+    }
+    return response;
+  }
+
+  Future<Response> _handleRedirectPath(
+      Response response, String formData) async {
+    if (response.statusCode == 302) {
+      final newUrl = response.headers['location']?.first;
+      if (newUrl != null) {
+        response = await dio.patch(
+          newUrl,
+          data: formData,
+          options: Options(
+            headers: {
+              'Content-Type': 'application/json',
             },
           ),
         );
@@ -73,15 +93,12 @@ class ApiService {
     }
   }
 
-  Future<Response> postRequest(
-    String url,
-    FormData data,
-  ) async {
+  Future<Response> postRequestUser(String url, Map<String, dynamic> data) async {
     try {
-      // Gửi yêu cầu POST ban đầu
+      final formData = FormData.fromMap(data);
       Response response = await dio.post(
         url,
-        data: data,
+        data: formData,
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -89,18 +106,43 @@ class ApiService {
           },
           followRedirects: false,
           validateStatus: (status) {
-            return status! < 500; // Cho phép tất cả các mã trạng thái dưới 500
+            return status! < 500; // Allow all status codes below 500
           },
         ),
       );
-      response = await _handleRedirect(response, data);
+      final formDataNew = FormData.fromMap(data);
+
+      response = await _handleRedirect(response, formDataNew);
+      print(response.data);
       return response;
     } catch (e) {
       throw Exception('POST request error: $e');
     }
   }
 
-  Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
+  Future<Response> patchRequestUser(String url, String data) async {
+    try {
+      Response response = await dio.patch(
+        url,
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500; // Allow all status codes below 500
+          },
+        ),
+      );
+
+      response = await _handleRedirectPath(response, data);
+      return response;
+    } catch (e) {
+      throw Exception('PATCH request error: $e');
+    }
+  }
+Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
     try {
       Response response;
       if (data != null) {
@@ -139,7 +181,32 @@ class ApiService {
       throw Exception('PATCH request error: $e');
     }
   }
-
+  Future<Response> postRequest(
+    String url,
+    FormData data,
+  ) async {
+    try {
+      // Gửi yêu cầu POST ban đầu
+      Response response = await dio.post(
+        url,
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500; // Cho phép tất cả các mã trạng thái dưới 500
+          },
+        ),
+      );
+      response = await _handleRedirect(response, data);
+      return response;
+    } catch (e) {
+      throw Exception('POST request error: $e');
+    }
+  }
   Future<Response> deleteRequest(String url,
       {Map<String, dynamic>? data}) async {
     try {

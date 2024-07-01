@@ -9,4 +9,7 @@ class Api {
   static const String getChapters = '/chapters';
   static const String postChapters = '/chapters';
   static const String approveStory = '/stories/approve';
+  static const String localHost =
+      'https://obliging-tetra-equally.ngrok-free.app/api';
+  static const String user = '/users';
 }

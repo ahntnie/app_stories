@@ -1,6 +1,10 @@
-import 'package:app_stories/styles/font.dart';
-import 'package:app_stories/styles/img.dart';
+import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
+import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/styles/app_img.dart';
 import 'package:app_stories/view_model/login.vm.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,17 +39,17 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.1),
+                              top: MediaQuery.of(context).size.height * 0.15),
                           child: Text(
                             "Đăng nhập",
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: fontSize.sizeTitle,
-                                fontWeight: fontWeight.bold),
+                                fontSize: AppFontSize.sizeTitle,
+                                fontWeight: AppFontWeight.bold),
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.15,
+                          height: MediaQuery.of(context).size.height * 0.1,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.9,
@@ -54,31 +58,78 @@ class _LoginPageState extends State<LoginPage> {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  "Số điện thoại",
+                                  "Email",
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: fontSize.sizeMedium,
-                                      fontWeight: fontWeight.bold),
+                                      fontSize: AppFontSize.sizeMedium,
+                                      fontWeight: AppFontWeight.bold),
                                 ),
                               ),
                               Container(
                                 margin: EdgeInsets.only(
                                     top: MediaQuery.of(context).size.height *
-                                        0.025),
+                                        0.01),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.white),
                                 child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(10),
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  decoration: const InputDecoration(
-                                    hintText: 'SĐT của bạn',
-                                    border: OutlineInputBorder(
+                                  onChanged: (_) {
+                                    viewModel.validateEmail();
+                                  },
+                                  controller: viewModel.emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: InputDecoration(
+                                    hintText: 'abc@gmail.com',
+                                    border: const OutlineInputBorder(
                                       borderSide: BorderSide.none,
                                     ),
+                                    errorText: viewModel.emailError.isNotEmpty
+                                        ? viewModel.emailError
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  "Mật khẩu",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: AppFontSize.sizeMedium,
+                                      fontWeight: AppFontWeight.bold),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.01),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white),
+                                child: TextField(
+                                  onChanged: (_) {
+                                    viewModel.validatePassword();
+                                  },
+                                  controller: viewModel.passwordController,
+                                  obscureText: viewModel.obscureText,
+                                  decoration: InputDecoration(
+                                    hintText: '***',
+                                    border: const OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    suffixIcon: GestureDetector(
+                                      onTap: () => viewModel.showhidePassword(),
+                                      child: Icon(
+                                        viewModel.obscureText
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    errorText: viewModel
+                                            .accountPasswordError.isNotEmpty
+                                        ? viewModel.accountPasswordError
+                                        : null,
                                   ),
                                 ),
                               ),
@@ -86,8 +137,33 @@ class _LoginPageState extends State<LoginPage> {
                                   height: MediaQuery.of(context).size.height *
                                       0.025),
                               ElevatedButton(
-                                onPressed: () {
-                                  viewModel.login();
+                                onPressed: () async {
+                                  var user =
+                                      await viewModel.loginUsingEmailPassword();
+                                  if (user != null) {
+                                    AppSP.set(AppSPKey.user_info,
+                                        viewModel.user!.email);
+                                    print(
+                                        'Email user: ${AppSP.get(AppSPKey.user_info)}');
+                                    viewModel.showSuccessSnackBar(context);
+                                  } else {
+                                    viewModel.validateEmail();
+                                    viewModel.validatePassword();
+                                    if (viewModel
+                                            .emailController.text.isEmpty ||
+                                        viewModel
+                                            .passwordController.text.isEmpty) {
+                                      viewModel
+                                          .showFailedSnackBarEmpty(context);
+                                    } else if (FirebaseAuth
+                                            .instance.currentUser!.email !=
+                                        viewModel.emailController.text) {
+                                      viewModel.showFailedSnackBarName(context);
+                                    } else {
+                                      viewModel
+                                          .showFailedSnackBarPassword(context);
+                                    }
+                                  }
                                 },
                                 style: ButtonStyle(
                                     minimumSize: WidgetStateProperty.all<Size>(
@@ -103,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 30,
-                                      fontWeight: fontWeight.bold),
+                                      fontWeight: AppFontWeight.bold),
                                 ),
                               ),
                               SizedBox(
@@ -125,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
-                                          fontWeight: fontWeight.bold),
+                                          fontWeight: AppFontWeight.bold),
                                     ),
                                   ),
                                   Expanded(
@@ -140,7 +216,10 @@ class _LoginPageState extends State<LoginPage> {
                                   height: MediaQuery.of(context).size.height *
                                       0.025),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  viewModel.signInWithGoogle();
+                                  viewModel.showSuccessSnackBar(context);
+                                },
                                 style: ButtonStyle(
                                     minimumSize: WidgetStateProperty.all<Size>(
                                       Size.fromHeight(
@@ -173,11 +252,53 @@ class _LoginPageState extends State<LoginPage> {
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 28,
-                                          fontWeight: fontWeight.bold),
+                                          fontWeight: AppFontWeight.bold),
                                     ),
                                   ],
                                 ),
                               ),
+                              SizedBox(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.03),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Bạn chưa có tài khoản?",
+                                    style: TextStyle(
+                                        color: AppColor.extraColor,
+                                        fontSize: AppFontSize.sizeMedium,
+                                        fontWeight: AppFontWeight.bold),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      viewModel.signup();
+                                    },
+                                    child: Text(
+                                      " Đăng ký",
+                                      style: TextStyle(
+                                          color: Colors.indigo.shade400,
+                                          fontSize: AppFontSize.sizeMedium,
+                                          fontWeight: AppFontWeight.bold),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Text(
+                                      "Quên mật khẩu",
+                                      style: TextStyle(
+                                          color: Colors.indigo.shade400,
+                                          fontSize: AppFontSize.sizeMedium,
+                                          fontWeight: AppFontWeight.bold),
+                                    ),
+                                  )
+                                ],
+                              )
                             ],
                           ),
                         ),
