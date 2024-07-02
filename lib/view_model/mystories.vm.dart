@@ -12,8 +12,10 @@ class MyStoriesViewModel extends BaseViewModel {
   List<Story> myStories = [];
   late Story currentStory;
   getMyStories() async {
+    setBusy(true);
     myStories = await request.getMyStories();
     notifyListeners();
+    setBusy(false);
   }
 
   nextPostChapter() {

@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:app_stories/models/category_model.dart';
 import 'package:app_stories/models/story_model.dart';
+import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/requests/category.request.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 
 import '../requests/story.request.dart';
+import '../widget/pop_up.dart';
 
 class PostStoriesViewModel extends BaseViewModel {
   late BuildContext viewContext;
@@ -33,23 +35,49 @@ class PostStoriesViewModel extends BaseViewModel {
   }
 
   Future<void> submitRequest() async {
-  String? errorString =  await request.uploadStory(
+    setBusy(true);
+    String? errorString = await request.uploadStory(
       coverImage!,
       chaptersImages,
       copyrightDocumentsImages,
       Story(
         title: storyNameController.text,
-        authorId: 'lehuuthanh',
+        author: Users(
+            id: 'lehuuthanh',
+            name: 'Lê Hữu Thành',
+            email: 'thanh@gmail.com',
+            password: '',
+            birthDate: DateTime(2003, 5, 23),
+            role: 'user'),
         summary: summaryController.text,
       ),
       selectedCategoryIds,
     );
-    if(errorString != null){
-      
+    setBusy(false);
+    if (errorString != null) {
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Lỗi gửi yêu cầu phê duyệt: $errorString',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
+    } else {
+      chaptersImages = [];
+      coverImage = null;
+      copyrightDocumentsImages = [];
+      storyNameController.clear();
+      summaryController.clear();
+      genreController.clear();
+      authorNameController.clear();
+      Navigator.pop(viewContext);
     }
-    chaptersImages = [];
-    coverImage = null;
-    copyrightDocumentsImages = [];
+
     notifyListeners();
   }
 

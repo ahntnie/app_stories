@@ -3,13 +3,15 @@ import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../view_model/mystories.vm.dart';
 import '../../widget/base_page.dart';
 import 'widget/image_card.dart';
 import 'widget/custom_textfield.dart';
 import 'widget/upload_button.dart';
 
 class PostStoriesPage extends StatefulWidget {
-  const PostStoriesPage({super.key});
+  final MyStoriesViewModel myStoriesViewModel;
+  const PostStoriesPage({super.key, required this.myStoriesViewModel});
 
   @override
   State<PostStoriesPage> createState() => _PostStoriesPageState();
@@ -20,7 +22,10 @@ class _PostStoriesPageState extends State<PostStoriesPage> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<PostStoriesViewModel>.reactive(
         viewModelBuilder: () => PostStoriesViewModel(),
-        onViewModelReady: (viewModel) => viewModel.init(),
+        onViewModelReady: (viewModel) {
+          viewModel.viewContext = context;
+          viewModel.init();
+        },
         builder: (context, viewModel, child) {
           return BasePage(
             title: 'Đăng truyện',
@@ -265,10 +270,10 @@ class _PostStoriesPageState extends State<PostStoriesPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: CustomButton(
+                        isLoading: viewModel.isBusy,
                         onPressed: () async {
-                          print('Nhấn gửi yêu cầu phê duyệt');
                           await viewModel.submitRequest();
-                          print('Gửi xong rồi');
+                          await widget.myStoriesViewModel.getMyStories();
                         },
                         title: const Text(
                           'Gửi yêu cầu phê duyệt',

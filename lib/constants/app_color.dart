@@ -15,5 +15,6 @@ class AppColor {
   static const Color unConfirmColor = Color(0xFF1B263B);
   static const Color diaglogColor = Color(0xFF22233F);
   static const Color changeNameColor = Color(0xFF434351);
+  static const Color bottomSheetColor = Color(0xff2B2E38);
   static const Color inwellColor = Color(0xFF434351);
 }

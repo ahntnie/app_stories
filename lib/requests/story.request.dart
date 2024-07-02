@@ -37,7 +37,7 @@ class StoryRequest {
       }
       final formData = FormData.fromMap({
         'title': story.title,
-        'author_id': story.authorId,
+        'author_id': story.author!.id,
         'summary': story.summary,
         'cover_image':
             await MultipartFile.fromFile(image.path, filename: fileName),
