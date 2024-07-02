@@ -6,11 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../models/chapter_model.dart';
 import '../widget/pop_up.dart';
 
 class ComicViewModel extends BaseViewModel {
   late BuildContext viewContext;
   late Story currentStory;
+  Chapter? currentChapter;
   List<Story> storiesIsActive = [];
   StoryRequest request = StoryRequest();
   List<Category> categories = [];

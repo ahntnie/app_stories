@@ -46,6 +46,7 @@ class PostStoriesViewModel extends BaseViewModel {
             id: 'lehuuthanh',
             name: 'Lê Hữu Thành',
             email: 'thanh@gmail.com',
+            password: '',
             birthDate: DateTime(2003, 5, 23),
             role: 'user'),
         summary: summaryController.text,
