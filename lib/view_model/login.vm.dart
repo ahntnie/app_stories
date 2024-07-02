@@ -1,6 +1,9 @@
 import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
+import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/user_model.dart';
+import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
@@ -9,6 +12,7 @@ import 'package:app_stories/views/home/home.page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
@@ -49,17 +53,28 @@ class LoginViewModel extends BaseViewModel {
     final User? user = userCredential.user;
 
     if (user != null) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
-      userDoc.set({
-        'name': user.displayName,
-        'email': user.email,
-        'age': 0,
-        'photoURL': user.photoURL,
-        'lastSignIn': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+      String uid = user.uid;
+      final apiService = ApiService();
+      final response = await apiService.getRequest('${Api.user}/$uid');
+      if (response.statusCode == 200) {
+        return user;
+      } else if (response.statusCode == 404) {
+        // Tài khoản không tồn tại, tạo mới tài khoản trong MySQL
+        Users? userModel = Users(
+          id: user.uid,
+          name: user.displayName.toString(),
+          email: user.email.toString(),
+          birthDate: DateTime.now(),
+          password: 'passwordGoogle',
+          role: 'user',
+        );
+        await apiService.postRequestUser(Api.user, userModel.toJson());
 
-      return user;
+        return user;
+      } else {
+        // Xử lý các lỗi khác (nếu có)
+        throw Exception('Failed to check user status');
+      }
     }
     notifyListeners();
     return null;
@@ -70,25 +85,11 @@ class LoginViewModel extends BaseViewModel {
     await _googleSignIn.signOut();
   }
 
-  // getUser() {
-  //   ProfileViewModel profileViewModel = ProfileViewModel();
-  //   profileViewModel.currentUser.email;
-  //   profileViewModel.currentUser.name;
-  //   notifyListeners();
-  // }
-
   Future<User?> loginUsingEmailPassword() async {
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       user = userCredential.user;
-      // ProfileViewModel profileViewModel = ProfileViewModel();
-      // profileViewModel.fetchCurrentUser();
-      // name = profileViewModel.currentUser.email;
-      // email = profileViewModel.currentUser.name;
-      print(user);
-      String? idToken = await user!.getIdToken();
-      print(idToken);
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
         print("Không tìm thấy user");

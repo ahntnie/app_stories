@@ -93,7 +93,8 @@ class ApiService {
     }
   }
 
-  Future<Response> postRequestUser(String url, Map<String, dynamic> data) async {
+  Future<Response> postRequestUser(
+      String url, Map<String, dynamic> data) async {
     try {
       final formData = FormData.fromMap(data);
       Response response = await dio.post(
@@ -142,7 +143,8 @@ class ApiService {
       throw Exception('PATCH request error: $e');
     }
   }
-Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
+
+  Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
     try {
       Response response;
       if (data != null) {
@@ -181,6 +183,7 @@ Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
       throw Exception('PATCH request error: $e');
     }
   }
+
   Future<Response> postRequest(
     String url,
     FormData data,
@@ -207,6 +210,7 @@ Future<Response> patchRequest(String url, Map<String, dynamic>? data) async {
       throw Exception('POST request error: $e');
     }
   }
+
   Future<Response> deleteRequest(String url,
       {Map<String, dynamic>? data}) async {
     try {
