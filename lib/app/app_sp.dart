@@ -75,8 +75,8 @@ class AppSP {
   /// users
   static Future<void> saveUser(Users? user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String string_user = jsonEncode(user!.toJson());
-    await prefs.setString('Users', string_user);
+    String stringUser = jsonEncode(user!.toJson());
+    await prefs.setString('Users', stringUser);
   }
 
   /// Delete item

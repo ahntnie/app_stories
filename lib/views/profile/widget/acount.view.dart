@@ -1,8 +1,6 @@
 import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/profile/widget/custom/accountitem.widget.dart';
-import 'package:app_stories/views/profile/widget/custom/menuitem.widget.dart';
 import 'package:app_stories/widget/base_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -37,15 +35,17 @@ class _AccountViewState extends State<AccountView> {
                             text1: viewModel.currentUserData!['username'] ?? '',
                             onTap: () {
                               viewModel.changeNameAccount();
+                              viewModel.notifyListeners();
                             },
                           ),
                           CustomMenuAccount(
                             text: 'Độ tuổi',
-                            text1: viewModel.currentUserData!['age'] >= 18
+                            text1: viewModel.isOver18(
+                                    viewModel.currentUserData!['birth_date'])
                                 ? 'Tôi đã đủ 18 tuổi trở lên'
                                 : 'Tôi chưa đủ 18 tuổi',
                             onTap: () {
-                              viewModel.checkAgeAndShowDialog();
+                              viewModel.showBirthDateDialog();
                             },
                           ),
                           CustomMenuAccount(

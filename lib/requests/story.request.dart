@@ -84,7 +84,7 @@ class StoryRequest {
     return stories;
   }
 
-   Future<List<Story>> getStoriesIsActive() async {
+  Future<List<Story>> getStoriesIsActive() async {
     List<Story> stories = [];
     final response = await ApiService().getRequest(
         '${Api.hostApi}${Api.getMyStories}',

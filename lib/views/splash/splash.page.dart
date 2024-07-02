@@ -25,7 +25,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _navigateToNextScreen() async {
-    if (AppSP.get(AppSPKey.user_info) != null) {
+    if (AppSP.get(AppSPKey.userinfo) != null) {
       await Future.delayed(const Duration(seconds: 2), () {
         // Tải ảnh trong 3 giây
         precacheImage(const AssetImage('assets/imgStart.png'), context);
