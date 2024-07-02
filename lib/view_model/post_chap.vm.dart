@@ -23,7 +23,7 @@ class PostChapViewModel extends BaseViewModel {
   ChapterRequest chapterRequest = ChapterRequest();
   StoryRequest storyRequest = StoryRequest();
   TextEditingController titleChapterController = TextEditingController();
-
+  
   // getListImageChapter(int chapter_index) {
   //   imagesChapter = currentStory.chapters![chapter_index].images
   //       .map((image) => '${Api.hostImage}$image')

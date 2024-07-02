@@ -11,7 +11,8 @@ class AppColor {
   static const Color extraColor = Colors.white;
   static const Color successColor = Colors.green;
   static const Color buttonColor = Color(0xFF1B263B);
-  static const Color unConfirmColor= Color(0xFF1B263B);
+  static const Color unConfirmColor = Color(0xFF1B263B);
   static const Color diaglogColor = Color(0xFF22233F);
   static const Color changeNameColor = Color(0xFF434351);
+  static const Color bottomSheetColor = Color(0xff2B2E38);
 }

@@ -37,7 +37,7 @@ class StoryRequest {
       }
       final formData = FormData.fromMap({
         'title': story.title,
-        'author_id': story.authorId,
+        'author_id': story.author!.id,
         'summary': story.summary,
         'cover_image':
             await MultipartFile.fromFile(image.path, filename: fileName),
@@ -75,6 +75,20 @@ class StoryRequest {
     final response = await ApiService().getRequest(
         '${Api.hostApi}${Api.getMyStories}',
         queryParams: {"is_active": 0});
+    print('Body truyện: ${response.data}');
+    print('Code: ${response.statusCode}');
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
+    print('Số lượng truyện: ${stories.length}');
+    return stories;
+  }
+
+   Future<List<Story>> getStoriesIsActive() async {
+    List<Story> stories = [];
+    final response = await ApiService().getRequest(
+        '${Api.hostApi}${Api.getMyStories}',
+        queryParams: {"is_active": 1});
     print('Body truyện: ${response.data}');
     print('Code: ${response.statusCode}');
     final responseData = jsonDecode(jsonEncode(response.data));

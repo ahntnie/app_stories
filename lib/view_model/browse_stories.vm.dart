@@ -30,7 +30,7 @@ class BrowseStoriesViewModel extends BaseViewModel {
     titleController.text = currentStory.title!;
     genreController.text =
         currentStory.categories!.map((category) => category.name).join(', ');
-    authorNameController.text = currentStory.authorId!;
+    authorNameController.text = currentStory.author!.id;
     summaryController.text = currentStory.summary!;
   }
 
