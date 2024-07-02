@@ -7,12 +7,15 @@ import 'package:app_stories/custom/snackbar.custom.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
+import 'package:app_stories/views/profile/profile.page.dart';
 import 'package:app_stories/views/profile/widget/custom/button.widget.dart';
 import 'package:app_stories/views/profile/widget/custom/textfield.widget.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileViewModel extends BaseViewModel {
   late BuildContext viewContext;
@@ -25,6 +28,7 @@ class ProfileViewModel extends BaseViewModel {
   TextEditingController currentPasswordController = TextEditingController();
   Map<String, dynamic>? _currentUserData;
   Map<String, dynamic>? get currentUserData => _currentUserData;
+
   Future<void> fetchCurrentUser() async {
     try {
       User? firebaseUser = _auth.currentUser;
@@ -32,7 +36,6 @@ class ProfileViewModel extends BaseViewModel {
         setBusy(true);
         String uid = firebaseUser.uid;
         Response infoResponse = await apiService.getRequest('${Api.user}/$uid');
-
         _currentUserData = infoResponse.data;
 
         notifyListeners();
@@ -85,13 +88,12 @@ class ProfileViewModel extends BaseViewModel {
                         nameButton: 'Xác nhận',
                         onPressed: () async {
                           if (changeNameController.text.isEmpty) {
-                            showFailedChangeNameSnackBar(context);
+                            showFailedChangeNameSnackBar(viewContext);
                           } else if (changeNameController.text.length < 8) {
-                            showFailedLenghtNameSnackBar(context);
+                            showFailedLenghtNameSnackBar(viewContext);
                           } else {
                             User? firebaseUser = _auth.currentUser;
 
-                            Navigator.of(context).pop();
                             String uid = firebaseUser!.uid;
                             await apiService.patchRequestUser(
                                 '${Api.user}/$uid',
@@ -100,7 +102,11 @@ class ProfileViewModel extends BaseViewModel {
                             _currentUserData!['username'] =
                                 changeNameController.text;
                             notifyListeners();
-                            Navigator.of(context).pop();
+                            // Navigator.of(context).pushReplacement(
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const ProfilePage()),
+                            // );
+                            Navigator.of(viewContext).pop();
                             changeNameController.clear();
                           }
                         },
@@ -111,6 +117,7 @@ class ProfileViewModel extends BaseViewModel {
                       color: AppColor.buttonColor,
                       nameButton: 'Hủy',
                       onPressed: () {
+                        notifyListeners();
                         Navigator.of(context).pop();
                         changeNameController.clear();
                       },
@@ -123,6 +130,27 @@ class ProfileViewModel extends BaseViewModel {
     );
   }
 
+  Future<void> changePasswordFirebase() async {
+    User? user = _auth.currentUser;
+    String? idToken = await user!.getIdToken();
+    final response = await http.post(
+      Uri.parse(Api.apiAuth),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'idToken': idToken,
+        'password': newPasswordController.text,
+        'returnSecureToken': true,
+      }),
+    );
+    if (response.statusCode == 200) {
+      print('Password changed successfully.');
+    } else {
+      print('Error: ${json.decode(response.body)}');
+    }
+  }
+
   Future<void> changPassword() async {
     showDialog(
       context: viewContext,
@@ -131,7 +159,7 @@ class ProfileViewModel extends BaseViewModel {
         return AlertDialog(
           backgroundColor: AppColor.diaglogColor,
           content: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(viewContext).size.width * 0.8,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -147,10 +175,6 @@ class ProfileViewModel extends BaseViewModel {
                       color: AppColor.extraColor),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
-                TextFieldCustom(
-                    controller: currentPasswordController,
-                    hintText: 'Mật khẩu hiện tại'),
                 const SizedBox(height: 10),
                 TextFieldCustom(
                     controller: newPasswordController,
@@ -172,12 +196,25 @@ class ProfileViewModel extends BaseViewModel {
                       color: AppColor.selectColor,
                       nameButton: 'Xác nhận',
                       onPressed: () async {
-                        // User? user = _auth.currentUser;
-                        notifyListeners();
-                        Navigator.of(context).pop();
-                        currentPasswordController.clear();
-                        newPasswordController.clear();
-                        newRePasswordController.clear();
+                        if (newPasswordController.text !=
+                            newRePasswordController.text) {
+                          showFailedChangePasswordSnackBar(viewContext);
+                        } else if (newPasswordController.text.isEmpty ||
+                            newRePasswordController.text.isEmpty) {
+                          showFailedEmptyPasswordSnackBar(viewContext);
+                        } else {
+                          changePasswordFirebase();
+                          User? firebaseUser = _auth.currentUser;
+                          String uid = firebaseUser!.uid;
+                          await apiService.patchRequestUser(
+                              '${Api.user}/$uid',
+                              jsonEncode(
+                                  {'password': newPasswordController.text}));
+                          notifyListeners();
+                          Navigator.of(viewContext).pop();
+                          newPasswordController.clear();
+                          newRePasswordController.clear();
+                        }
                       },
                     )),
                 SizedBox(
@@ -186,7 +223,7 @@ class ProfileViewModel extends BaseViewModel {
                         color: AppColor.buttonColor,
                         nameButton: 'Hủy',
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(viewContext).pop();
                           currentPasswordController.clear();
                           newPasswordController.clear();
                           newRePasswordController.clear();
@@ -199,47 +236,91 @@ class ProfileViewModel extends BaseViewModel {
     );
   }
 
+  void showFailedEmptyPasswordSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(viewContext).showSnackBar(CustomSnackBar(
+        icon: Icons.warning_rounded, message: 'Không được bỏ trống'));
+  }
+
+  void showFailedChangePasswordSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(viewContext).showSnackBar(CustomSnackBar(
+        icon: Icons.warning_rounded, message: 'Mật khẩu không trùng nhau'));
+  }
+
   void showFailedChangeNameSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+    ScaffoldMessenger.of(viewContext).showSnackBar(CustomSnackBar(
         icon: Icons.warning_rounded, message: 'Tên không được bỏ trống'));
   }
 
   void showFailedLenghtNameSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+    ScaffoldMessenger.of(viewContext).showSnackBar(CustomSnackBar(
         icon: Icons.warning_rounded, message: 'Tên phải chứa 8 ký tự'));
   }
 
-  Future<void> checkAgeAndShowDialog() async {
-    CustomDialog.showCustomDialogAge(
-        context: viewContext,
-        title: 'Độ tuổi của bạn',
-        message: 'TruyenHay sẽ hiển thị nội dung theo độ tuổi của bạn',
-        onPressed: () async {
-          User? firebaseUser = _auth.currentUser;
-          if (firebaseUser != null) {
-            String uid = firebaseUser.uid;
-            await apiService.patchRequestUser(
-                '${Api.user}/$uid', jsonEncode({'age': 18}));
-            _currentUserData!['age'] = 18;
-            notifyListeners();
-            Navigator.of(viewContext).pop();
-          }
-        },
-        onPressed2: () async {
-          User? firebaseUser = _auth.currentUser;
-          if (firebaseUser != null) {
-            String uid = firebaseUser.uid;
+  String formatDate(String dateStr) {
+    DateTime dateTime = DateTime.parse(dateStr);
+    return DateFormat('dd/MM/yyyy').format(dateTime);
+  }
 
-            await apiService.patchRequestUser(
-                '${Api.user}/$uid', jsonEncode({'age': 1}));
-            _currentUserData!['age'] = 1;
+  bool isOver18(String birthDateString) {
+    DateTime birthDate = DateTime.parse(birthDateString);
+    DateTime today = DateTime.now();
+    int age = today.year - birthDate.year;
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      age--;
+    }
+    return age >= 18;
+  }
+
+  Future<void> showBirthDateDialog() async {
+    DateTime now = DateTime.now();
+    DateFormat('dd/MM/yyyy').format(now);
+
+    final DateTime? picked = await showDatePicker(
+      context: viewContext,
+      initialDate: now,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      confirmText: 'Xác nhận',
+      cancelText: 'Hủy',
+      fieldLabelText: 'Tháng Ngày Năm',
+      errorInvalidText: 'Vui lòng nhập chính xác',
+      errorFormatText: 'Yêu cầu đúng định dạng',
+      helpText: 'Nhập ngày tháng năm sinh',
+    );
+
+    String formattedDate = formatDate(picked.toString());
+    if (picked != null) {
+      CustomDialog.showCustomDialogAge(
+          context: viewContext,
+          title: 'Bạn có muốn chọn ngày sinh $formattedDate không?',
+          message: 'TruyenHay sẽ hiển thị nội dung theo độ tuổi của bạn',
+          onPressed: () async {
+            User? firebaseUser = _auth.currentUser;
+            if (firebaseUser != null) {
+              String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+              String uid = firebaseUser.uid;
+              currentUserData!['birth_date'] = formattedDate;
+              // currentUserData!['birth_date'] =
+              //     picked.toIso8601String().split('T').first;
+              await apiService.patchRequestUser(
+                  '${Api.user}/$uid',
+                  jsonEncode({
+                    'birth_date': picked.toIso8601String().split('T').first
+                  }));
+
+              notifyListeners();
+              Navigator.of(viewContext).pop();
+            }
+          },
+          onPressed2: () async {
             notifyListeners();
             Navigator.of(viewContext).pop();
-          }
-        },
-        confirmText: 'Tôi đã đủ 18 tuổi trở lên',
-        unConfirmText: 'Tôi chưa đủ 18 tuổi',
-        unConfirmColor: AppColor.unConfirmColor,
-        confirmColor: AppColor.selectColor);
+          },
+          confirmText: 'Xác nhận',
+          unConfirmText: 'Hủy',
+          unConfirmColor: AppColor.unConfirmColor,
+          confirmColor: AppColor.selectColor);
+    }
   }
 }

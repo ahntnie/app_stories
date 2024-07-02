@@ -84,6 +84,20 @@ class StoryRequest {
     return stories;
   }
 
+  Future<List<Story>> getStoriesIsActive() async {
+    List<Story> stories = [];
+    final response = await ApiService().getRequest(
+        '${Api.hostApi}${Api.getMyStories}',
+        queryParams: {"is_active": 1});
+    print('Body truyện: ${response.data}');
+    print('Code: ${response.statusCode}');
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
+    print('Số lượng truyện: ${stories.length}');
+    return stories;
+  }
+
   Future<Story> getStoryById(int storyId) async {
     Story story;
     final response = await ApiService()

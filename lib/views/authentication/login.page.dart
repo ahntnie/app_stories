@@ -141,10 +141,10 @@ class _LoginPageState extends State<LoginPage> {
                                   var user =
                                       await viewModel.loginUsingEmailPassword();
                                   if (user != null) {
-                                    AppSP.set(AppSPKey.user_info,
+                                    AppSP.set(AppSPKey.userinfo,
                                         viewModel.user!.email);
                                     print(
-                                        'Email user: ${AppSP.get(AppSPKey.user_info)}');
+                                        'Email user: ${AppSP.get(AppSPKey.userinfo)}');
                                     viewModel.showSuccessSnackBar(context);
                                   } else {
                                     viewModel.validateEmail();
@@ -216,9 +216,13 @@ class _LoginPageState extends State<LoginPage> {
                                   height: MediaQuery.of(context).size.height *
                                       0.025),
                               ElevatedButton(
-                                onPressed: () {
-                                  viewModel.signInWithGoogle();
-                                  viewModel.showSuccessSnackBar(context);
+                                onPressed: () async {
+                                  var user = await viewModel.signInWithGoogle();
+                                  if (user != null) {
+                                    // AppSP.set(AppSPKey.userinfo,
+                                    //     viewModel.user!.email);
+                                    viewModel.showSuccessSnackBar(context);
+                                  }
                                 },
                                 style: ButtonStyle(
                                     minimumSize: WidgetStateProperty.all<Size>(
