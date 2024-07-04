@@ -29,9 +29,13 @@ class _BottomChapterState extends State<BottomChapter> {
               topLeft: Radius.circular(15), topRight: Radius.circular(15))),
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(right: 20, left: 20, top: 30, bottom: 10),
-            child: SearchTextField(),
+          Padding(
+            padding:
+                const EdgeInsets.only(right: 20, left: 20, top: 30, bottom: 10),
+            child: SearchTextField(
+              seatchController: TextEditingController(),
+              onChanged: () {},
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

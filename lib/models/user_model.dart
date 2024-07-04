@@ -19,7 +19,7 @@ class Users {
       id: data['user_id'] ?? '',
       name: data['username'] ?? '',
       email: data['email'] ?? '',
-      birthDate: data['birth_date'] ?? 1,
+      birthDate: DateTime.parse(data['birth_date'].toString()),
       password: data['password'] ?? '',
       role: data['role'] ?? '',
     );

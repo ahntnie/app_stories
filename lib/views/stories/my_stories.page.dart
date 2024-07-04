@@ -33,7 +33,7 @@ class _MyStoriesPageState extends State<MyStoriesPage> {
           return BasePage(
             title: 'Đăng truyện',
             body: viewModel.isBusy
-                ? const Center(child: GradientLoadingWidget())
+                ? Center(child: GradientLoadingWidget())
                 : SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class GradientLoadingWidget extends StatelessWidget {
-  const GradientLoadingWidget({super.key});
+  bool showFull;
+  GradientLoadingWidget({super.key, this.showFull = false});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
+      width: showFull ? MediaQuery.of(context).size.width : 200,
       height: 5,
       child: ShaderMask(
         shaderCallback: (Rect bounds) {

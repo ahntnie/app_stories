@@ -47,15 +47,14 @@ class LoginViewModel extends BaseViewModel {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
     final UserCredential userCredential =
         await auth.signInWithCredential(credential);
     final User? user = userCredential.user;
-
     if (user != null) {
       String uid = user.uid;
       final apiService = ApiService();
-      final response = await apiService.getRequest('${Api.user}/$uid');
+      final response =
+          await apiService.getRequest('${Api.hostApi}${Api.getUser}/$uid');
       if (response.statusCode == 200) {
         return user;
       } else if (response.statusCode == 404) {
@@ -68,8 +67,8 @@ class LoginViewModel extends BaseViewModel {
           password: 'passwordGoogle',
           role: 'user',
         );
-        await apiService.postRequestUser(Api.user, userModel.toJson());
-
+        await apiService.postRequestUser(
+            '${Api.hostApi}${Api.getUser}', userModel.toJson());
         return user;
       } else {
         // Xử lý các lỗi khác (nếu có)

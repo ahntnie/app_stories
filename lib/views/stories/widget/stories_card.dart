@@ -14,7 +14,7 @@ class StoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('Đường dẫn: ${data.coverImage!.first}');
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         // viewModel.currentStory = data;
         // viewModel.nextPostChapter();
@@ -30,7 +30,7 @@ class StoryCard extends StatelessWidget {
         margin: const EdgeInsets.only(top: 20),
         child: Row(
           children: [
-            if (data.coverImage!.first != null)
+            if (data.coverImage?.first != null)
               SizedBox(
                 width: MediaQuery.of(context).size.width / 4,
                 child: Image.network(

@@ -25,27 +25,27 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _navigateToNextScreen() async {
-    if (AppSP.get(AppSPKey.userinfo) != null) {
-      await Future.delayed(const Duration(seconds: 2), () {
-        // Tải ảnh trong 3 giây
-        precacheImage(const AssetImage('assets/imgStart.png'), context);
-      });
-      // Chuyển sang màn hình tiếp theo
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } else {
-      await Future.delayed(const Duration(seconds: 2), () {
-        // Tải ảnh trong 3 giây
-        precacheImage(const AssetImage('assets/imgStart.png'), context);
-      });
-      // Chuyển sang màn hình tiếp theo
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-      // }
-      // print(AppSP.get(ProfileViewModel().user!.email));
-    }
+    // if (AppSP.get(AppSPKey.userinfo) != null) {
+    //   await Future.delayed(const Duration(seconds: 2), () {
+    //     // Tải ảnh trong 3 giây
+    //     precacheImage(const AssetImage('assets/imgStart.png'), context);
+    //   });
+    //   // Chuyển sang màn hình tiếp theo
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (context) => const HomePage()),
+    //   );
+    // } else {
+    await Future.delayed(const Duration(seconds: 2), () {
+      // Tải ảnh trong 3 giây
+      precacheImage(const AssetImage('assets/imgStart.png'), context);
+    });
+    // Chuyển sang màn hình tiếp theo
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
+    // }
+    // print(AppSP.get(ProfileViewModel().user!.email));
+    // }
   }
 
   @override
