@@ -49,7 +49,7 @@ class _ComicWidgetState extends State<ComicWidget> {
                                   viewModel.currentStory =
                                       viewModel.storiesIsActive[index];
                                   viewModel.nextDetailStory();
-                                  print('nhan');
+                                 // print('nhan');
                                 },
                               );
                             }),
