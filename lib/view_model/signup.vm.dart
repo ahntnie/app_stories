@@ -1,5 +1,6 @@
 import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
@@ -77,19 +78,18 @@ class SignUpViewModel extends BaseViewModel {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
       User? user = userCredential.user;
       if (user != null) {
-        //await user.updateDisplayName(accountNameController.text.trim());
-        Map<String, dynamic> formData = {
-          'user_id': user.uid,
-          'username': accountNameController.text,
-          'email': emailController.text,
-          'password': passwordController.text,
-          'age': 1,
-        };
+        Users? userModel = Users(
+            id: user.uid,
+            name: accountNameController.text,
+            email: emailController.text,
+            birthDate: DateTime.now(),
+            password: passwordController.text,
+            role: 'user');
         final apiService = ApiService();
-        await apiService.postRequestUser(Api.user, formData);
+        await apiService.postRequestUser(
+            '${Api.hostApi}${Api.getUser}', userModel.toJson());
       }
     } catch (e) {
       print('Error: ${e.toString()}');

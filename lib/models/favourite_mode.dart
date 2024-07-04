@@ -1,7 +1,7 @@
 class Favorite {
   int favoriteId;
-  int userId;
-  int storyId;
+  String userId;
+  int? storyId;
   DateTime createdAt;
 
   Favorite({
