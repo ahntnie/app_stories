@@ -14,7 +14,6 @@ class ApiService {
 
   Future<Response> _handleRedirect(Response response, FormData formData) async {
     if (response.statusCode == 302) {
-      print('vo 302');
       final newUrl = response.headers['location']?.first;
       if (newUrl != null) {
         response = await dio.post(
@@ -92,7 +91,33 @@ class ApiService {
       throw Exception('GET request error: $e');
     }
   }
+Future<Response> postFavourite(
+      String url, Map<String, dynamic> data) async {
+    try {
+      final formData = FormData.fromMap(data);
+      Response response = await dio.post(
+        url,
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500; // Allow all status codes below 500
+          },
+        ),
+      );
+      final formDataNew = FormData.fromMap(data);
 
+      response = await _handleRedirect(response, formDataNew);
+      print(response.data);
+      return response;
+    } catch (e) {
+      throw Exception('POST request error: $e');
+    }
+  }
   Future<Response> postRequestUser(
       String url, Map<String, dynamic> data) async {
     try {
