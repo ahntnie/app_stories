@@ -60,15 +60,15 @@ class ComicViewModel extends BaseViewModel {
       'user_id': idUser
     };
     final apiService = ApiService();
-    if (!isFavourite) {
-      await apiService.postFavourite(
-          '${Api.hostApi}${Api.postLike}', favoriteModel);
-      isFavourite = true;
-    } else {
-      await apiService.postFavourite(
-          '${Api.hostApi}${Api.unLike}', favoriteModel);
-      isFavourite = false;
-    }
+    // if (!isFavourite) {
+    //   await apiService.postFavourite(
+    //       '${Api.hostApi}${Api.postLike}', favoriteModel);
+    //   isFavourite = true;
+    // } else {
+    //   await apiService.postFavourite(
+    //       '${Api.hostApi}${Api.unLike}', favoriteModel);
+    //   isFavourite = false;
+    // }
     notifyListeners();
   }
 

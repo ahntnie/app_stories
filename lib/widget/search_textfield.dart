@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SearchTextField extends StatelessWidget {
-  const SearchTextField({
+  final TextEditingController seatchController;
+  VoidCallback onChanged;
+  SearchTextField({
     super.key,
+    required this.seatchController,
+    required this.onChanged,
   });
 
   @override
@@ -13,6 +17,12 @@ class SearchTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextField(
+        onChanged: (value) {
+          Future.delayed(const Duration(seconds: 1), () {
+            onChanged();
+          });
+        },
+        controller: seatchController,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Tìm kiếm',

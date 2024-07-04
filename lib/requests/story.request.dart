@@ -9,6 +9,30 @@ import 'package:dio/dio.dart';
 class StoryRequest {
   Dio dio = Dio();
 
+  Future<List<Story>> searchStory(String search,
+      [List<int>? categoriesId]) async {
+    List<Story> stories = [];
+    print('aaa:$categoriesId');
+    print('search: (${{
+      "is_active": 1,
+      "search_string": search,
+      "categories_id": categoriesId ?? [],
+    }})');
+    final response = await ApiService()
+        .getRequest('${Api.hostApi}${Api.getMyStories}', queryParams: {
+      "is_active": 1,
+      "search_string": search,
+      "categories_id": categoriesId.toString(),
+    });
+    print('Body truyện: ${response.data}');
+    print('Code: ${response.statusCode}');
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
+    print('Số lượng truyện: ${stories.length}');
+    return stories;
+  }
+
   Future<String?> uploadStory(
       File image,
       List<File> chapters,
@@ -55,6 +79,7 @@ class StoryRequest {
     } catch (e) {
       errorString = e.toString();
     }
+    return errorString;
   }
 
   Future<List<Story>> getMyStories() async {

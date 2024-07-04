@@ -96,6 +96,7 @@ class ApiService {
   Future<Response> postRequestUser(
       String url, Map<String, dynamic> data) async {
     try {
+      print('Thằng đăng kí: ${data.toString()}');
       final formData = FormData.fromMap(data);
       Response response = await dio.post(
         url,

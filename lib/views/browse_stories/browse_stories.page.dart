@@ -27,7 +27,7 @@ class _BrowseStoriesPageState extends State<BrowseStoriesPage> {
           return BasePage(
             title: 'Phê duyệt truyện',
             body: viewModel.isBusy
-                ? const Center(child: GradientLoadingWidget())
+                ? Center(child: GradientLoadingWidget())
                 : ListView.builder(
                     itemCount: viewModel.stories.length,
                     itemBuilder: (context, index) {

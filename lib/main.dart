@@ -1,7 +1,9 @@
 import 'package:app_stories/firebase_options.dart';
+import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:app_stories/views/splash/splash.page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'app/di.dart';
 import 'views/browse_stories/browse_stories.page.dart';
 import 'views/home/home.page.dart';
 import 'views/stories/my_stories.page.dart';
@@ -17,6 +19,7 @@ Future<void> main() async {
   // );
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await DependencyInjection.init();
   runApp(const MyApp());
 }
 
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyStoriesPage(),
+      home: const HomePage(),
     );
   }
 }

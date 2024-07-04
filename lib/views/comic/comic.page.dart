@@ -12,7 +12,8 @@ class ComicPage extends StatefulWidget {
 class _ComicPageState extends State<ComicPage> {
   @override
   Widget build(BuildContext context) {
-    return const BasePage(
+    return  BasePage(
+      showLeading: false,
       showLogo: true,
       body: ComicWidget(),
     );

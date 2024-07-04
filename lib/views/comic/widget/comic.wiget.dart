@@ -29,7 +29,7 @@ class _ComicWidgetState extends State<ComicWidget> {
         },
         builder: (context, viewModel, child) {
           return viewModel.isBusy
-              ? const Center(child: GradientLoadingWidget())
+              ?  Center(child: GradientLoadingWidget())
               : SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

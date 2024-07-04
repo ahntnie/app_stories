@@ -3,29 +3,36 @@ import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
 import 'package:app_stories/view_model/login.vm.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'search_textfield.dart';
+import 'loading_shimmer.dart';
 
 class BasePage extends StatefulWidget {
   final bool showLogo;
-  final bool showSearch;
   final String? title;
   final bool showLogout;
   final Widget body;
   final bool showAppBar;
   final Widget? bottomNav;
-  const BasePage({
+  final Widget? appBar;
+  final bool showLeading;
+  final List<Widget>? actions;
+  final Widget? drawer;
+  final bool isLoading;
+  BasePage({
     super.key,
     this.showLogo = false,
-    this.showSearch = false,
     this.title,
     this.showLogout = false,
     required this.body,
     this.showAppBar = true,
     this.bottomNav,
+    this.appBar,
+    this.showLeading = true,
+    this.actions,
+    this.drawer,
+    this.isLoading = false,
   });
 
   @override
@@ -43,46 +50,49 @@ class _BasePageState extends State<BasePage> {
         builder: (context, viewModel, child) {
           return SafeArea(
             child: Scaffold(
+              endDrawer: widget.drawer,
               backgroundColor: AppColor.primary,
               appBar: widget.showAppBar
                   ? AppBar(
-                      leading: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                          )),
+                      leading: widget.showLeading
+                          ? IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ))
+                          : null,
                       toolbarHeight: 100,
                       backgroundColor: AppColor.darkPrimary,
-                      title: widget.showLogo
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
+                      title: widget.appBar ??
+                          (widget.showLogo
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Image.asset(
-                                      Img.imgLogo,
-                                      width: 70,
-                                      height: 70,
+                                    Row(
+                                      children: [
+                                        Image.asset(
+                                          Img.imgLogo,
+                                          width: 70,
+                                          height: 70,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        const Text(
+                                          'TRUYENHAY',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: AppFontWeight.bold,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'TRUYENHAY',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: AppFontWeight.bold,
-                                      ),
-                                    )
                                   ],
-                                ),
-                              ],
-                            )
-                          : widget.showSearch
-                              ? const SearchTextField()
+                                )
                               : Center(
                                   child: Text(
                                     widget.title ?? '',
@@ -90,21 +100,14 @@ class _BasePageState extends State<BasePage> {
                                         color: AppColor.extraColor,
                                         fontWeight: AppFontWeight.bold),
                                   ),
-                                ),
-                      actions: [
-                        widget.showLogo
-                            ? IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.notifications_none_outlined,
-                                  color: AppColor.extraColor,
-                                  size: 30,
-                                ))
-                            : widget.showSearch
+                                )),
+                      actions: widget.actions ??
+                          [
+                            widget.showLogo
                                 ? IconButton(
                                     onPressed: () {},
                                     icon: const Icon(
-                                      Icons.tune,
+                                      Icons.notifications_none_outlined,
                                       color: AppColor.extraColor,
                                       size: 30,
                                     ))
@@ -124,14 +127,15 @@ class _BasePageState extends State<BasePage> {
                                           size: 30,
                                         ))
                                     : const SizedBox()
-                      ],
+                          ],
                     )
                   : null,
-              body: widget.body,
+              body: widget.isLoading
+                  ? Center(child: GradientLoadingWidget())
+                  : widget.body,
               bottomNavigationBar: widget.bottomNav,
             ),
           );
         });
   }
 }
-

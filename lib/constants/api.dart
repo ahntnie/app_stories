@@ -20,7 +20,6 @@ class Api {
       'https://obliging-tetra-equally.ngrok-free.app/api';
   static const String user =
       'https://obliging-tetra-equally.ngrok-free.app/api/users';
-
   //authen-firebase
   static const apiKeyAuth = 'AIzaSyCjkNznq8DoDKDk6q1l5Ebn6oX3xx43rJ4';
   static const String apiAuth =
