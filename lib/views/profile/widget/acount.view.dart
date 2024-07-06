@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class AccountView extends StatefulWidget {
-  const AccountView({super.key});
-
+  AccountView({super.key, required this.profileViewModel});
+  ProfileViewModel profileViewModel;
   @override
   State<AccountView> createState() => _AccountViewState();
 }
@@ -15,7 +15,7 @@ class _AccountViewState extends State<AccountView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-        viewModelBuilder: () => ProfileViewModel(),
+        viewModelBuilder: () => widget.profileViewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
           viewModel.fetchCurrentUser();

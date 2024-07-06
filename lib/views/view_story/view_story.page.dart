@@ -3,13 +3,13 @@ import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/views/view_story/widget/chapterbottom.widget.dart';
+import 'package:app_stories/views/view_story/widget/commentbottom.widget.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../widget/loading_shimmer.dart';
-import '../../widget/search_textfield.dart';
 
 class ViewStoryPage extends StatefulWidget {
   ViewStoryPage(
@@ -29,7 +29,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
   final ScrollController _scrollController = ScrollController();
   bool _showAppBar = true;
   bool showNewStories = true;
-
+  bool isScrollControlled = true;
   @override
   void initState() {
     super.initState();
@@ -66,6 +66,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
         viewModel.currentStory = widget.story;
         viewModel.viewContext = context;
         viewModel.init();
+        viewModel.getCommentByChapter();
       },
       builder: (context, viewModel, child) {
         return BasePage(
@@ -107,6 +108,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                         InkWell(
                           onTap: () {
                             showModalBottomSheet(
+                              isScrollControlled: isScrollControlled,
                               context: context,
                               builder: (context) {
                                 return StatefulBuilder(
@@ -125,7 +127,23 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: isScrollControlled,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return CommentBottom(
+                                    setState: setState,
+                                    comicViewModel: viewModel,
+                                    story: viewModel.currentStory,
+                                    chapter: viewModel.currentChapter,
+                                  );
+                                });
+                              },
+                            );
+                          },
                           child: Image.asset(
                             'assets/ic_comment.png',
                             width: 30,

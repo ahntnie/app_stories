@@ -17,7 +17,6 @@ import 'package:velocity_x/velocity_x.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
-
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -33,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
       },
       builder: (context, viewModel, child) {
         return BasePage(
+          showLeading: false,
           title: 'Cá nhân',
           showLogout: true,
           body: Container(
@@ -73,7 +73,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           // Navigator.pop(context);
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => const AccountView()),
+                                builder: (context) => AccountView(
+                                      profileViewModel: viewModel,
+                                    )),
                           ); //
                         },
                       ),

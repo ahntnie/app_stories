@@ -14,12 +14,13 @@ class Api {
   static const String unLike = '/delete-favourite-story';
   //host hữu thành
   //'https://willing-morally-cougar.ngrok-free.app'
-
+  static const String comment = '/comment';
+  static const String commentStory = '/comments/bystory';
   //test
-  static const String localHost =
-      'https://obliging-tetra-equally.ngrok-free.app/api';
-  static const String user =
-      'https://obliging-tetra-equally.ngrok-free.app/api/users';
+  // static const String localHost =
+  //     'https://obliging-tetra-equally.ngrok-free.app/api';
+  // static const String user =
+  //     'https://obliging-tetra-equally.ngrok-free.app/api/users';
   //authen-firebase
   static const apiKeyAuth = 'AIzaSyCjkNznq8DoDKDk6q1l5Ebn6oX3xx43rJ4';
   static const String apiAuth =
