@@ -7,7 +7,7 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewStoriesItems extends StatelessWidget {
-  NewStoriesItems({super.key, required this.data, required this.onTap});
+  const NewStoriesItems({super.key, required this.data, required this.onTap});
   final Story data;
   final VoidCallback onTap;
   @override

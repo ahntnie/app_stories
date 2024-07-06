@@ -22,7 +22,7 @@ class _BottomChapterState extends State<BottomChapter> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 2,
+      height: MediaQuery.of(context).size.height * 0.8,
       decoration: const BoxDecoration(
           color: AppColor.bottomSheetColor,
           borderRadius: BorderRadius.only(
@@ -49,8 +49,9 @@ class _BottomChapterState extends State<BottomChapter> {
                   child: Text(
                     'Mới nhất',
                     style: TextStyle(
-                        color:
-                            widget.showNewStories ? Colors.red : Colors.white),
+                        color: widget.showNewStories
+                            ? AppColor.selectColor
+                            : AppColor.extraColor),
                   )),
               TextButton(
                   onPressed: () {
@@ -61,13 +62,13 @@ class _BottomChapterState extends State<BottomChapter> {
                   child: Text(
                     'Cũ nhất',
                     style: TextStyle(
-                        color:
-                            widget.showNewStories ? Colors.white : Colors.red),
+                        color: widget.showNewStories
+                            ? AppColor.extraColor
+                            : AppColor.selectColor),
                   ))
             ],
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
+          Expanded(
             child: ListView.builder(
                 itemCount: widget.story.chapters!.length,
                 itemBuilder: (context, index) {

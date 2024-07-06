@@ -141,9 +141,8 @@ class _LoginPageState extends State<LoginPage> {
                                   var user =
                                       await viewModel.loginUsingEmailPassword();
                                   if (user != null) {
-                                    
                                     AppSP.set(
-                                        AppSPKey.userinfo, viewModel.user!);
+                                        AppSPKey.userinfo, viewModel.user!.uid);
                                     // print(
                                     //     'Email user: ${AppSP.get(AppSPKey.userinfo)}');
                                     viewModel.showSuccessSnackBar(context);

@@ -3,10 +3,13 @@ import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
+import 'package:app_stories/views/stories/stories_view/bottomcomment/bottom_total_comment.widget.dart';
 import 'package:app_stories/views/stories/stories_view/chapter/chapter.widget.dart';
 import 'package:app_stories/views/stories/stories_view/comment/comment.widget.dart';
+import 'package:app_stories/views/view_story/widget/chapterbottom.widget.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:stacked/stacked.dart';
 
 class ComicDetailPage extends StatefulWidget {
@@ -20,12 +23,47 @@ class ComicDetailPage extends StatefulWidget {
 }
 
 class _ComicDetailPageState extends State<ComicDetailPage> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showAppBar = true;
+  bool showNewStories = true;
+  bool isScrollControlled = true;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      setState(() {
+        _showAppBar = false;
+      });
+    } else if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      setState(() {
+        _showAppBar = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<ComicViewModel>.reactive(
         disposeViewModel: false,
         viewModelBuilder: () => widget.viewModel,
-        onViewModelReady: (viewModel) => viewModel.init(),
+        onViewModelReady: (viewModel) {
+          viewModel.init();
+          viewModel.getCommentByStory();
+          viewModel.checkFavourite();
+        },
         builder: (context, viewModel, child) {
           return BasePage(
             showAppBar: false,
@@ -57,38 +95,10 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                                 fontWeight: AppFontWeight.bold,
                                 color: AppColor.extraColor),
                           ),
-                          InkWell(
-                            onTap: () {
-                              viewModel.postFavourite(
-                                  viewModel.currentStory.storyId);
-                            },
-                            child: Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: viewModel.isFavourite
-                                      ? AppColor.inwellColor
-                                      : AppColor.selectColor,
-                                ),
-                                child: Text(
-                                  viewModel.isFavourite
-                                      ? 'Đang theo dõi '
-                                      : 'Theo dõi',
-                                  style: TextStyle(
-                                      color: AppColor.extraColor,
-                                      fontSize: AppFontSize.sizeSmall),
-                                ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       Text(
-                        'Nhóm dịch: Tiến Thành',
+                        'Tác giả: ${widget.data.author!.name}',
                         style: TextStyle(
                             fontSize: AppFontSize.sizeSmall,
                             color: AppColor.extraColor),
@@ -105,10 +115,11 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                                 color: AppColor.extraColor),
                           ),
                           const SizedBox(width: 16),
-                          const Icon(Icons.favorite, color: Colors.red),
+                          const Icon(Icons.favorite,
+                              color: AppColor.selectColor),
                           const SizedBox(width: 4),
                           Text(
-                            '155k',
+                            '${widget.data.favouriteUser!.length}',
                             style: TextStyle(
                                 fontSize: AppFontSize.sizeSmall,
                                 color: AppColor.extraColor),
@@ -117,7 +128,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                           const Icon(Icons.comment, color: Colors.blue),
                           const SizedBox(width: 4),
                           Text(
-                            '28',
+                            '${viewModel.comments.length}',
                             style: TextStyle(
                                 fontSize: AppFontSize.sizeSmall,
                                 color: AppColor.extraColor),
@@ -135,29 +146,46 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                                 fontWeight: AppFontWeight.bold,
                                 color: AppColor.extraColor),
                           ),
-                          Text(
-                            'Tổng 2 bình luận',
-                            style: TextStyle(
-                                fontSize: AppFontSize.sizeSmall,
-                                fontWeight: AppFontWeight.bold,
-                                color: AppColor.inwellColor),
+                          InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: isScrollControlled,
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return TotalComment(
+                                      setState: setState,
+                                      story: viewModel.currentStory,
+                                      //chapter: viewModel.currentChapter,
+                                      comicViewModel: viewModel,
+                                    );
+                                  });
+                                },
+                              );
+                            },
+                            child: Text(
+                              'Tổng ${viewModel.comments.length} bình luận',
+                              style: TextStyle(
+                                  fontSize: AppFontSize.sizeSmall,
+                                  fontWeight: AppFontWeight.bold,
+                                  color: AppColor.inwellColor),
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       SizedBox(
-                        height: 120,
+                        height: 200,
                         child: ListView.builder(
                             shrinkWrap: true,
                             // physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 4,
+                            itemCount: viewModel.timeComment.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return CommentWidget(
-                                username: 'Thành',
-                                comment: 'Truyện hay!',
-                                chapter: 'Chapter 9',
-                                time: '06/06/2024 17:20',
+                                story: viewModel.currentStory,
+                                comment: viewModel.comments[index],
                               );
                             }),
                       ),
@@ -218,25 +246,61 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                     ],
                   ),
                 ),
-                Positioned(
-                    top: 20,
-                    left: 10,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.black45),
-                        child: const Icon(
-                          Icons.close,
-                          color: AppColor.extraColor,
-                          size: 40,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Positioned(
+                        top: 20,
+                        left: 10,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.black45),
+                            child: const Icon(
+                              Icons.close,
+                              color: AppColor.extraColor,
+                              size: 40,
+                            ),
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: InkWell(
+                        onTap: () {
+                          viewModel
+                              .postFavourite(viewModel.currentStory.storyId);
+                        },
+                        child: Positioned(
+                          top: 8,
+                          right: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: viewModel.isFavourite
+                                  ? AppColor.inwellColor
+                                  : AppColor.selectColor,
+                            ),
+                            child: Text(
+                              viewModel.isFavourite
+                                  ? 'Đang theo dõi '
+                                  : 'Theo dõi',
+                              style: TextStyle(
+                                  color: AppColor.extraColor,
+                                  fontSize: AppFontSize.sizeSmall),
+                            ),
+                          ),
                         ),
                       ),
-                    ))
+                    ),
+                  ],
+                ),
               ],
             ),
           );
