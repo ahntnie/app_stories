@@ -30,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
         },
         builder: (context, viewModel, child) {
           return BasePage(
+            showLeading: false,
             isLoading: viewModel.isBusy,
             drawer: DrawerSearch(
               viewModel: viewModel,

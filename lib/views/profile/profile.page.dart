@@ -1,9 +1,12 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
+import 'package:app_stories/view_model/mystories.vm.dart';
 import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/profile/widget/acount.view.dart';
 import 'package:app_stories/views/profile/widget/custom/menuitem.widget.dart';
+import 'package:app_stories/views/stories/my_stories.page.dart';
+import 'package:app_stories/views/stories/post_stories.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -97,7 +100,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       CustomMenuButton(
                         icon: Icons.add_circle,
                         text: 'Đăng truyện',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MyStoriesPage()));
+                        },
                       ),
                     ],
                   ),

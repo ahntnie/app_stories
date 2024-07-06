@@ -6,6 +6,7 @@ import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../views/notification/notification.page.dart';
 import 'loading_shimmer.dart';
 
 class BasePage extends StatefulWidget {
@@ -105,7 +106,13 @@ class _BasePageState extends State<BasePage> {
                           [
                             widget.showLogo
                                 ? IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const NotificationPage()));
+                                    },
                                     icon: const Icon(
                                       Icons.notifications_none_outlined,
                                       color: AppColor.extraColor,
