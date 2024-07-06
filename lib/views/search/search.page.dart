@@ -1,6 +1,8 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/search_textfield.dart';
+import 'package:app_stories/widget/test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,8 @@ import '../stories/widget/stories_card.dart';
 import 'widget/drawer_search.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  SearchPage({super.key, required this.title});
+  String title;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -59,18 +62,9 @@ class _SearchPageState extends State<SearchPage> {
                 ? GradientLoadingWidget(
                     showFull: true,
                   )
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...viewModel.stories.map((story) => StoryCard(
-                              data: story,
-                              onTap: () {
-                                // viewModel.currentStory = story;
-                                // viewModel.nextPostChapter();
-                              },
-                            )),
-                      ],
-                    ),
+                : CustomTabView(
+                    title: widget.title,
+                    stories: viewModel.stories,
                   ),
           );
         });
