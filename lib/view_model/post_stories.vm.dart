@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/models/category_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/models/user_model.dart';
@@ -36,6 +39,10 @@ class PostStoriesViewModel extends BaseViewModel {
 
   Future<void> submitRequest() async {
     setBusy(true);
+    print('Current userid: ${AppSP.get(AppSPKey.userinfo)}');
+    Users currentUser =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    print('User hiện tại: ${currentUser.name}');
     String? errorString = await request.uploadStory(
       coverImage!,
       chaptersImages,
@@ -43,9 +50,9 @@ class PostStoriesViewModel extends BaseViewModel {
       Story(
         title: storyNameController.text,
         author: Users(
-            id: 'lehuuthanh',
-            name: 'Lê Hữu Thành',
-            email: 'thanh@gmail.com',
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
             password: '',
             birthDate: DateTime(2003, 5, 23),
             role: 'user'),
