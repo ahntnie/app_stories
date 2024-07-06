@@ -2,17 +2,24 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
+import 'package:app_stories/views/view_story/widget/chapterbottom.widget.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../widget/loading_shimmer.dart';
 import '../../widget/search_textfield.dart';
 
 class ViewStoryPage extends StatefulWidget {
-  const ViewStoryPage({super.key});
+  ViewStoryPage(
+      {super.key,
+      required this.story,
+      required this.viewModel,
+      required this.chapter});
+  Story story;
+  Chapter chapter;
+  final ComicViewModel viewModel;
 
   @override
   State<ViewStoryPage> createState() => _ViewStoryPageState();
@@ -55,6 +62,9 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => ComicViewModel(),
       onViewModelReady: (viewModel) {
+        viewModel.currentChapter = widget.chapter;
+        viewModel.currentStory = widget.story;
+        viewModel.viewContext = context;
         viewModel.init();
       },
       builder: (context, viewModel, child) {
@@ -62,14 +72,14 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
             showAppBar: _showAppBar,
             title: viewModel.isBusy
                 ? ''
-                : 'Chapter ${viewModel.currentChapter!.chapterNumber.toString()}',
+                : 'Chapter ${viewModel.currentChapter.chapterNumber.toString()}',
             body: viewModel.isBusy
                 ? Center(child: GradientLoadingWidget())
                 : SingleChildScrollView(
                     controller: _scrollController,
                     child: Column(
                       children: [
-                        ...viewModel.currentChapter!.images
+                        ...viewModel.currentChapter.images
                             .map((image) => Image.network(image)),
                       ],
                     ),
@@ -82,7 +92,12 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            viewModel.currentChapter =
+                                viewModel.currentStory.chapters![
+                                    viewModel.currentChapter.chapterNumber - 2];
+                            viewModel.notifyListeners();
+                          },
                           child: Image.asset(
                             'assets/ic_back_chapter.png',
                             width: 20,
@@ -95,9 +110,10 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                               context: context,
                               builder: (context) {
                                 return StatefulBuilder(
-                                    builder: (context, _setState) {
-                                  return listChapterBottomSheet(context,
-                                      _setState, viewModel.currentStory);
+                                    builder: (context, setState) {
+                                  return BottomChapter(
+                                      setState: setState,
+                                      story: viewModel.currentStory);
                                 });
                               },
                             );
@@ -117,7 +133,14 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            // viewModel.currentChapter.chapterNumber + 1;
+                            // viewModel.detailChapter();
+                            viewModel.currentChapter =
+                                viewModel.currentStory.chapters![
+                                    viewModel.currentChapter.chapterNumber];
+                            viewModel.notifyListeners();
+                          },
                           child: Image.asset(
                             'assets/ic_next_chapter.png',
                             width: 20,
@@ -129,100 +152,6 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                   )
                 : null);
       },
-    );
-  }
-
-  Container listChapterBottomSheet(
-      BuildContext context, StateSetter _setState, Story story) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 2,
-      decoration: const BoxDecoration(
-          color: AppColor.bottomSheetColor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
-      child: Column(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(right: 20, left: 20, top: 30, bottom: 10),
-            child: SearchTextField(
-              seatchController: TextEditingController(),
-              onChanged: () {},
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                  onPressed: () {
-                    _setState(() {
-                      showNewStories = true;
-                    });
-                  },
-                  child: Text(
-                    'Mới nhất',
-                    style: TextStyle(
-                        color: showNewStories ? Colors.red : Colors.white),
-                  )),
-              TextButton(
-                  onPressed: () {
-                    _setState(() {
-                      showNewStories = false;
-                    });
-                  },
-                  child: Text(
-                    'Cũ nhất',
-                    style: TextStyle(
-                        color: showNewStories ? Colors.white : Colors.red),
-                  ))
-            ],
-          ),
-          SizedBox(
-            height: 290,
-            child: ListView.builder(
-                itemCount: story.chapters!.length,
-                itemBuilder: (context, index) {
-                  return chapterCard(story.chapters![index]);
-                }),
-          )
-        ],
-      ),
-    );
-  }
-
-  Container chapterCard(Chapter chapter) {
-    return Container(
-      height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-          color: AppColor.primary, borderRadius: BorderRadius.circular(10)),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                chapter.images.first,
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Chapter ${chapter.chapterNumber}',
-                style: const TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              Text(
-                chapter.title,
-                style: const TextStyle(color: Colors.white, fontSize: 15),
-              )
-            ],
-          )
-        ],
-      ),
     );
   }
 }

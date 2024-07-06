@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/custom/dialog.custom.dart';
@@ -35,9 +37,11 @@ class ProfileViewModel extends BaseViewModel {
       if (firebaseUser != null) {
         setBusy(true);
         String uid = firebaseUser.uid;
-        Response infoResponse = await apiService.getRequest('${Api.user}/$uid');
+        Response infoResponse =
+            await apiService.getRequest('${Api.hostApi}${Api.getUser}/$uid');
+        print(infoResponse.data);
+        AppSP.set(AppSPKey.currrentUser, jsonEncode(infoResponse.data));
         _currentUserData = infoResponse.data;
-
         notifyListeners();
         // });
       }
@@ -96,7 +100,7 @@ class ProfileViewModel extends BaseViewModel {
 
                             String uid = firebaseUser!.uid;
                             await apiService.patchRequestUser(
-                                '${Api.user}/$uid',
+                                '${Api.hostApi}${Api.getUser}/$uid',
                                 jsonEncode(
                                     {'username': changeNameController.text}));
                             _currentUserData!['username'] =
@@ -207,7 +211,7 @@ class ProfileViewModel extends BaseViewModel {
                           User? firebaseUser = _auth.currentUser;
                           String uid = firebaseUser!.uid;
                           await apiService.patchRequestUser(
-                              '${Api.user}/$uid',
+                              '${Api.hostApi}${Api.getUser}/$uid',
                               jsonEncode(
                                   {'password': newPasswordController.text}));
                           notifyListeners();
@@ -304,7 +308,7 @@ class ProfileViewModel extends BaseViewModel {
               // currentUserData!['birth_date'] =
               //     picked.toIso8601String().split('T').first;
               await apiService.patchRequestUser(
-                  '${Api.user}/$uid',
+                  '${Api.hostApi}${Api.getUser}/$uid',
                   jsonEncode({
                     'birth_date': picked.toIso8601String().split('T').first
                   }));
