@@ -16,6 +16,9 @@ class SignUpViewModel extends BaseViewModel {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repasswordController = TextEditingController();
+  final TextEditingController penNameController = TextEditingController();
+  final TextEditingController bioController = TextEditingController();
+  final TextEditingController previousWorksController = TextEditingController();
   bool _obscureText = true;
   bool _obscureText2 = true;
   String accountNameError = '';
@@ -86,7 +89,40 @@ class SignUpViewModel extends BaseViewModel {
             email: emailController.text,
             birthDate: DateTime.now(),
             password: passwordController.text,
-            role: 'user');
+            role: 'user',
+            bio: '',
+            penName: '',
+            previousWorks: '');
+        final apiService = ApiService();
+        await apiService.postRequestUser(
+            '${Api.hostApi}${Api.getUser}', userModel.toJson());
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+    }
+    notifyListeners();
+  }
+
+  Future<void> signupAuthor() async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      User? user = userCredential.user;
+      if (user != null) {
+        Users? userModel = Users(
+          id: user.uid,
+          name: accountNameController.text,
+          email: emailController.text,
+          birthDate: DateTime.now(),
+          password: passwordController.text,
+          role: 'author',
+          bio: bioController.text,
+          penName: penNameController.text,
+          previousWorks: previousWorksController.text,
+        );
         final apiService = ApiService();
         await apiService.postRequestUser(
             '${Api.hostApi}${Api.getUser}', userModel.toJson());

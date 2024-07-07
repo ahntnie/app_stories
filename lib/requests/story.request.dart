@@ -6,30 +6,57 @@ import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:dio/dio.dart';
 
+import '../app/app_sp.dart';
+import '../app/app_sp_key.dart';
+import '../models/user_model.dart';
+
 class StoryRequest {
   Dio dio = Dio();
 
   Future<List<Story>> searchStory(String search,
       [List<int>? categoriesId]) async {
     List<Story> stories = [];
-    // print('aaa:$categoriesId');
-    // print('search: (${{
-    //   "is_active": 1,
-    //   "search_string": search,
-    //   "categories_id": categoriesId ?? [],
-    // }})');
     final response = await ApiService()
         .getRequest('${Api.hostApi}${Api.getMyStories}', queryParams: {
       "is_active": 1,
       "search_string": search,
       "categories_id": categoriesId.toString(),
     });
-    // print('Body truyện: ${response.data}');
-    // print('Code: ${response.statusCode}');
     final responseData = jsonDecode(jsonEncode(response.data));
     List<dynamic> lstStory = responseData['data'];
     stories = lstStory.map((e) => Story.fromJson(e)).toList();
-    //print('Số lượng truyện: ${stories.length}');
+    return stories;
+  }
+
+  Future<List<Story>> getStoryIsComplete(String search,
+      [List<int>? categoriesId]) async {
+    List<Story> stories = [];
+    final response = await ApiService()
+        .getRequest('${Api.hostApi}${Api.getMyStories}', queryParams: {
+      "is_active": 1,
+      "search_string": search,
+      "categories_id": categoriesId.toString(),
+      "is_complete": 1,
+    });
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
+    return stories;
+  }
+
+  Future<List<Story>> getStoryIsNotComplete(String search,
+      [List<int>? categoriesId]) async {
+    List<Story> stories = [];
+    final response = await ApiService()
+        .getRequest('${Api.hostApi}${Api.getMyStories}', queryParams: {
+      "is_active": 1,
+      "search_string": search,
+      "categories_id": categoriesId.toString(),
+      "is_complete": 0,
+    });
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
     return stories;
   }
 
@@ -48,16 +75,13 @@ class StoryRequest {
         String chapterFileName = 'img_chapter_${count++}';
         chapterImages.add(await MultipartFile.fromFile(chapter.path,
             filename: chapterFileName));
-        //print(chapterImages[count - 1].filename);
       }
-      //print('List categoriesId: $selectedCategoryIds');
       List<MultipartFile> copyrightDocumentsImages = [];
       for (File document in copyrightDocuments) {
         int count = 0;
         String chapterFileName = 'img_document_${count++}';
         copyrightDocumentsImages.add(await MultipartFile.fromFile(document.path,
             filename: chapterFileName));
-        // print(copyrightDocumentsImages[count - 1].filename);
       }
       final formData = FormData.fromMap({
         'title': story.title,
@@ -74,8 +98,6 @@ class StoryRequest {
         '${Api.hostApi}${Api.postStory}',
         formData,
       );
-      // final responseData = jsonDecode(response.data.toString());
-      // print('Body đăng truyện: $response');
     } catch (e) {
       errorString = e.toString();
     }
@@ -84,14 +106,15 @@ class StoryRequest {
 
   Future<List<Story>> getMyStories() async {
     List<Story> stories = [];
-    final response =
-        await ApiService().getRequest('${Api.hostApi}${Api.getMyStories}');
-    // print('Body truyện: ${response.data}');
-    // print('Code: ${response.statusCode}');
+    Users currentUser =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    final response = await ApiService()
+        .getRequest('${Api.hostApi}${Api.getMyStories}', queryParams: {
+      "user_id": currentUser.id,
+    });
     final responseData = jsonDecode(jsonEncode(response.data));
     List<dynamic> lstStory = responseData['data'];
     stories = lstStory.map((e) => Story.fromJson(e)).toList();
-    // print('Số lượng truyện: ${stories.length}');
     return stories;
   }
 
@@ -100,26 +123,36 @@ class StoryRequest {
     final response = await ApiService().getRequest(
         '${Api.hostApi}${Api.getMyStories}',
         queryParams: {"is_active": 0});
-    //  print('Body truyện: ${response.data}');
-    // print('Code: ${response.statusCode}');
     final responseData = jsonDecode(jsonEncode(response.data));
     List<dynamic> lstStory = responseData['data'];
     stories = lstStory.map((e) => Story.fromJson(e)).toList();
-    // print('Số lượng truyện: ${stories.length}');
     return stories;
   }
 
-  Future<List<Story>> getStoriesIsActive() async {
+  Future<List<Story>> getStoriesIsActive(int pageIndex) async {
     List<Story> stories = [];
     final response = await ApiService().getRequest(
-        '${Api.hostApi}${Api.getMyStories}',
-        queryParams: {"is_active": 1});
-    //  print('Body truyện: ${response.data}');
-    // print('Code: ${response.statusCode}');
+      '${Api.hostApi}${Api.getMyStories}',
+      queryParams: {
+        "is_active": 1,
+        "page": pageIndex,
+      },
+    );
     final responseData = jsonDecode(jsonEncode(response.data));
     List<dynamic> lstStory = responseData['data'];
     stories = lstStory.map((e) => Story.fromJson(e)).toList();
-    //  print('Số lượng truyện: ${stories.length}');
+    return stories;
+  }
+
+  Future<List<Story>> getStoriesNew() async {
+    List<Story> stories = [];
+    final response = await ApiService().getRequest(
+      '${Api.hostApi}${Api.getMyStories}',
+      queryParams: {"is_active": 1, "is_story_new": 1},
+    );
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
     return stories;
   }
 
@@ -127,8 +160,6 @@ class StoryRequest {
     Story story;
     final response = await ApiService()
         .getRequest('${Api.hostApi}${Api.getMyStories}/$storyId');
-    // print('Body truyện: ${response.data}');
-    // print('Code: ${response.statusCode}');
     final responseData = jsonDecode(jsonEncode(response.data));
     dynamic storyJson = responseData['data'];
     story = Story.fromJson(storyJson);
@@ -140,7 +171,6 @@ class StoryRequest {
     try {
       final response = await ApiService()
           .patchRequest('${Api.hostApi}${Api.approveStory}/$storyId', null);
-      // print('Body phê duyệt truyện: ${response.data}');
       if (response.statusCode == 200) {
         errorString = null;
       } else {
@@ -150,5 +180,16 @@ class StoryRequest {
       errorString = e.toString();
     }
     return errorString;
+  }
+
+  Future<void> addView(int storyId) async {
+    Users currentUser =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    final formData = FormData.fromMap({
+      "user_id": currentUser.id,
+    });
+    final response = await ApiService()
+        .postRequest('${Api.hostApi}${Api.addViewStory}/$storyId', formData);
+    final responseData = response.data;
   }
 }

@@ -1,43 +1,58 @@
+import 'package:app_stories/models/chapter_model.dart';
+import 'package:app_stories/models/story_model.dart';
+
 class Notification {
-  int notificationId;
-  int userId;
+  int id;
+  String userId;
   String title;
-  String descript;
-  String? detail;
-  String? picture;
+  String message;
+  String type;
+  bool isRead;
   DateTime createdAt;
+  DateTime updatedAt;
+  Story story;
+  Chapter chapter;
 
   Notification({
-    required this.notificationId,
+    required this.id,
     required this.userId,
     required this.title,
-    required this.descript,
-    this.detail,
-    this.picture,
+    required this.message,
+    required this.type,
+    required this.isRead,
     required this.createdAt,
+    required this.updatedAt,
+    required this.story,
+    required this.chapter,
   });
 
+  // Phương thức từ JSON để chuyển đổi JSON thành một đối tượng Notification
   factory Notification.fromJson(Map<String, dynamic> json) {
     return Notification(
-      notificationId: json['notification_id'],
+      id: json['id'],
       userId: json['user_id'],
       title: json['title'],
-      descript: json['descript'],
-      detail: json['detail'],
-      picture: json['picture'],
+      message: json['message'],
+      type: json['type'],
+      isRead: json['is_read'] == 1, // Chuyển đổi từ int sang bool
       createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
+      story: Story.fromJson(json["story"]),
+      chapter: Chapter.fromJson(json["chapter"]),
     );
   }
 
+  // Phương thức để chuyển đổi đối tượng Notification thành JSON
   Map<String, dynamic> toJson() {
     return {
-      'notification_id': notificationId,
+      'id': id,
       'user_id': userId,
       'title': title,
-      'descript': descript,
-      'detail': detail,
-      'picture': picture,
+      'message': message,
+      'type': type,
+      'is_read': isRead ? 1 : 0, // Chuyển đổi từ bool sang int
       'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
     };
   }
 }

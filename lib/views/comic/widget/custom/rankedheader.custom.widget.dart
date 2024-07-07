@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class RankedHeader extends StatelessWidget {
-  const RankedHeader({super.key});
+  final ComicViewModel viewModel;
+  const RankedHeader({super.key, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-        viewModelBuilder: () => ComicViewModel(),
+        disposeViewModel: false,
+        viewModelBuilder: () => viewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
-          viewModel.init();
         },
         builder: (context, viewModel, child) {
           return DefaultTabController(
@@ -32,47 +33,54 @@ class RankedHeader extends StatelessWidget {
                   height: MediaQuery.of(context).size.width / 1,
                   child: TabBarView(
                     children: [
-                      Column(
-                        children: List.generate(
-                            viewModel.storiesIsActive.length, (index) {
-                          return RankedItems(
-                            tabName: 'Top ngày',
-                            data: viewModel.storiesIsActive[index],
-                            onTap: () {
-                              viewModel.currentStory =
-                                  viewModel.storiesIsActive[index];
-                              viewModel.nextDetailStory();
-                            },
-                          );
-                        }),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                              viewModel.storiesIsActive.length, (index) {
+                            return RankedItems(
+                              tabName: 'Top ngày',
+                              data: viewModel.storiesIsActive[index],
+                              onTap: () {
+                                viewModel.currentStory =
+                                    viewModel.storiesIsActive[index];
+                                viewModel.nextDetailStory();
+                              },
+                            );
+                          }),
+                        ),
                       ),
-                      Column(
-                        children: List.generate(
-                            viewModel.storiesIsActive.length, (index) {
-                          return RankedItems(
-                            tabName: 'Top tuần',
-                            data: viewModel.storiesIsActive[index],
-                            onTap: () {
-                              viewModel.currentStory =
-                                  viewModel.storiesIsActive[index];
-                              viewModel.nextDetailStory();
-                            },
-                          );
-                        }),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                              viewModel.storiesIsActive.length, (index) {
+                            return RankedItems(
+                              tabName: 'Top tuần',
+                              data: viewModel.storiesIsActive[index],
+                              onTap: () {
+                                viewModel.currentStory =
+                                    viewModel.storiesIsActive[index];
+                                viewModel.viewContext = context;
+                                viewModel.nextDetailStory();
+                              },
+                            );
+                          }),
+                        ),
                       ),
-                      Column(
-                        children: List.generate(
-                            viewModel.storiesIsActive.length, (index) {
-                          return RankedItems(
-                            tabName: 'Top tháng',
-                            data: viewModel.storiesIsActive[index],
-                            onTap: () {
-                              viewModel.currentStory =
-                                  viewModel.storiesIsActive[index];
-                              viewModel.nextDetailStory();
-                            },
-                          );
-                        }),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                              viewModel.storiesIsActive.length, (index) {
+                            return RankedItems(
+                              tabName: 'Top tháng',
+                              data: viewModel.storiesIsActive[index],
+                              onTap: () {
+                                viewModel.currentStory =
+                                    viewModel.storiesIsActive[index];
+                                viewModel.nextDetailStory();
+                              },
+                            );
+                          }),
+                        ),
                       ),
                     ],
                   ),
@@ -82,15 +90,17 @@ class RankedHeader extends StatelessWidget {
                 ),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Xem thêm >'),
+                    onPressed: () async {
+                      await viewModel.getStoryActive(true);
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
                     ),
+                    child: const Text('Xem thêm >'),
                   ),
                 ),
               ],

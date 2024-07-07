@@ -30,67 +30,65 @@ class _CommentCardState extends State<CommentCard> {
         decoration: BoxDecoration(
             color: AppColor.inwellColor,
             borderRadius: BorderRadius.circular(10)),
-        child: Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(
-                          Img.imgAVT // Thay thế bằng URL ảnh avatar thực tế
-                          ),
-                      radius: 20,
-                    ),
-                  ),
-                  Text(
-                    widget.comment.username,
-                    style: TextStyle(
-                      color: AppColor.extraColor,
-                      fontSize: AppFontSize.sizeMedium,
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: Text(
-                  widget.comment.content,
-                  style: TextStyle(
-                    color: AppColor.extraColor,
-                    fontSize: AppFontSize.sizeSmall,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(
+                        Img.imgAVT // Thay thế bằng URL ảnh avatar thực tế
+                        ),
+                    radius: 20,
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  'Chapter ${widget.comment.chapterNumber}',
+                Text(
+                  widget.comment.username,
                   style: TextStyle(
                     color: AppColor.extraColor,
-                    fontSize: AppFontSize.sizeSmall,
-                    fontWeight: FontWeight.w300,
+                    fontSize: AppFontSize.sizeMedium,
                   ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Text(
+                widget.comment.content,
+                style: TextStyle(
+                  color: AppColor.extraColor,
+                  fontSize: AppFontSize.sizeSmall,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  formatDateTime(widget.comment.createdAt.toIso8601String()),
-                  style: TextStyle(
-                    color: AppColor.extraColor,
-                    fontSize: AppFontSize.sizeSmall,
-                    fontWeight: FontWeight.w300,
-                  ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Chapter ${widget.comment.chapterNumber}',
+                style: TextStyle(
+                  color: AppColor.extraColor,
+                  fontSize: AppFontSize.sizeSmall,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              )
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                formatDateTime(widget.comment.createdAt.toIso8601String()),
+                style: TextStyle(
+                  color: AppColor.extraColor,
+                  fontSize: AppFontSize.sizeSmall,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            )
+          ],
         ));
   }
 }

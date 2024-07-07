@@ -139,36 +139,6 @@ class _PostStoriesPageState extends State<PostStoriesPage> {
                         )
                       ],
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Text(
-                          'Tên tác giả: ',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: TextField(
-                            cursorColor: Colors.white,
-                            controller: viewModel.authorNameController,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                            textAlignVertical: TextAlignVertical.bottom,
-                            decoration: const InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(
                       height: 20,
                     ),

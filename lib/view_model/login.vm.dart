@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_stories/app/app_sp.dart';
 import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/api.dart';
@@ -10,6 +12,7 @@ import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:app_stories/views/authentication/signup.page.dart';
 import 'package:app_stories/views/home/home.page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -56,17 +59,31 @@ class LoginViewModel extends BaseViewModel {
       final response =
           await apiService.getRequest('${Api.hostApi}${Api.getUser}/$uid');
       if (response.statusCode == 200) {
+        Users? userModel = Users(
+            id: user.uid,
+            name: user.displayName.toString(),
+            email: user.email.toString(),
+            birthDate: DateTime.now(),
+            password: 'passwordGoogle',
+            role: 'user',
+            bio: '',
+            penName: '',
+            previousWorks: '');
+        AppSP.set(AppSPKey.currrentUser, userModel.toJson().toString());
         return user;
       } else if (response.statusCode == 404) {
         // Tài khoản không tồn tại, tạo mới tài khoản trong MySQL
         Users? userModel = Users(
-          id: user.uid,
-          name: user.displayName.toString(),
-          email: user.email.toString(),
-          birthDate: DateTime.now(),
-          password: 'passwordGoogle',
-          role: 'user',
-        );
+            id: user.uid,
+            name: user.displayName.toString(),
+            email: user.email.toString(),
+            birthDate: DateTime.now(),
+            password: 'passwordGoogle',
+            role: 'user',
+            bio: '',
+            penName: '',
+            previousWorks: '');
+        AppSP.set(AppSPKey.currrentUser, userModel.toJson().toString());
         await apiService.postRequestUser(
             '${Api.hostApi}${Api.getUser}', userModel.toJson());
         return user;
@@ -82,6 +99,8 @@ class LoginViewModel extends BaseViewModel {
   Future<void> signOut() async {
     await auth.signOut();
     await _googleSignIn.signOut();
+    AppSP.set(AppSPKey.currrentUser, '');
+    AppSP.set(AppSPKey.userinfo, '');
   }
 
   Future<User?> loginUsingEmailPassword() async {
@@ -89,6 +108,9 @@ class LoginViewModel extends BaseViewModel {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
       user = userCredential.user;
+      Response infoResponse = await ApiService()
+          .getRequest('${Api.hostApi}${Api.getUser}/${user!.uid}');
+      AppSP.set(AppSPKey.currrentUser, jsonEncode(infoResponse.data));
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
         print("Không tìm thấy user");

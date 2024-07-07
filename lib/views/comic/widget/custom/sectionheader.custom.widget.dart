@@ -3,8 +3,9 @@ import 'package:app_stories/styles/app_font.dart';
 import 'package:flutter/material.dart';
 
 class SectionHeader extends StatelessWidget {
-  SectionHeader({super.key, required this.title});
+  SectionHeader({super.key, required this.title, required this.onPressed});
   String title;
+  VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,7 +21,7 @@ class SectionHeader extends StatelessWidget {
                 color: AppColor.extraColor),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: onPressed,
             child: Text('Xem thêm',
                 style: TextStyle(
                     color: AppColor.inwellColor,

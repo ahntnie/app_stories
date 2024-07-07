@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/models/category_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/models/user_model.dart';
@@ -36,6 +39,8 @@ class PostStoriesViewModel extends BaseViewModel {
 
   Future<void> submitRequest() async {
     setBusy(true);
+    Users currentUser =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
     String? errorString = await request.uploadStory(
       coverImage!,
       chaptersImages,
@@ -43,12 +48,15 @@ class PostStoriesViewModel extends BaseViewModel {
       Story(
         title: storyNameController.text,
         author: Users(
-            id: 'lehuuthanh',
-            name: 'Lê Hữu Thành',
-            email: 'thanh@gmail.com',
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
             password: '',
             birthDate: DateTime(2003, 5, 23),
-            role: 'user'),
+            role: currentUser.role,
+            bio: currentUser.role,
+            penName: currentUser.penName,
+            previousWorks: currentUser.previousWorks),
         summary: summaryController.text,
       ),
       selectedCategoryIds,
@@ -91,7 +99,6 @@ class PostStoriesViewModel extends BaseViewModel {
         .map((id) =>
             categories.firstWhere((category) => category.categoryId == id).name)
         .join(', ');
-    print('Thể loại: ${genreController.text}');
     notifyListeners();
   }
 
@@ -100,7 +107,6 @@ class PostStoriesViewModel extends BaseViewModel {
     if (pickedFiles.isNotEmpty) {
       copyrightDocumentsImages =
           pickedFiles.map((pickedFile) => File(pickedFile.path)).toList();
-      print('Số lượng hình của giấy tờ: ${copyrightDocumentsImages.length}');
       notifyListeners();
     } else {
       print('No image selected.');
@@ -112,7 +118,6 @@ class PostStoriesViewModel extends BaseViewModel {
     if (pickedFiles.isNotEmpty) {
       chaptersImages =
           pickedFiles.map((pickedFile) => File(pickedFile.path)).toList();
-      print('Số lượng hình của chap: ${chaptersImages.length}');
       notifyListeners();
     } else {
       print('No image selected.');

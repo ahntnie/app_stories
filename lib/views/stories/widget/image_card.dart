@@ -48,13 +48,13 @@ class ImageCard extends StatelessWidget {
                     } else {
                       return SizedBox(
                         width: MediaQuery.of(context).size.width / 4,
-                        child: Center(
+                        child: const Center(
                           child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
+                              // value: loadingProgress.expectedTotalBytes != null
+                              //     ? loadingProgress.cumulativeBytesLoaded /
+                              //         loadingProgress.expectedTotalBytes!
+                              //     : null,
+                              ),
                         ),
                       );
                     }

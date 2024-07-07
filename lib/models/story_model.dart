@@ -15,6 +15,7 @@ class Story {
   List<Category>? categories;
   Users? author;
   List<Users>? favouriteUser;
+  int? totalView;
   Story({
     this.storyId,
     this.title,
@@ -27,6 +28,7 @@ class Story {
     this.categories,
     this.author,
     this.favouriteUser,
+    this.totalView,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -36,17 +38,24 @@ class Story {
       summary: json['summary'],
       chapterCount: json['chapters_count'],
       active: json['active'],
-      chapters:
-          List<Chapter>.from(json['chapters'].map((x) => Chapter.fromJson(x))),
+      chapters: json['chapters'] == null
+          ? []
+          : List<Chapter>.from(
+              json['chapters'].map((x) => Chapter.fromJson(x))),
       licenseImage: List<String>.from(
           json['license_image'].map((x) => "${Api.hostImage}$x")),
       coverImage: List<String>.from(
           json['cover_image'].map((x) => "${Api.hostImage}$x")),
-      categories: List<Category>.from(
-          json['categories'].map((x) => Category.fromJson(x))),
+      categories: json['categories'] != null
+          ? List<Category>.from(
+              json['categories'].map((x) => Category.fromJson(x)))
+          : [],
       author: Users.fromJson(json['author']),
-      favouriteUser: List<Users>.from(
-          json['favourited_users'].map((x) => Users.fromJson(x))),
+      favouriteUser: json['favourited_users'] == null
+          ? []
+          : List<Users>.from(
+              json['favourited_users'].map((x) => Users.fromJson(x))),
+      totalView: json["total_view"],
     );
   }
 
@@ -62,7 +71,7 @@ class Story {
       'cover_image': List<dynamic>.from(coverImage!.map((x) => x)),
       'categories': List<dynamic>.from(categories!.map((x) => x)),
       'favourited_users': List<dynamic>.from(favouriteUser!.map((x) => x)),
-      'author':author!.toJson(),
+      'author': author!.toJson(),
     };
   }
 }

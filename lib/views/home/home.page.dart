@@ -1,11 +1,14 @@
+import 'package:app_stories/view_model/comic.vm.dart';
+import 'package:app_stories/view_model/profile.vm.dart';
+import 'package:app_stories/view_model/search_stories.vm.dart';
 import 'package:app_stories/views/comic/comic.page.dart';
 import 'package:app_stories/views/profile/profile.page.dart';
 import 'package:app_stories/views/search/search.page.dart';
-import 'package:app_stories/widget/base_page.dart';
+import 'package:app_stories/widget/nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-import '../../widget/loading_shimmer.dart';
-import '../../widget/nav_bar.dart';
+import '../../view_model/home.vm.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,30 +18,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    const ComicPage(),
-    const SearchPage(),
-    const ProfilePage(),
-  ];
-  Future<void> _onTabSelected(int index) async {
-    setState(() {
-      _currentIndex = index;
-    });
+  late HomeViewModel homeViewModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    homeViewModel = HomeViewModel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          _pages[_currentIndex],
-        ],
-      ),
-      bottomNavigationBar: HomeNavigationBar(
-        currentIndex: _currentIndex,
-        onTabSelected: _onTabSelected,
+    return ViewModelBuilder<HomeViewModel>.reactive(
+      viewModelBuilder: () => homeViewModel,
+      builder: (context, viewModel, child) => Scaffold(
+        body: IndexedStack(
+          index: viewModel.currentIndex,
+          children: viewModel.getPages(),
+        ),
+        bottomNavigationBar: HomeNavigationBar(
+          currentIndex: viewModel.currentIndex,
+          onTabSelected: (index) => viewModel.setIndex(index),
+        ),
       ),
     );
   }

@@ -30,7 +30,6 @@ class ChapterRequest {
         '${Api.hostApi}${Api.postChapters}',
         formData,
       );
-      print('Body thêm chapter: ${response.data}');
     } catch (e) {
       errorString = e.toString();
     }

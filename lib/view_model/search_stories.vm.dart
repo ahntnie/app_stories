@@ -9,17 +9,36 @@ class SearchSotriesViewModel extends BaseViewModel {
   late BuildContext viewContext;
   TextEditingController searchController = TextEditingController();
   List<Story> stories = [];
+  List<Story> storiesIsComplete = [];
+  List<Story> storiesIsNotComplete = [];
   StoryRequest request = StoryRequest();
   CategoryRequest categoryRequest = CategoryRequest();
   bool categoryFilter = true;
   List<Category> categories = [];
   List<bool> selectedCategories = [];
+  List<int> categoriesId = [];
+  Category? currentCategory;
   init() async {
     searchController.text = '';
     setBusy(true);
     await getCategories();
-    await searchStories();
-    setBusy(false);
+    if (categoriesId.isEmpty) {
+      await searchStories();
+      await getStoryIsComplete();
+      await getStoryIsNotComplete();
+      setBusy(false);
+    }
+  }
+
+  getStoryIsComplete() async {
+    storiesIsComplete = await request.getStoryIsComplete(searchController.text);
+    notifyListeners();
+  }
+
+  getStoryIsNotComplete() async {
+    storiesIsNotComplete =
+        await request.getStoryIsNotComplete(searchController.text);
+    notifyListeners();
   }
 
   Future<void> getCategories() async {
@@ -43,16 +62,16 @@ class SearchSotriesViewModel extends BaseViewModel {
   Future<void> searchStoriesByFilter() async {
     setBusy(true);
     int index = 0;
-    List<int> categoriesId = [];
+    print('Vào lấy stories');
+    categoriesId = [];
     for (var selected in selectedCategories) {
       if (selected) {
         categoriesId.add(categories[index].categoryId!);
       }
       index++;
     }
-
-    print(categoriesId);
     stories = await request.searchStory(searchController.text, categoriesId);
+    print('Vào lấy xong stories');
     setBusy(false);
     notifyListeners();
   }
@@ -65,5 +84,15 @@ class SearchSotriesViewModel extends BaseViewModel {
   changeSortFilter() {
     categoryFilter = false;
     notifyListeners();
+  }
+
+  Future<void> checkAndSearchStoriesByCategory(int? selectedCategoryId) async {
+    print('Đúng');
+    categoriesId = [selectedCategoryId!];
+    currentCategory = categories
+        .firstWhere((category) => category.categoryId == selectedCategoryId);
+    int index = categories.indexOf(currentCategory!);
+    selectedCategories[index] = true;
+    await searchStoriesByFilter();
   }
 }

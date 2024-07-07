@@ -24,16 +24,7 @@ class PostChapViewModel extends BaseViewModel {
   StoryRequest storyRequest = StoryRequest();
   TextEditingController titleChapterController = TextEditingController();
   
-  // getListImageChapter(int chapter_index) {
-  //   imagesChapter = currentStory.chapters![chapter_index].images
-  //       .map((image) => '${Api.hostImage}$image')
-  //       .toList();
-  //   notifyListeners();
-  //   print(imagesChapter);
-  // }
-
   changeShowChapter() {
-    print('Nhấn chapter');
     showChapters = !showChapters;
     notifyListeners();
   }
@@ -48,7 +39,6 @@ class PostChapViewModel extends BaseViewModel {
     if (pickedFiles.isNotEmpty) {
       newChapterImages =
           pickedFiles.map((pickedFile) => File(pickedFile.path)).toList();
-      print('Số lượng hình chap mới: ${newChapterImages.length}');
       notifyListeners();
     } else {
       print('No image selected.');

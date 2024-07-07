@@ -12,8 +12,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../view_model/home.vm.dart';
+
 class ComicPage extends StatefulWidget {
-  const ComicPage({super.key});
+  final HomeViewModel homeViewModel;
+  final ComicViewModel viewModel;
+  const ComicPage(
+      {super.key, required this.homeViewModel, required this.viewModel});
 
   @override
   State<ComicPage> createState() => _ComicPageState();
@@ -23,12 +28,14 @@ class _ComicPageState extends State<ComicPage> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-        viewModelBuilder: () => ComicViewModel(),
-        onViewModelReady: (viewModel) {
+        disposeViewModel: false,
+        viewModelBuilder: () => widget.viewModel,
+        onViewModelReady: (viewModel) async {
           viewModel.viewContext = context;
-          viewModel.init();
+          await viewModel.init();
         },
         builder: (context, viewModel, child) {
+          viewModel.viewContext = context;
           return BasePage(
               isLoading: viewModel.isBusy,
               showLogo: true,
@@ -38,37 +45,48 @@ class _ComicPageState extends State<ComicPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SectionHeader(title: 'Truyện mới'),
+                    SectionHeader(
+                      title: 'Truyện mới',
+                      onPressed: () {
+                        widget.homeViewModel.setIndex(1);
+                      },
+                    ),
                     SizedBox(
-                      height: 200,
+                      height: 220,
                       child: ListView.builder(
                           shrinkWrap: true,
-                          //physics: const NeverScrollableScrollPhysics(),
-                          itemCount: viewModel.storiesIsActive.length,
+                          itemCount: viewModel.storiesNew.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return NewStoriesItems(
-                              data: viewModel.storiesIsActive[index],
+                              data: viewModel.storiesNew[index],
                               onTap: () {
                                 viewModel.currentStory =
-                                    viewModel.storiesIsActive[index];
+                                    viewModel.storiesNew[index];
+                                viewModel.viewContext = context;
                                 viewModel.nextDetailStory();
-                                // print('nhan');
                               },
                             );
                           }),
                     ),
-                    SectionHeader(title: 'Phân loại truyện'),
-                    CategoriesItems(categories: const [
-                      'Tất cả',
-                      'Ngôn tình',
-                      'Học đường',
-                      'Cổ đại',
-                      'Hành động',
-                      'Đam mỹ',
-                    ]),
-                    SectionHeader(title: 'BXH hot'),
-                    const RankedHeader(),
+                    SectionHeader(
+                      title: 'Phân loại truyện',
+                      onPressed: () {
+                        widget.homeViewModel.setIndex(1);
+                      },
+                    ),
+                    CategoriesItems(
+                        homeViewModel: widget.homeViewModel,
+                        categories: viewModel.categories.take(6).toList()),
+                    SectionHeader(
+                      title: 'BXH hot',
+                      onPressed: () {
+                        widget.homeViewModel.setIndex(1);
+                      },
+                    ),
+                    RankedHeader(
+                      viewModel: viewModel,
+                    ),
                   ],
                 ),
               ));
