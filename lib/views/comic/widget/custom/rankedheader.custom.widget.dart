@@ -59,6 +59,7 @@ class RankedHeader extends StatelessWidget {
                               onTap: () {
                                 viewModel.currentStory =
                                     viewModel.storiesIsActive[index];
+                                viewModel.viewContext = context;
                                 viewModel.nextDetailStory();
                               },
                             );
