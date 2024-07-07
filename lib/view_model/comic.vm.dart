@@ -5,15 +5,18 @@ import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/models/comment_model.dart';
 import 'package:app_stories/models/story_model.dart';
+import 'package:app_stories/requests/category.request.dart';
+import 'package:app_stories/requests/notification.request.dart';
 import 'package:app_stories/requests/story.request.dart';
 import 'package:app_stories/services/api_service.dart';
+import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/stories/stories_view/stories.page.dart';
 import 'package:app_stories/views/view_story/view_story.page.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../models/category_model.dart';
 import '../models/chapter_model.dart';
 
 class ComicViewModel extends BaseViewModel {
@@ -22,6 +25,7 @@ class ComicViewModel extends BaseViewModel {
   late Comment commentStory;
   late Chapter currentChapter;
   List<Story> storiesIsActive = [];
+  List<Story> storiesNew = [];
   StoryRequest request = StoryRequest();
   List<Category> categories = [];
   TextEditingController titleController = TextEditingController();
@@ -37,29 +41,31 @@ class ComicViewModel extends BaseViewModel {
   bool isFavourite = false;
   final apiService = ApiService();
   List<Comment> comments = [];
-  List<Comment> timeComment = [];
+  int pageIndex = 1;
   Future<void> init() async {
     setBusy(true);
     await getStoryActive();
-    //checkFavourite();
-    // getCommentByStory();
-    // getCommentByChapter();
+    await ProfileViewModel().fetchCurrentUser();
+    categories = await CategoryRequest().getCategories();
+    await getCommentByStory();
+    await getStoryNew();
     setBusy(false);
     notifyListeners();
   }
 
-  getDetailCurrentStory() {
-    titleController.text = currentStory.title!;
-    genreController.text =
-        currentStory.categories!.map((category) => category.name).join(', ');
-    // authorNameController.text = currentStory.authorI;
-    summaryController.text = currentStory.summary!;
+  Future<void> getStoryActive([bool nextPage = false]) async {
+    if (nextPage) {
+      pageIndex++;
+      List<Story> storiesNextPage = await request.getStoriesIsActive(pageIndex);
+      storiesIsActive.addAll(storiesNextPage);
+      notifyListeners();
+    } else {
+      storiesIsActive = await request.getStoriesIsActive(pageIndex);
+    }
   }
 
-  Future<void> getStoryActive() async {
-    setBusy(true);
-    storiesIsActive = await request.getStoriesIsActive();
-    setBusy(false);
+  Future<void> getStoryNew() async {
+    storiesNew = await request.getStoriesNew();
   }
 
   Future<void> postFavourite(int? storyID) async {
@@ -77,7 +83,6 @@ class ComicViewModel extends BaseViewModel {
           '${Api.hostApi}${Api.unLike}', favoriteModel);
       isFavourite = false;
     }
-    notifyListeners();
   }
 
   Future<void> postComment(int? storyID, int? chapterID, String content) async {
@@ -112,7 +117,6 @@ class ComicViewModel extends BaseViewModel {
     List<dynamic> lstComment = responseData['data'];
     comments = lstComment.map((e) => Comment.fromJson(e)).toList();
     comments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    timeComment = comments.take(5).toList();
     notifyListeners();
   }
 
@@ -124,9 +128,6 @@ class ComicViewModel extends BaseViewModel {
     final responseData = jsonDecode(jsonEncode(infoResponse.data));
     List<dynamic> lstComment = responseData['data'];
     comments = lstComment.map((e) => Comment.fromJson(e)).toList();
-    comments.forEach((e) {
-      print(e.toJson());
-    });
     notifyListeners();
   }
 
@@ -136,7 +137,6 @@ class ComicViewModel extends BaseViewModel {
       for (var user in currentStory.favouriteUser!) {
         if (user.id == idUser) {
           isFavourite = true;
-          // print('Có like');
         }
       }
       notifyListeners();
@@ -145,8 +145,7 @@ class ComicViewModel extends BaseViewModel {
     return false;
   }
 
-  nextDetailStory() {
-    // print(currentStory.title);
+  nextDetailStory() async {
     Navigator.push(
         viewContext,
         MaterialPageRoute(
@@ -165,5 +164,9 @@ class ComicViewModel extends BaseViewModel {
                   chapter: currentChapter,
                   viewModel: this,
                 )));
+  }
+
+  addViewStory() async {
+    await storyRequest.addView(currentStory.storyId!);
   }
 }

@@ -1,26 +1,39 @@
 class Api {
   static const String hostApi =
-      'https://obliging-tetra-equally.ngrok-free.app/api';
+      'https://balanced-secure-titmouse.ngrok-free.app/api';
   static const String hostImage =
-      'https://obliging-tetra-equally.ngrok-free.app';
+      'https://balanced-secure-titmouse.ngrok-free.app';
+
+  //Story
   static const String postStory = '/stories';
   static const String getMyStories = '/stories';
-  static const String getCategories = '/categories';
-  static const String getChapters = '/chapters';
-  static const String postChapters = '/chapters';
   static const String approveStory = '/stories/approve';
-  static const String getUser = '/users';
+
+  //View Story
+  static const String addViewStory = '/story/view';
+
+  //Favourite
   static const String postLike = '/favourite-story';
   static const String unLike = '/delete-favourite-story';
-  //host hữu thành
-  //'https://willing-morally-cougar.ngrok-free.app'
+
+  //Category
+  static const String getCategories = '/categories';
+
+  //Chapter
+  static const String getChapters = '/chapters';
+  static const String postChapters = '/chapters';
+
+  //User
+  static const String getUser = '/users';
+
+  //Notification
+  static const String getNotificationByUserId = '/notifications/user';
+  static const String markAsReadNotification = '/notifications/read';
+
+  //Comment
   static const String comment = '/comment';
   static const String commentStory = '/comments/bystory';
-  //test
-  // static const String localHost =
-  //     'https://obliging-tetra-equally.ngrok-free.app/api';
-  // static const String user =
-  //     'https://obliging-tetra-equally.ngrok-free.app/api/users';
+
   //authen-firebase
   static const apiKeyAuth = 'AIzaSyCjkNznq8DoDKDk6q1l5Ebn6oX3xx43rJ4';
   static const String apiAuth =

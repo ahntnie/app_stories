@@ -4,6 +4,7 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
 import 'package:app_stories/view_model/login.vm.dart';
+import 'package:app_stories/views/authentication/widget/textfield_authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,83 +56,27 @@ class _LoginPageState extends State<LoginPage> {
                           width: MediaQuery.of(context).size.width * 0.9,
                           child: Column(
                             children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Email",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: AppFontSize.sizeMedium,
-                                      fontWeight: AppFontWeight.bold),
-                                ),
+                              CustomTextField(
+                                labelText: "Email",
+                                hintText: "abc@gmail.com",
+                                controller: viewModel.emailController,
+                                errorText: viewModel.emailError,
+                                onChanged: (value) {
+                                  viewModel.validateEmail();
+                                },
                               ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.01),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white),
-                                child: TextField(
-                                  onChanged: (_) {
-                                    viewModel.validateEmail();
-                                  },
-                                  controller: viewModel.emailController,
-                                  keyboardType: TextInputType.emailAddress,
-                                  decoration: InputDecoration(
-                                    hintText: 'abc@gmail.com',
-                                    border: const OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    errorText: viewModel.emailError.isNotEmpty
-                                        ? viewModel.emailError
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Mật khẩu",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: AppFontSize.sizeMedium,
-                                      fontWeight: AppFontWeight.bold),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.01),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white),
-                                child: TextField(
-                                  onChanged: (_) {
-                                    viewModel.validatePassword();
-                                  },
-                                  controller: viewModel.passwordController,
-                                  obscureText: viewModel.obscureText,
-                                  decoration: InputDecoration(
-                                    hintText: '***',
-                                    border: const OutlineInputBorder(
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    suffixIcon: GestureDetector(
-                                      onTap: () => viewModel.showhidePassword(),
-                                      child: Icon(
-                                        viewModel.obscureText
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    errorText: viewModel
-                                            .accountPasswordError.isNotEmpty
-                                        ? viewModel.accountPasswordError
-                                        : null,
-                                  ),
-                                ),
+                              CustomTextField(
+                                labelText: "Mật khẩu",
+                                hintText: "***",
+                                controller: viewModel.passwordController,
+                                obscureText: viewModel.obscureText,
+                                errorText: viewModel.accountPasswordError,
+                                onChanged: (value) {
+                                  viewModel.validatePassword();
+                                },
+                                onSuffixIconTap: () =>
+                                    viewModel.showhidePassword(),
+                                hasSuffixIcon: true,
                               ),
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
@@ -143,8 +88,6 @@ class _LoginPageState extends State<LoginPage> {
                                   if (user != null) {
                                     AppSP.set(
                                         AppSPKey.userinfo, viewModel.user!.uid);
-                                    // print(
-                                    //     'Email user: ${AppSP.get(AppSPKey.userinfo)}');
                                     viewModel.showSuccessSnackBar(context);
                                   } else {
                                     viewModel.validateEmail();

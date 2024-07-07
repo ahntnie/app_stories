@@ -1,25 +1,20 @@
-import 'dart:math';
-
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
-
 import 'package:app_stories/view_model/signup.vm.dart';
 
 import 'package:flutter/material.dart';
-
 import 'package:stacked/stacked.dart';
 
-import 'signup_author.page.dart';
 import 'widget/textfield_authentication.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignupAuthorPage extends StatefulWidget {
+  const SignupAuthorPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<SignupAuthorPage> createState() => _SignupAuthorPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupAuthorPageState extends State<SignupAuthorPage> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -31,9 +26,9 @@ class _SignupPageState extends State<SignupPage> {
         return SafeArea(
           child: Scaffold(
             body: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(Img.imgLogin),
+                  image: AssetImage("assets/img_login.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -42,11 +37,16 @@ class _SignupPageState extends State<SignupPage> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.1,
-                        ),
+                        padding: const EdgeInsets.only(top: 30),
+                        child: SizedBox(
+                            height: 110,
+                            width: 110,
+                            child: Image.asset('assets/ic_logo.png')),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
                         child: Text(
-                          "Đăng ký",
+                          "Đăng ký tác giả",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: AppFontSize.sizeTitle,
@@ -107,26 +107,36 @@ class _SignupPageState extends State<SignupPage> {
                                   viewModel.showhideRePassword(),
                               hasSuffixIcon: true,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SignupAuthorPage()));
-                                    },
-                                    child: Text(
-                                      'Đăng kí tài khoản tác giả',
-                                      style: TextStyle(
-                                          color: Colors.indigo.shade400,
-                                          fontSize: AppFontSize.sizeMedium,
-                                          fontWeight: AppFontWeight.bold),
-                                    )),
-                              ),
+                            CustomTextField(
+                              labelText: "Tên bút danh",
+                              hintText: "",
+                              controller: viewModel.penNameController,
+                              errorText: '',
+                              onChanged: (value) {
+                                viewModel.validateAccountName();
+                                viewModel.setName(value);
+                              },
+                            ),
+                            CustomTextField(
+                              labelText: "Mô tả ngắn gọn về bản thân",
+                              hintText: "",
+                              controller: viewModel.bioController,
+                              errorText: '',
+                              onChanged: (value) {
+                                viewModel.validateAccountName();
+                                viewModel.setName(value);
+                              },
+                            ),
+                            CustomTextField(
+                              labelText:
+                                  "Liên kết tới các tác phẩm trước đây (nếu có)",
+                              hintText: "",
+                              controller: viewModel.previousWorksController,
+                              errorText: '',
+                              onChanged: (value) {
+                                viewModel.validateAccountName();
+                                viewModel.setName(value);
+                              },
                             ),
                             ElevatedButton(
                               onPressed: () async {
@@ -138,7 +148,7 @@ class _SignupPageState extends State<SignupPage> {
                                     viewModel.accountPasswordError.isEmpty &&
                                     viewModel.repasswordError.isEmpty &&
                                     viewModel.emailError.isEmpty) {
-                                  viewModel.signup();
+                                  viewModel.signupAuthor();
                                   viewModel.showSuccessSnackBar(context);
                                 } else {
                                   viewModel.showFailedSnackBar(context);

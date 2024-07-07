@@ -32,12 +32,12 @@ class _TotalCommentState extends State<TotalComment> {
     return ViewModelBuilder.reactive(
         disposeViewModel: false,
         viewModelBuilder: () => widget.comicViewModel,
-        onViewModelReady: (viewModel) {
-          //viewModel.currentChapter = widget.chapter;
-          viewModel.currentStory = widget.story;
-          viewModel.viewContext = context;
-          viewModel.init();
-        },
+        // onViewModelReady: (viewModel) {
+        //   //viewModel.currentChapter = widget.chapter;
+        //   viewModel.currentStory = widget.story;
+        //   viewModel.viewContext = context;
+        //   viewModel.init();
+        // },
         builder: (context, viewModel, child) {
           return SingleChildScrollView(
             child: Padding(
@@ -113,12 +113,12 @@ class _TotalCommentState extends State<TotalComment> {
                                 IconButton(
                                   icon: const Icon(Icons.send,
                                       color: AppColor.extraColor),
-                                  onPressed: () {
-                                    viewModel.postCommentStory(
+                                  onPressed: () async {
+                                    await viewModel.postCommentStory(
                                         viewModel.currentStory.storyId,
                                         viewModel.commenStorytController.text);
                                     viewModel.commenStorytController.clear();
-                                    viewModel.getCommentByStory();
+                                    await viewModel.getCommentByStory();
                                   },
                                 ),
                               ],

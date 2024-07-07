@@ -39,10 +39,8 @@ class PostStoriesViewModel extends BaseViewModel {
 
   Future<void> submitRequest() async {
     setBusy(true);
-    print('Current userid: ${AppSP.get(AppSPKey.userinfo)}');
     Users currentUser =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
-    print('User hiện tại: ${currentUser.name}');
     String? errorString = await request.uploadStory(
       coverImage!,
       chaptersImages,
@@ -55,7 +53,10 @@ class PostStoriesViewModel extends BaseViewModel {
             email: currentUser.email,
             password: '',
             birthDate: DateTime(2003, 5, 23),
-            role: 'user'),
+            role: currentUser.role,
+            bio: currentUser.role,
+            penName: currentUser.penName,
+            previousWorks: currentUser.previousWorks),
         summary: summaryController.text,
       ),
       selectedCategoryIds,
@@ -98,7 +99,6 @@ class PostStoriesViewModel extends BaseViewModel {
         .map((id) =>
             categories.firstWhere((category) => category.categoryId == id).name)
         .join(', ');
-    print('Thể loại: ${genreController.text}');
     notifyListeners();
   }
 
@@ -107,7 +107,6 @@ class PostStoriesViewModel extends BaseViewModel {
     if (pickedFiles.isNotEmpty) {
       copyrightDocumentsImages =
           pickedFiles.map((pickedFile) => File(pickedFile.path)).toList();
-      print('Số lượng hình của giấy tờ: ${copyrightDocumentsImages.length}');
       notifyListeners();
     } else {
       print('No image selected.');
@@ -119,7 +118,6 @@ class PostStoriesViewModel extends BaseViewModel {
     if (pickedFiles.isNotEmpty) {
       chaptersImages =
           pickedFiles.map((pickedFile) => File(pickedFile.path)).toList();
-      print('Số lượng hình của chap: ${chaptersImages.length}');
       notifyListeners();
     } else {
       print('No image selected.');

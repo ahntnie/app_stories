@@ -34,7 +34,6 @@ class _CommentBottomState extends State<CommentBottom> {
           viewModel.currentChapter = widget.chapter;
           viewModel.currentStory = widget.story;
           viewModel.viewContext = context;
-          viewModel.init();
         },
         builder: (context, viewModel, child) {
           return SingleChildScrollView(
