@@ -18,7 +18,7 @@ class _AccountViewState extends State<AccountView> {
         viewModelBuilder: () => widget.profileViewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
-          viewModel.fetchCurrentUser();
+          // viewModel.fetchCurrentUser();
         },
         builder: (context, viewModel, child) {
           return BasePage(
@@ -32,7 +32,7 @@ class _AccountViewState extends State<AccountView> {
                         children: [
                           CustomMenuAccount(
                             text: 'Tài khoản',
-                            text1: viewModel.currentUserData!['username'] ?? '',
+                            text1: viewModel.currentUser!.name,
                             onTap: () {
                               viewModel.changeNameAccount();
                               viewModel.notifyListeners();
@@ -41,7 +41,7 @@ class _AccountViewState extends State<AccountView> {
                           CustomMenuAccount(
                             text: 'Độ tuổi',
                             text1: viewModel.isOver18(
-                                    viewModel.currentUserData!['birth_date'])
+                                    viewModel.currentUser!.birthDate.toString())
                                 ? 'Tôi đã đủ 18 tuổi trở lên'
                                 : 'Tôi chưa đủ 18 tuổi',
                             onTap: () {
@@ -50,7 +50,7 @@ class _AccountViewState extends State<AccountView> {
                           ),
                           CustomMenuAccount(
                             text: 'Email',
-                            text1: viewModel.currentUserData!['email'] ?? '',
+                            text1: viewModel.currentUser!.email,
                             onTap: () {},
                           ),
                           CustomMenuAccount(

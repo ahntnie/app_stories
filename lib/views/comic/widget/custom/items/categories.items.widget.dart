@@ -1,8 +1,13 @@
+import 'package:app_stories/models/category_model.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../view_model/home.vm.dart';
+
 class CategoriesItems extends StatelessWidget {
-  CategoriesItems({super.key, required this.categories});
-  List<String> categories;
+  HomeViewModel homeViewModel;
+  CategoriesItems(
+      {super.key, required this.categories, required this.homeViewModel});
+  List<Category> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +20,18 @@ class CategoriesItems extends StatelessWidget {
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
-        return Card(
-          color: Colors.black87,
-          child: Center(
-            child:
-                Text(categories[index], style: TextStyle(color: Colors.white)),
+        return GestureDetector(
+          onTap: () async {
+            await homeViewModel.searchSotriesViewModel
+                .checkAndSearchStoriesByCategory(categories[index].categoryId);
+            homeViewModel.setIndex(1);
+          },
+          child: Card(
+            color: Colors.black87,
+            child: Center(
+              child: Text(categories[index].name!,
+                  style: const TextStyle(color: Colors.white)),
+            ),
           ),
         );
       },

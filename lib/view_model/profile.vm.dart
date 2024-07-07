@@ -6,6 +6,7 @@ import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/custom/dialog.custom.dart';
 import 'package:app_stories/custom/snackbar.custom.dart';
+import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
@@ -28,8 +29,8 @@ class ProfileViewModel extends BaseViewModel {
   TextEditingController newRePasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController currentPasswordController = TextEditingController();
-  Map<String, dynamic>? _currentUserData;
-  Map<String, dynamic>? get currentUserData => _currentUserData;
+  Users? currentUser =
+      Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
 
   Future<void> fetchCurrentUser() async {
     try {
@@ -39,9 +40,6 @@ class ProfileViewModel extends BaseViewModel {
         String uid = firebaseUser.uid;
         Response infoResponse =
             await apiService.getRequest('${Api.hostApi}${Api.getUser}/$uid');
-        print(infoResponse.data);
-        AppSP.set(AppSPKey.currrentUser, jsonEncode(infoResponse.data));
-        _currentUserData = infoResponse.data;
         notifyListeners();
         // });
       }
@@ -96,15 +94,13 @@ class ProfileViewModel extends BaseViewModel {
                           } else if (changeNameController.text.length < 8) {
                             showFailedLenghtNameSnackBar(viewContext);
                           } else {
-                            User? firebaseUser = _auth.currentUser;
-
-                            String uid = firebaseUser!.uid;
+                            Users currentUser = Users.fromJson(
+                                jsonDecode(AppSP.get(AppSPKey.currrentUser)));
                             await apiService.patchRequestUser(
-                                '${Api.hostApi}${Api.getUser}/$uid',
+                                '${Api.hostApi}${Api.getUser}/${currentUser.id}',
                                 jsonEncode(
                                     {'username': changeNameController.text}));
-                            _currentUserData!['username'] =
-                                changeNameController.text;
+                            currentUser!.name = changeNameController.text;
                             notifyListeners();
                             // Navigator.of(context).pushReplacement(
                             //   MaterialPageRoute(
@@ -304,7 +300,7 @@ class ProfileViewModel extends BaseViewModel {
             if (firebaseUser != null) {
               String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
               String uid = firebaseUser.uid;
-              currentUserData!['birth_date'] = formattedDate;
+              currentUser!.birthDate = DateTime.parse(formattedDate);
               // currentUserData!['birth_date'] =
               //     picked.toIso8601String().split('T').first;
               await apiService.patchRequestUser(

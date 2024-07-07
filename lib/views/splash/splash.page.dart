@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../models/user_model.dart';
 import '../authentication/login.page.dart';
 
 class SplashPage extends StatefulWidget {
@@ -25,8 +26,8 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _navigateToNextScreen() async {
-    if (AppSP.get(AppSPKey.userinfo) != null) {
-      print(AppSP.get(AppSPKey.userinfo));
+    if (AppSP.get(AppSPKey.userinfo) != null &&
+        AppSP.get(AppSPKey.userinfo) != '') {
       await Future.delayed(const Duration(seconds: 2), () {
         // Tải ảnh trong 3 giây
         precacheImage(const AssetImage('assets/imgStart.png'), context);
@@ -44,8 +45,6 @@ class _SplashPageState extends State<SplashPage> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-      // }
-      // print(AppSP.get(ProfileViewModel().user!.email));
     }
   }
 

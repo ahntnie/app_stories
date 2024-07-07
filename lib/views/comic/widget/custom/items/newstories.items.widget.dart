@@ -14,7 +14,8 @@ class NewStoriesItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Padding(
+      child: Container(
+        width: 120,
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -29,8 +30,6 @@ class NewStoriesItems extends StatelessWidget {
                     fontWeight: AppFontWeight.bold,
                     fontSize: AppFontSize.sizeSmall,
                     color: AppColor.extraColor)),
-            // Text('Chapter 9 - 12h',
-            //     style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),

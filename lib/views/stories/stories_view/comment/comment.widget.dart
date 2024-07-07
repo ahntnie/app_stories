@@ -17,7 +17,7 @@ class CommentWidget extends StatefulWidget {
 
 String formatDateTime(String isoString) {
   if (isoString == null) return '';
-  DateTime dateTime = DateTime.parse(isoString);
+  DateTime dateTime = DateTime.parse(isoString).add(const Duration(hours: 7));
   return DateFormat('dd/MM/yyyy HH:mm').format(dateTime);
 }
 
@@ -59,7 +59,7 @@ class _CommentWidgetState extends State<CommentWidget> {
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxHeight: 40.0,
               ),
               child: SingleChildScrollView(

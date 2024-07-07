@@ -60,115 +60,153 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-      viewModelBuilder: () => ComicViewModel(),
-      onViewModelReady: (viewModel) {
+      viewModelBuilder: () => widget.viewModel,
+      disposeViewModel: false,
+      onViewModelReady: (viewModel) async {
         viewModel.currentChapter = widget.chapter;
         viewModel.currentStory = widget.story;
         viewModel.viewContext = context;
-        viewModel.init();
-        viewModel.getCommentByChapter();
+        await viewModel.getCommentByChapter();
       },
       builder: (context, viewModel, child) {
-        return BasePage(
-            showAppBar: _showAppBar,
-            title: viewModel.isBusy
-                ? ''
-                : 'Chapter ${viewModel.currentChapter.chapterNumber.toString()}',
-            body: viewModel.isBusy
-                ? Center(child: GradientLoadingWidget())
-                : SingleChildScrollView(
-                    controller: _scrollController,
-                    child: Column(
-                      children: [
-                        ...viewModel.currentChapter.images
-                            .map((image) => Image.network(image)),
-                      ],
+        viewModel.viewContext = context;
+        return WillPopScope(
+          onWillPop: () async {
+            viewModel.viewContext = context;
+            await viewModel.getCommentByStory();
+            return true;
+          },
+          child: BasePage(
+              onPressedLeading: () async {
+                viewModel.viewContext = context;
+                await viewModel.getCommentByStory();
+                Navigator.pop(context);
+              },
+              showAppBar: _showAppBar,
+              title: viewModel.isBusy
+                  ? ''
+                  : 'Chapter ${viewModel.currentChapter.chapterNumber.toString()}',
+              body: viewModel.isBusy
+                  ? Center(child: GradientLoadingWidget())
+                  : SingleChildScrollView(
+                      controller: _scrollController,
+                      child: Column(
+                        children: [
+                          ...viewModel.currentChapter.images
+                              .map((image) => Image.network(
+                                    image,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              2,
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.error,
+                                        color: Colors.red,
+                                      );
+                                    },
+                                  )),
+                        ],
+                      ),
                     ),
-                  ),
-            bottomNav: _showAppBar
-                ? Container(
-                    height: 70,
-                    color: AppColor.darkPrimary,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            viewModel.currentChapter =
-                                viewModel.currentStory.chapters![
-                                    viewModel.currentChapter.chapterNumber - 2];
-                            viewModel.notifyListeners();
-                          },
-                          child: Image.asset(
-                            'assets/ic_back_chapter.png',
-                            width: 20,
-                            height: 20,
+              bottomNav: _showAppBar
+                  ? Container(
+                      height: 70,
+                      color: AppColor.darkPrimary,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              viewModel.currentChapter = viewModel
+                                      .currentStory.chapters![
+                                  viewModel.currentChapter.chapterNumber - 2];
+                              viewModel.notifyListeners();
+                            },
+                            child: Image.asset(
+                              'assets/ic_back_chapter.png',
+                              width: 20,
+                              height: 20,
+                            ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                              isScrollControlled: isScrollControlled,
-                              context: context,
-                              builder: (context) {
-                                return StatefulBuilder(
-                                    builder: (context, setState) {
-                                  return BottomChapter(
+                          InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                isScrollControlled: isScrollControlled,
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return BottomChapter(
                                       setState: setState,
-                                      story: viewModel.currentStory);
-                                });
-                              },
-                            );
-                          },
-                          child: Image.asset(
-                            'assets/ic_view_chapters.png',
-                            width: 25,
-                            height: 25,
+                                      story: viewModel.currentStory,
+                                      viewModel: viewModel,
+                                    );
+                                  });
+                                },
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/ic_view_chapters.png',
+                              width: 25,
+                              height: 25,
+                            ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: isScrollControlled,
-                              builder: (context) {
-                                return StatefulBuilder(
-                                    builder: (context, setState) {
-                                  return CommentBottom(
-                                    setState: setState,
-                                    comicViewModel: viewModel,
-                                    story: viewModel.currentStory,
-                                    chapter: viewModel.currentChapter,
-                                  );
-                                });
-                              },
-                            );
-                          },
-                          child: Image.asset(
-                            'assets/ic_comment.png',
-                            width: 30,
-                            height: 30,
+                          InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: isScrollControlled,
+                                builder: (context) {
+                                  return StatefulBuilder(
+                                      builder: (context, setState) {
+                                    return CommentBottom(
+                                      setState: setState,
+                                      comicViewModel: viewModel,
+                                      story: viewModel.currentStory,
+                                      chapter: viewModel.currentChapter,
+                                    );
+                                  });
+                                },
+                              );
+                            },
+                            child: Image.asset(
+                              'assets/ic_comment.png',
+                              width: 30,
+                              height: 30,
+                            ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            // viewModel.currentChapter.chapterNumber + 1;
-                            // viewModel.detailChapter();
-                            viewModel.currentChapter =
-                                viewModel.currentStory.chapters![
-                                    viewModel.currentChapter.chapterNumber];
-                            viewModel.notifyListeners();
-                          },
-                          child: Image.asset(
-                            'assets/ic_next_chapter.png',
-                            width: 20,
-                            height: 20,
+                          InkWell(
+                            onTap: () {
+                              viewModel.currentChapter =
+                                  viewModel.currentStory.chapters![
+                                      viewModel.currentChapter.chapterNumber];
+                              viewModel.notifyListeners();
+                            },
+                            child: Image.asset(
+                              'assets/ic_next_chapter.png',
+                              width: 20,
+                              height: 20,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                : null);
+                        ],
+                      ),
+                    )
+                  : null),
+        );
       },
     );
   }

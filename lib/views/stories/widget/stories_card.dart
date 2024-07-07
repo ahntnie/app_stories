@@ -13,11 +13,8 @@ class StoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Đường dẫn: ${data.coverImage!.first}');
     return GestureDetector(
       onTap: () {
-        // viewModel.currentStory = data;
-        // viewModel.nextPostChapter();
         onTap();
       },
       child: Container(

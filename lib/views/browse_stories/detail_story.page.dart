@@ -29,7 +29,6 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
         viewModelBuilder: () => widget.viewModel,
         onViewModelReady: (viewModel) => viewModel.getDetailCurrentStory(),
         builder: (context, viewModel, child) {
-          print('${Api.hostImage}${widget.data.licenseImage![0]}');
           return BasePage(
             title: 'Phê duyệt truyện',
             body: SingleChildScrollView(

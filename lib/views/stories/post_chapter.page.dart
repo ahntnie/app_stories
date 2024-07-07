@@ -30,11 +30,8 @@ class _PostChapterPageState extends State<PostChapterPage> {
         viewModel.viewContext = context;
         viewModel.currentStory = widget.data;
         viewModel.currentChapter = widget.data.chapters!.first;
-        //viewModel.getListImageChapter(0);
       },
       builder: (context, viewModel, child) {
-        //viewModel.getStoryById();
-        print('Hình: ${viewModel.currentChapter.images[0]}');
         return BasePage(
           title: 'Đăng truyện',
           body: SingleChildScrollView(
@@ -56,6 +53,7 @@ class _PostChapterPageState extends State<PostChapterPage> {
                       ),
                       viewModel.showAddChapter
                           ? CustomButton(
+                              isLoading: viewModel.isBusy,
                               title: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
