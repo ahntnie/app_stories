@@ -67,6 +67,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
       },
       builder: (context, viewModel, child) {
         viewModel.viewContext = context;
+        print('Số lượng like: ${viewModel.currentStory.favouriteUser!.length}');
         return BasePage(
           showAppBar: false,
           isLoading: viewModel.isBusy,
@@ -121,7 +122,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                         const Icon(Icons.favorite, color: AppColor.selectColor),
                         const SizedBox(width: 4),
                         Text(
-                          '${widget.data.favouriteUser!.length}',
+                          '${viewModel.currentStory.favouriteUser!.length}',
                           style: TextStyle(
                               fontSize: AppFontSize.sizeSmall,
                               color: AppColor.extraColor),
@@ -269,8 +270,10 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                 top: 8,
                 right: 10,
                 child: InkWell(
-                  onTap: () {
-                    viewModel.postFavourite(viewModel.currentStory.storyId);
+                  onTap: () async {
+                    await viewModel.postFavourite(widget.data.storyId);
+                    await viewModel.getStoryActive();
+                    await viewModel.getStoryNew();
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

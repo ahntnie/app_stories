@@ -7,6 +7,7 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/custom/dialog.custom.dart';
 import 'package:app_stories/custom/snackbar.custom.dart';
 import 'package:app_stories/models/user_model.dart';
+import 'package:app_stories/requests/story.request.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
@@ -31,6 +32,7 @@ class ProfileViewModel extends BaseViewModel {
   TextEditingController currentPasswordController = TextEditingController();
   Users? currentUser =
       Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+  int totalStories = 0;
 
   Future<void> fetchCurrentUser() async {
     try {
@@ -48,6 +50,12 @@ class ProfileViewModel extends BaseViewModel {
       print('Error fetching current user: $e');
       notifyListeners();
     }
+  }
+
+  getTotalStories() async {
+    totalStories = await StoryRequest().getTotalStories();
+    print('Số lượng truyện: $totalStories');
+    notifyListeners();
   }
 
   Future<void> changeNameAccount() async {

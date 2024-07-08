@@ -5,6 +5,7 @@ import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/models/comment_model.dart';
 import 'package:app_stories/models/story_model.dart';
+import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/requests/category.request.dart';
 import 'package:app_stories/requests/notification.request.dart';
 import 'package:app_stories/requests/story.request.dart';
@@ -37,12 +38,15 @@ class ComicViewModel extends BaseViewModel {
   StoryRequest storyRequest = StoryRequest();
   late Map<String, dynamic> _commentModel;
   Map<String, dynamic>? get commentModel => _commentModel;
-  String idUser = AppSP.get(AppSPKey.userinfo);
+  String idUser = '';
+  Users? currentUsers;
   bool isFavourite = false;
   final apiService = ApiService();
   List<Comment> comments = [];
   int pageIndex = 1;
   Future<void> init() async {
+    currentUsers = Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    idUser = currentUsers!.id;
     setBusy(true);
     await getStoryActive();
     await ProfileViewModel().fetchCurrentUser();
@@ -78,11 +82,14 @@ class ComicViewModel extends BaseViewModel {
       await apiService.postFavourite(
           '${Api.hostApi}${Api.postLike}', favoriteModel);
       isFavourite = true;
+      currentStory.favouriteUser!.add(currentUsers!);
     } else {
       await apiService.postFavourite(
           '${Api.hostApi}${Api.unLike}', favoriteModel);
       isFavourite = false;
+      currentStory.favouriteUser!.remove(currentUsers!);
     }
+    notifyListeners();
   }
 
   Future<void> postComment(int? storyID, int? chapterID, String content) async {
@@ -132,20 +139,20 @@ class ComicViewModel extends BaseViewModel {
   }
 
   checkFavourite() {
+    isFavourite = false;
     if (currentStory.favouriteUser != null) {
-      // Kiểm tra xem currentUserId có trong danh sách favouritedUsers hay không
       for (var user in currentStory.favouriteUser!) {
         if (user.id == idUser) {
           isFavourite = true;
+          break;
         }
       }
-      notifyListeners();
     }
-
-    return false;
+    print('Giá trị của favourite: $isFavourite');
   }
 
   nextDetailStory() async {
+    checkFavourite();
     Navigator.push(
         viewContext,
         MaterialPageRoute(

@@ -16,6 +16,7 @@ class Story {
   Users? author;
   List<Users>? favouriteUser;
   int? totalView;
+  int? totalComment;
   Story({
     this.storyId,
     this.title,
@@ -29,6 +30,7 @@ class Story {
     this.author,
     this.favouriteUser,
     this.totalView,
+    this.totalComment,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class Story {
           : List<Users>.from(
               json['favourited_users'].map((x) => Users.fromJson(x))),
       totalView: json["total_view"],
+      totalComment: json["total_comment"],
     );
   }
 
