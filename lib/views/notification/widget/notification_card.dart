@@ -80,17 +80,19 @@ class NotificationCard extends StatelessWidget {
     String result = '';
 
     if (days > 0) {
-      result += '$days ngày ';
+      result = '$days ngày ';
     }
-    if (hours > 0) {
-      result += '$hours giờ ';
-    }
-    if (minutes > 0) {
-      result += '$minutes phút ';
-    }
+    if (days == 0) {
+      if (hours > 0) {
+        result += '$hours giờ ';
+      }
+      if (minutes > 0) {
+        result += '$minutes phút ';
+      }
 
-    if (result.isEmpty) {
-      result = 'Vừa mới đây';
+      if (result.isEmpty) {
+        result = 'Vừa mới đây';
+      }
     }
 
     print(result);

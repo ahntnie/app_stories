@@ -13,6 +13,14 @@ import '../models/user_model.dart';
 class StoryRequest {
   Dio dio = Dio();
 
+  Future<int> getTotalStories() async {
+    final response = await ApiService().getRequest(
+      '${Api.hostApi}${Api.getTotalStories}',
+    );
+    final responseData = jsonDecode(jsonEncode(response.data));
+    return responseData['total_stories'];
+  }
+
   Future<List<Story>> searchStory(String search,
       [List<int>? categoriesId]) async {
     List<Story> stories = [];

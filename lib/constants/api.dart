@@ -8,6 +8,7 @@ class Api {
   static const String postStory = '/stories';
   static const String getMyStories = '/stories';
   static const String approveStory = '/stories/approve';
+  static const String getTotalStories = '/total/storise';
 
   //View Story
   static const String addViewStory = '/story/view';
