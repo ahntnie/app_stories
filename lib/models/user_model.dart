@@ -3,7 +3,6 @@ class Users {
   String name;
   String email;
   DateTime birthDate;
-  String password;
   String penName;
   String bio;
   String previousWorks;
@@ -14,7 +13,6 @@ class Users {
     required this.name,
     required this.email,
     required this.birthDate,
-    required this.password,
     required this.role,
     required this.penName,
     required this.bio,
@@ -28,7 +26,6 @@ class Users {
       name: data['username'] ?? '',
       email: data['email'] ?? '',
       birthDate: DateTime.parse(data['birth_date'].toString()),
-      password: data['password'] ?? '',
       role: data['role'] ?? '',
       bio: data["bio"] ?? '',
       penName: data['pen_name'] ?? '',
@@ -43,7 +40,6 @@ class Users {
       'username': name,
       'email': email,
       'birth_date': birthDate.toIso8601String(),
-      'password': password,
       'role': role,
       'bio': bio,
       'pen_name': penName,
