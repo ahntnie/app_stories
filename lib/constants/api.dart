@@ -1,8 +1,8 @@
 class Api {
   static const String hostApi =
-      'https://balanced-secure-titmouse.ngrok-free.app/api';
+      'https://obliging-tetra-equally.ngrok-free.app/api';
   static const String hostImage =
-      'https://balanced-secure-titmouse.ngrok-free.app';
+      'https://obliging-tetra-equally.ngrok-free.app';
 
   //Story
   static const String postStory = '/stories';

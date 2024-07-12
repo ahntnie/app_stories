@@ -1,15 +1,24 @@
+import 'package:app_stories/app/app_sp.dart';
+import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/comment_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
+import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stacked/stacked.dart';
 
 class CommentWidget extends StatefulWidget {
   Comment comment;
   Story story;
-  CommentWidget({super.key, required this.comment, required this.story});
+  String currentUserID;
+  CommentWidget(
+      {super.key,
+      required this.comment,
+      required this.story,
+      required this.currentUserID});
 
   @override
   State<CommentWidget> createState() => _CommentWidgetState();
@@ -25,7 +34,7 @@ class _CommentWidgetState extends State<CommentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: 320,
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -93,14 +102,29 @@ class _CommentWidgetState extends State<CommentWidget> {
                           fontWeight: FontWeight.w300,
                         ),
                       ),
-                      Text(
-                        formatDateTime(
-                            widget.comment.createdAt.toIso8601String()),
-                        style: TextStyle(
-                          color: AppColor.extraColor,
-                          fontSize: AppFontSize.sizeSmall,
-                          fontWeight: FontWeight.w300,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            formatDateTime(
+                                widget.comment.createdAt.toIso8601String()),
+                            style: TextStyle(
+                              color: AppColor.extraColor,
+                              fontSize: AppFontSize.sizeSmall,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          if (widget.comment.userId != widget.currentUserID)
+                            TextButton(
+                              onPressed: () {
+                                print(widget.currentUserID);
+                                // Xử lý báo cáo bình luận
+                                // print(
+                                //     'Báo cáo bình luận của user: ${comment.userId}');
+                              },
+                              child: Text('Báo cáo',
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                        ],
                       ),
                     ]
                   : [
@@ -124,17 +148,6 @@ class _CommentWidgetState extends State<CommentWidget> {
                     ],
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 10),
-          //   child: Text(
-          //     formatDateTime(widget.comment.createdAt.toIso8601String()),
-          //     style: TextStyle(
-          //       color: AppColor.extraColor,
-          //       fontSize: AppFontSize.sizeSmall,
-          //       fontWeight: FontWeight.w300,
-          //     ),
-          //   ),
-          // ),
           const SizedBox(
             height: 10,
           )
