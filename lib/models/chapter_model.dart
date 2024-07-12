@@ -1,4 +1,5 @@
 import 'package:app_stories/constants/api.dart';
+
 class Chapter {
   int chapterId;
   int storyId;

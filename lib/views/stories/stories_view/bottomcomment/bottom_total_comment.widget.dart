@@ -84,6 +84,7 @@ class _TotalCommentState extends State<TotalComment> {
                                 itemCount: viewModel.comments.length,
                                 itemBuilder: (context, index) {
                                   return TotalCommentCard(
+                                      currentUserID: viewModel.idUser,
                                       comment: viewModel.comments[index]);
                                 }),
                           ),

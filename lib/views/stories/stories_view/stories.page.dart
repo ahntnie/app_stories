@@ -1,3 +1,5 @@
+import 'package:app_stories/views/stories/stories_view/category/category.wiget.dart';
+import 'package:app_stories/views/stories/stories_view/summary/summary.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:stacked/stacked.dart';
@@ -138,6 +140,28 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                         ),
                       ],
                     ),
+                    if (viewModel.categories.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SizedBox(
+                          height: 30,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: viewModel.categories.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return CategoryWidget(
+                                  story: viewModel.currentStory,
+                                  category: viewModel.categories[index],
+                                );
+                              }),
+                        ),
+                      ),
+                    // const Divider(),
+                    ExpandableText(
+                      viewModel.currentStory.summary!,
+                    ),
+
                     const Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,6 +175,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                         ),
                         InkWell(
                           onTap: () {
+                            print(viewModel.idUser);
                             showModalBottomSheet(
                               isScrollControlled: isScrollControlled,
                               context: context,
@@ -187,6 +212,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return CommentWidget(
+                                currentUserID: viewModel.idUser,
                                 story: viewModel.currentStory,
                                 comment: viewModel.comments[index],
                               );

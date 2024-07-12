@@ -2,13 +2,15 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/comment_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
+import 'package:app_stories/widget/pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TotalCommentCard extends StatefulWidget {
-  TotalCommentCard({super.key, required this.comment});
+  TotalCommentCard(
+      {super.key, required this.comment, required this.currentUserID});
   Comment comment;
-
+  String currentUserID;
   @override
   State<TotalCommentCard> createState() => _TotalCommentCardState();
 }
@@ -76,13 +78,30 @@ class _TotalCommentCardState extends State<TotalCommentCard> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              formatDateTime(widget.comment.createdAt.toIso8601String()),
-              style: TextStyle(
-                color: AppColor.extraColor,
-                fontSize: AppFontSize.sizeSmall,
-                fontWeight: FontWeight.w300,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  formatDateTime(widget.comment.createdAt.toIso8601String()),
+                  style: TextStyle(
+                    color: AppColor.extraColor,
+                    fontSize: AppFontSize.sizeSmall,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                if (widget.comment.userId != widget.currentUserID)
+                  PopupMenuButton<int>(
+                      icon: Icon(
+                        Icons.report,
+                        size: 30,
+                        color: AppColor.selectColor,
+                      ),
+                      onSelected: (item) => onSelected(context, item),
+                      itemBuilder: (context) => [
+                            PopupMenuItem<int>(
+                                value: 0, child: Text('Báo cáo')),
+                          ]),
+              ],
             ),
           ),
           const SizedBox(
@@ -91,5 +110,25 @@ class _TotalCommentCardState extends State<TotalCommentCard> {
         ],
       ),
     );
+  }
+}
+
+void onSelected(BuildContext context, int item) {
+  switch (item) {
+    case 0:
+      // Xử lý báo cáo bình luận
+      showDialog(
+          context: context,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_success.png"),
+              title: 'Báo cáo bình luận thành công',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
+      break;
   }
 }
