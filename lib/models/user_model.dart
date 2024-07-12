@@ -8,6 +8,7 @@ class Users {
   String bio;
   String previousWorks;
   String role;
+  bool? isActive;
   Users({
     required this.id,
     required this.name,
@@ -18,6 +19,7 @@ class Users {
     required this.penName,
     required this.bio,
     required this.previousWorks,
+    this.isActive,
   });
 
   factory Users.fromJson(Map<String, dynamic> data) {
@@ -31,6 +33,7 @@ class Users {
       bio: data["bio"] ?? '',
       penName: data['pen_name'] ?? '',
       previousWorks: data["previous_works"] ?? '',
+      isActive: data["is_active"] == 1 ? true : false,
     );
   }
 

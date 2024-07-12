@@ -7,10 +7,16 @@ import '../view_image.page.dart';
 class ImageCard extends StatelessWidget {
   final String? urlImage;
   final File? fileImage;
-  const ImageCard({super.key, required this.urlImage, this.fileImage});
+  const ImageCard({
+    super.key,
+    required this.urlImage,
+    this.fileImage,
+  });
 
   @override
   Widget build(BuildContext context) {
+    String urlImageWithTimestamp =
+        '$urlImage?timestamp=${DateTime.now().millisecondsSinceEpoch}';
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -36,7 +42,8 @@ class ImageCard extends StatelessWidget {
                   },
                 )
               : Image.network(
-                  urlImage!,
+                  // isLoad ? urlImageWithTimestamp : urlImage!,
+                  urlImageWithTimestamp,
                   width: MediaQuery.of(context).size.width / 4,
                   fit: BoxFit.fill,
                   loadingBuilder: (BuildContext context, Widget child,
@@ -49,12 +56,7 @@ class ImageCard extends StatelessWidget {
                       return SizedBox(
                         width: MediaQuery.of(context).size.width / 4,
                         child: const Center(
-                          child: CircularProgressIndicator(
-                              // value: loadingProgress.expectedTotalBytes != null
-                              //     ? loadingProgress.cumulativeBytesLoaded /
-                              //         loadingProgress.expectedTotalBytes!
-                              //     : null,
-                              ),
+                          child: CircularProgressIndicator(),
                         ),
                       );
                     }

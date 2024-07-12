@@ -15,6 +15,7 @@ class Story {
   List<Category>? categories;
   Users? author;
   List<Users>? favouriteUser;
+  List<Users>? viewUsers;
   int? totalView;
   int? totalComment;
   Story({
@@ -31,6 +32,7 @@ class Story {
     this.favouriteUser,
     this.totalView,
     this.totalComment,
+    this.viewUsers,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -59,6 +61,10 @@ class Story {
               json['favourited_users'].map((x) => Users.fromJson(x))),
       totalView: json["total_view"],
       totalComment: json["total_comment"],
+      viewUsers: json['favourited_users'] == null
+          ? []
+          : List<Users>.from(
+              json['view_users'].map((x) => Users.fromJson(x))),
     );
   }
 

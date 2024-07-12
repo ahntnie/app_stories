@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_stories/app/app_sp.dart';
 import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/app_color.dart';
@@ -11,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
+
+import '../../models/user_model.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -88,7 +92,15 @@ class _LoginPageState extends State<LoginPage> {
                                   if (user != null) {
                                     AppSP.set(
                                         AppSPKey.userinfo, viewModel.user!.uid);
-                                    viewModel.showSuccessSnackBar(context);
+                                    Users currentUser = Users.fromJson(
+                                        jsonDecode(
+                                            AppSP.get(AppSPKey.currrentUser)));
+                                    if (!currentUser.isActive!) {
+                                      viewModel
+                                          .showFailedIsActiveSnackBar(context);
+                                    } else {
+                                      viewModel.showSuccessSnackBar(context);
+                                    }
                                   } else {
                                     viewModel.validateEmail();
                                     viewModel.validatePassword();
@@ -128,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                               SizedBox(
                                   height: MediaQuery.of(context).size.height *
                                       0.025),
-                              const Row(
+                              Row(
                                 children: [
                                   Expanded(
                                     child: Divider(

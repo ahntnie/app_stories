@@ -59,7 +59,7 @@ class StoryRequest {
         .getRequest('${Api.hostApi}${Api.getMyStories}', queryParams: {
       "is_active": 1,
       "search_string": search,
-      "categories_id": categoriesId.toString(),
+      "categories_id": categoriesId.toString() ?? [],
       "is_complete": 0,
     });
     final responseData = jsonDecode(jsonEncode(response.data));
