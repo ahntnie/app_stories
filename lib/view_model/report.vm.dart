@@ -1,3 +1,4 @@
+import 'package:app_stories/requests/category.request.dart';
 import 'package:app_stories/requests/story.request.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -11,11 +12,16 @@ class ReportViewModel extends BaseViewModel {
   List<ViewData> favouriteData = [];
   List<ViewData> commentData = [];
   List<Story> stories = [];
+  int totalStories = 0;
+  int totalNewUsers = 0;
+  String type = 'week';
   init() async {
     await getMyStories();
     fetchViewsData();
     fetchFavouritesData();
     fetchCommentsData();
+    await getTotalStories();
+    await getCountNewUsers();
     notifyListeners();
   }
 
@@ -39,6 +45,23 @@ class ReportViewModel extends BaseViewModel {
 
   getMyStories() async {
     stories = await StoryRequest().getMyStories();
+  }
+
+  getTotalStories() async {
+    totalStories = await StoryRequest().getTotalStories();
+    print('Số lượng truyện: $totalStories');
+    notifyListeners();
+  }
+
+  getCountNewUsers() async {
+    totalNewUsers = await CategoryRequest().getCountNewUsers(type);
+    notifyListeners();
+  }
+
+  changeType(String typee) async {
+    type = typee;
+    getCountNewUsers();
+    notifyListeners();
   }
 }
 

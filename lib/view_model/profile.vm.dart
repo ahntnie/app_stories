@@ -52,10 +52,31 @@ class ProfileViewModel extends BaseViewModel {
     }
   }
 
-  getTotalStories() async {
-    totalStories = await StoryRequest().getTotalStories();
-    print('Số lượng truyện: $totalStories');
-    notifyListeners();
+  Future<List<Users>> getAuthorNotActive() async {
+    Response response = await apiService.getRequest(
+        '${Api.hostApi}${Api.getUser}',
+        queryParams: {"is_active": 0});
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> listUser = responseData;
+    List<Users> authorNotActive =
+        listUser.map((json) => Users.fromJson(json)).toList();
+    return authorNotActive;
+  }
+
+  Future<String?> approveAuthor(String userId) async {
+    String? errorString;
+    try {
+      final response = await ApiService()
+          .patchRequest('${Api.hostApi}${Api.approveAuthor}$userId', null);
+      if (response.statusCode == 200) {
+        errorString = null;
+      } else {
+        errorString = response.data['message'].toString();
+      }
+    } catch (e) {
+      errorString = e.toString();
+    }
+    return errorString;
   }
 
   Future<void> changeNameAccount() async {

@@ -8,7 +8,7 @@ class Api {
   static const String postStory = '/stories';
   static const String getMyStories = '/stories';
   static const String approveStory = '/stories/approve';
-  static const String getTotalStories = '/total/storise';
+  static const String getTotalStories = '/total/stories';
 
   //View Story
   static const String addViewStory = '/story/view';
@@ -19,13 +19,18 @@ class Api {
 
   //Category
   static const String getCategories = '/categories';
+  static const String addCategories = '/categories';
+  static const String deleteCategories = '/categories';
 
   //Chapter
   static const String getChapters = '/chapters';
   static const String postChapters = '/chapters';
+  static const String updateChapters = '/chapters';
 
   //User
   static const String getUser = '/users';
+  static const String approveAuthor = '/author/approve/';
+  static const String getCountNewUsers = '/new/users';
 
   //Notification
   static const String getNotificationByUserId = '/notifications/user';

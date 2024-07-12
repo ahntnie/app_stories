@@ -6,11 +6,14 @@ class CustomButton extends StatefulWidget {
   final Widget title;
   final VoidCallback onPressed;
   final bool isLoading;
-  const CustomButton(
-      {super.key,
-      required this.title,
-      required this.onPressed,
-      this.isLoading = false});
+  Color? color;
+  CustomButton({
+    super.key,
+    required this.title,
+    required this.onPressed,
+    this.isLoading = false,
+    this.color,
+  });
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -23,7 +26,7 @@ class _CustomButtonState extends State<CustomButton> {
       onTap: widget.onPressed,
       child: Container(
         decoration: BoxDecoration(
-            color: AppColor.buttonColor,
+            color: widget.color ?? AppColor.buttonColor,
             borderRadius: BorderRadius.circular(10)),
         margin: const EdgeInsets.symmetric(vertical: 5),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),

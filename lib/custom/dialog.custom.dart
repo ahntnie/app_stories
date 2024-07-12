@@ -44,8 +44,9 @@ class CustomDialog {
                 Text(
                   message,
                   style: TextStyle(
-                      fontSize: AppFontSize.sizeSmall,
-                      color: AppColor.extraColor),
+                    fontSize: AppFontSize.sizeSmall,
+                    color: AppColor.extraColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),

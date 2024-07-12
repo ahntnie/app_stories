@@ -15,10 +15,10 @@ class _AccountViewState extends State<AccountView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
+        disposeViewModel: false,
         viewModelBuilder: () => widget.profileViewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
-          // viewModel.fetchCurrentUser();
         },
         builder: (context, viewModel, child) {
           return BasePage(

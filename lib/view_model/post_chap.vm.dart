@@ -1,13 +1,15 @@
 import 'dart:io';
-
-import 'package:app_stories/constants/api.dart';
+import 'dart:math' as math;
 import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/requests/chapter.request.dart';
 import 'package:app_stories/requests/story.request.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 import '../widget/pop_up.dart';
 
@@ -23,10 +25,61 @@ class PostChapViewModel extends BaseViewModel {
   ChapterRequest chapterRequest = ChapterRequest();
   StoryRequest storyRequest = StoryRequest();
   TextEditingController titleChapterController = TextEditingController();
-  
+  List<File> downloadedFiles = [];
+  bool isLoadImage = false;
+
   changeShowChapter() {
     showChapters = !showChapters;
     notifyListeners();
+  }
+
+  Future<void> downloadImages() async {
+    Dio dio = Dio();
+    downloadedFiles = [];
+
+    for (String url in currentChapter.images) {
+      try {
+        File file = await urlToFile(url);
+        downloadedFiles.add(file);
+        print("Downloaded file path: ${file.path}");
+      } catch (e) {
+        print("Error downloading image: $e");
+      }
+    }
+
+    newChapterImages = downloadedFiles;
+    notifyListeners();
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+    var rng = math.Random();
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    File file = File('$tempPath/${rng.nextInt(100)}.png');
+    http.Response response = await http.get(Uri.parse(imageUrl));
+    await file.writeAsBytes(response.bodyBytes);
+    return file;
+  }
+
+  Future<void> clearTempDirectory(Directory tempDir) async {
+    try {
+      var files = tempDir.listSync();
+      for (var file in files) {
+        if (file is File) {
+          await file.delete();
+        }
+      }
+    } catch (e) {
+      print("Error clearing temp directory: $e");
+    }
+  }
+
+  Future<void> updateChapter() async {
+    await downloadImages();
+    await chapterRequest.updateChapter(
+        downloadedFiles, 'Truyện update', currentChapter.chapterId);
+    Directory tempDir = await getTemporaryDirectory();
+    await clearTempDirectory(tempDir);
   }
 
   changeShowAddChapter() {

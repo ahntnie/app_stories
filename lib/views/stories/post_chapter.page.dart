@@ -1,9 +1,11 @@
+import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/view_model/post_chap.vm.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../view_model/mystories.vm.dart';
@@ -168,42 +170,68 @@ class _PostChapterPageState extends State<PostChapterPage> {
                                 ),
                               ),
                             )
-                          : GridView.builder(
+                          : ReorderableGridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3, // Số cột trong grid
+                                crossAxisCount: 3,
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10,
                               ),
                               itemCount: viewModel.newChapterImages.length + 1,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
-                                  return CustomButton(
-                                    onPressed: () {
-                                      viewModel.chooseNewChapterImages();
-                                    },
-                                    title: const Center(
-                                      child: Icon(
-                                        Icons.add_circle_outline,
-                                        size: 80,
-                                        color: Colors.white,
+                                  return ReorderableDragStartListener(
+                                    key: const ValueKey('add'),
+                                    index: index,
+                                    child: CustomButton(
+                                      onPressed: () {
+                                        viewModel.chooseNewChapterImages();
+                                      },
+                                      title: const Center(
+                                        child: Icon(
+                                          Icons.add_circle_outline,
+                                          size: 80,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   );
                                 }
-                                return ClipRRect(
+                                return ReorderableDragStartListener(
+                                  key: ValueKey(
+                                      viewModel.newChapterImages[index - 1]),
+                                  index: index,
+                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5.0),
                                     child: ImageCard(
                                       urlImage: null,
                                       fileImage:
                                           viewModel.newChapterImages[index - 1],
-                                    ));
+                                    ),
+                                  ),
+                                );
+                              },
+                              onReorder: (oldIndex, newIndex) {
+                                // Adjust the newIndex if it's greater than the list length
+                                if (newIndex >
+                                    viewModel.newChapterImages.length) {
+                                  newIndex = viewModel.newChapterImages.length;
+                                }
+                                if (newIndex == 0 || oldIndex == 0) {
+                                  return;
+                                }
+                                final item = viewModel.newChapterImages
+                                    .removeAt(oldIndex - 1);
+                                viewModel.newChapterImages
+                                    .insert(newIndex - 1, item);
+                                viewModel
+                                    .notifyListeners(); // Call this method to update the UI
                               },
                             ))
                       : viewModel.currentChapter.images.isNotEmpty
-                          ? GridView.builder(
+                          ? ReorderableGridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate:
@@ -214,9 +242,26 @@ class _PostChapterPageState extends State<PostChapterPage> {
                               ),
                               itemCount: viewModel.currentChapter.images.length,
                               itemBuilder: (context, index) {
-                                return ImageCard(
-                                    urlImage:
-                                        viewModel.currentChapter.images[index]);
+                                return ReorderableDragStartListener(
+                                  key: ValueKey(
+                                      viewModel.currentChapter.images[index]),
+                                  index: index,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    child: ImageCard(
+                                      //isLoad: isLoadImage,
+                                      urlImage: viewModel
+                                          .currentChapter.images[index],
+                                    ),
+                                  ),
+                                );
+                              },
+                              onReorder: (oldIndex, newIndex) {
+                                final item = viewModel.currentChapter.images
+                                    .removeAt(oldIndex);
+                                viewModel.currentChapter.images
+                                    .insert(newIndex, item);
+                                viewModel.notifyListeners();
                               },
                             )
                           : const Center(child: Text('No images found.')),
@@ -224,6 +269,27 @@ class _PostChapterPageState extends State<PostChapterPage> {
               ),
             ),
           ),
+          bottomSheet: !viewModel.showAddChapter
+              ? GestureDetector(
+                  onTap: () async {
+                    print('Nhấn cập nhật');
+                    await viewModel.updateChapter();
+                  },
+                  child: Container(
+                    height: 70,
+                    width: double.infinity,
+                    color: AppColor.buttonColor,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Cập nhật',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : null,
         );
       },
     );

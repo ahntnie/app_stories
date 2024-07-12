@@ -26,6 +26,8 @@ class BasePage extends StatefulWidget {
   final Widget? drawer;
   final bool isLoading;
   final VoidCallback? onPressedLeading;
+  final Widget? bottomSheet;
+  final Widget? floatingActionButton;
   BasePage({
     super.key,
     this.showLogo = false,
@@ -40,6 +42,8 @@ class BasePage extends StatefulWidget {
     this.drawer,
     this.isLoading = false,
     this.onPressedLeading,
+    this.bottomSheet,
+    this.floatingActionButton,
   });
 
   @override
@@ -191,7 +195,9 @@ class _BasePageState extends State<BasePage> {
         body: widget.isLoading
             ? Center(child: GradientLoadingWidget())
             : widget.body,
+        floatingActionButton: widget.floatingActionButton,
         bottomNavigationBar: widget.bottomNav,
+        bottomSheet: widget.bottomSheet,
       ),
     );
   }

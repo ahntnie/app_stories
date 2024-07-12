@@ -110,6 +110,7 @@ class LoginViewModel extends BaseViewModel {
       user = userCredential.user;
       Response infoResponse = await ApiService()
           .getRequest('${Api.hostApi}${Api.getUser}/${user!.uid}');
+      print('User body: ${infoResponse.data}');
       AppSP.set(AppSPKey.currrentUser, jsonEncode(infoResponse.data));
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
@@ -179,6 +180,27 @@ class LoginViewModel extends BaseViewModel {
             ); // Chuyển sang trang HomePage
           });
         },
+      ),
+    );
+  }
+
+  void showFailedIsActiveSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(
+              Icons.warning_rounded,
+              color: AppColor.selectColor,
+            ),
+            const SizedBox(width: 5),
+            Text(
+              'Tài khoản chưa được duyệt',
+              style: TextStyle(fontSize: AppFontSize.sizeMedium),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
       ),
     );
   }
