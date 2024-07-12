@@ -51,7 +51,6 @@ class PostStoriesViewModel extends BaseViewModel {
             id: currentUser.id,
             name: currentUser.name,
             email: currentUser.email,
-            password: '',
             birthDate: DateTime(2003, 5, 23),
             role: currentUser.role,
             bio: currentUser.role,

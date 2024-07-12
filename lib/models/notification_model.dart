@@ -6,7 +6,6 @@ class Notification {
   String userId;
   String title;
   String message;
-  String type;
   bool isRead;
   DateTime createdAt;
   DateTime updatedAt;
@@ -18,7 +17,6 @@ class Notification {
     required this.userId,
     required this.title,
     required this.message,
-    required this.type,
     required this.isRead,
     required this.createdAt,
     required this.updatedAt,
@@ -33,7 +31,6 @@ class Notification {
       userId: json['user_id'],
       title: json['title'],
       message: json['message'],
-      type: json['type'],
       isRead: json['is_read'] == 1, // Chuyển đổi từ int sang bool
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
@@ -49,7 +46,6 @@ class Notification {
       'user_id': userId,
       'title': title,
       'message': message,
-      'type': type,
       'is_read': isRead ? 1 : 0, // Chuyển đổi từ bool sang int
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
