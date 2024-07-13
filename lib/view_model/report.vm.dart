@@ -13,6 +13,7 @@ class ReportViewModel extends BaseViewModel {
   List<ViewData> commentData = [];
   List<Story> stories = [];
   int totalStories = 0;
+  int totalNewStories = 0;
   int totalNewUsers = 0;
   String type = 'week';
   init() async {
@@ -22,6 +23,7 @@ class ReportViewModel extends BaseViewModel {
     fetchCommentsData();
     await getTotalStories();
     await getCountNewUsers();
+    await getCountNewStories();
     notifyListeners();
   }
 
@@ -58,9 +60,15 @@ class ReportViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  getCountNewStories() async {
+    totalNewStories = await StoryRequest().getCountNewStories(type);
+    notifyListeners();
+  }
+
   changeType(String typee) async {
     type = typee;
     getCountNewUsers();
+    getCountNewStories();
     notifyListeners();
   }
 }

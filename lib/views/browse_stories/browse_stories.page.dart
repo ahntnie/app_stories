@@ -1,4 +1,5 @@
 import 'package:app_stories/view_model/browse_stories.vm.dart';
+import 'package:app_stories/view_model/mystories.vm.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _BrowseStoriesPageState extends State<BrowseStoriesPage> {
                     itemCount: viewModel.stories.length,
                     itemBuilder: (context, index) {
                       return StoryCard(
+                        viewModel: MyStoriesViewModel(),
                         data: viewModel.stories[index],
                         onTap: () {
                           viewModel.currentStory = viewModel.stories[index];

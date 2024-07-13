@@ -18,6 +18,7 @@ class Story {
   List<Users>? viewUsers;
   int? totalView;
   int? totalComment;
+  bool? isCompleted;
   Story({
     this.storyId,
     this.title,
@@ -33,6 +34,7 @@ class Story {
     this.totalView,
     this.totalComment,
     this.viewUsers,
+    this.isCompleted,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -63,8 +65,8 @@ class Story {
       totalComment: json["total_comment"],
       viewUsers: json['favourited_users'] == null
           ? []
-          : List<Users>.from(
-              json['view_users'].map((x) => Users.fromJson(x))),
+          : List<Users>.from(json['view_users'].map((x) => Users.fromJson(x))),
+      isCompleted: json['is_completed'] == 1 ? true : false,
     );
   }
 

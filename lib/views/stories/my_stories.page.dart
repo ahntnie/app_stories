@@ -59,6 +59,7 @@ class _MyStoriesPageState extends State<MyStoriesPage> {
                             ),
                           ),
                           ...viewModel.myStories.map((story) => StoryCard(
+                                viewModel: viewModel,
                                 data: story,
                                 onTap: () {
                                   viewModel.currentStory = story;

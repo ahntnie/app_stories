@@ -1,3 +1,5 @@
+import 'package:app_stories/models/category_model.dart';
+import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -29,31 +31,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
               body: ListView.builder(
                 itemCount: viewModel.categories.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColor.buttonColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          viewModel.categories[index].name!,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        CustomButton(
-                            title: Icon(
-                              Icons.delete_outline_outlined,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              viewModel.deleteCategory(
-                                  viewModel.categories[index].categoryId!);
-                            })
-                      ],
-                    ),
+                  return CategoryItem(
+                    viewModel: viewModel,
+                    data: viewModel.categories[index],
                   );
                 },
               ),
@@ -68,9 +48,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
                         child: Container(
+                          decoration: BoxDecoration(
+                              color: AppColor.bottomSheetColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20))),
                           padding: EdgeInsets.all(20),
                           height: MediaQuery.of(context).size.height / 3,
-                          color: AppColor.bottomSheetColor,
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
@@ -128,5 +112,71 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ),
               ));
         });
+  }
+}
+
+class CategoryItem extends StatefulWidget {
+  final CategoriesViewModel viewModel;
+  final Category data;
+  const CategoryItem({
+    super.key,
+    required this.viewModel,
+    required this.data,
+  });
+
+  @override
+  State<CategoryItem> createState() => _CategoryItemState();
+}
+
+class _CategoryItemState extends State<CategoryItem> {
+  bool showDesc = false;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          showDesc = !showDesc;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColor.buttonColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  widget.data.name!,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: AppFontSize.sizeMedium),
+                ),
+                CustomButton(
+                    title: Icon(
+                      Icons.delete_outline_outlined,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                      widget.viewModel.deleteCategory(widget.data.categoryId!);
+                    })
+              ],
+            ),
+            if (showDesc)
+              Text(
+                widget.data.description!,
+                style: TextStyle(
+                    color: Colors.white, fontSize: AppFontSize.sizeSmall),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }

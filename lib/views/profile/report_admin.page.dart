@@ -44,14 +44,14 @@ class ReportAdminPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Tổng truyện',
+                                  'Truyện mới',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  '${viewModel.totalStories}',
+                                  '${viewModel.totalNewStories}',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 25),
                                 ),
@@ -73,14 +73,7 @@ class ReportAdminPage extends StatelessWidget {
                                   'Người dùng mới',
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  '(Theo tuần)',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
@@ -108,7 +101,7 @@ class ReportAdminPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Truyện mới',
+                                  'Tổng truyện',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -122,32 +115,32 @@ class ReportAdminPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
-                            width: MediaQuery.of(context).size.width / 2.3,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                color: AppColor.primary,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Tăng trưởng',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  '${viewModel.totalStories}%',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 25),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Container(
+                          //   margin: EdgeInsets.symmetric(
+                          //       vertical: 5, horizontal: 5),
+                          //   width: MediaQuery.of(context).size.width / 2.3,
+                          //   height: 100,
+                          //   decoration: BoxDecoration(
+                          //       color: AppColor.primary,
+                          //       borderRadius: BorderRadius.circular(10)),
+                          //   child: Column(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Text(
+                          //         'Tăng trưởng',
+                          //         style: TextStyle(
+                          //             color: Colors.white,
+                          //             fontSize: 20,
+                          //             fontWeight: FontWeight.w500),
+                          //       ),
+                          //       Text(
+                          //         '${viewModel.totalStories}%',
+                          //         style: TextStyle(
+                          //             color: Colors.white, fontSize: 25),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       )
                     ],
@@ -163,7 +156,9 @@ class ReportAdminPage extends StatelessWidget {
                         viewModel.changeType('week');
                     },
                     title: Text(
-                      'Lọc theo tháng',
+                      viewModel.type == 'week'
+                          ? 'Lọc theo tháng'
+                          : 'Lọc theo tuần',
                       style: TextStyle(color: Colors.white, fontSize: 17),
                     ),
                   ),

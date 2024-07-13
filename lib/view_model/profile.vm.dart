@@ -123,18 +123,15 @@ class ProfileViewModel extends BaseViewModel {
                           } else if (changeNameController.text.length < 8) {
                             showFailedLenghtNameSnackBar(viewContext);
                           } else {
-                            Users currentUser = Users.fromJson(
+                            currentUser = Users.fromJson(
                                 jsonDecode(AppSP.get(AppSPKey.currrentUser)));
                             await apiService.patchRequestUser(
-                                '${Api.hostApi}${Api.getUser}/${currentUser.id}',
+                                '${Api.hostApi}${Api.getUser}/${currentUser!.id}',
                                 jsonEncode(
                                     {'username': changeNameController.text}));
                             currentUser!.name = changeNameController.text;
                             notifyListeners();
-                            // Navigator.of(context).pushReplacement(
-                            //   MaterialPageRoute(
-                            //       builder: (context) => const ProfilePage()),
-                            // );
+                            print('Load lại profile');
                             Navigator.of(viewContext).pop();
                             changeNameController.clear();
                           }

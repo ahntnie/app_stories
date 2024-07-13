@@ -162,11 +162,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                       ],
                       if (viewModel.currentUser!.role == 'admin') ...[
-                        CustomMenuButton(
-                          icon: Icons.menu_book_sharp,
-                          text: 'Truyện đọc nhiều',
-                          onTap: () {},
-                        ),
+                        // CustomMenuButton(
+                        //   icon: Icons.menu_book_sharp,
+                        //   text: 'Truyện đọc nhiều',
+                        //   onTap: () {},
+                        // ),
                         CustomMenuButton(
                           icon: Icons.description,
                           text: 'Phê duyệt truyện',
