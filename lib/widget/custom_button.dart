@@ -6,6 +6,7 @@ class CustomButton extends StatefulWidget {
   final Widget title;
   final VoidCallback onPressed;
   final bool isLoading;
+  bool enable;
   Color? color;
   CustomButton({
     super.key,
@@ -13,6 +14,7 @@ class CustomButton extends StatefulWidget {
     required this.onPressed,
     this.isLoading = false,
     this.color,
+    this.enable = true,
   });
 
   @override
@@ -23,7 +25,7 @@ class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.onPressed,
+      onTap: widget.enable ? widget.onPressed : null,
       child: Container(
         decoration: BoxDecoration(
             color: widget.color ?? AppColor.buttonColor,

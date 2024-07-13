@@ -9,6 +9,8 @@ class Api {
   static const String getMyStories = '/stories';
   static const String approveStory = '/stories/approve';
   static const String getTotalStories = '/total/stories';
+  static const String getCountNewStories = '/new/story';
+  static const String completedStory = '/stories/completed';
 
   //View Story
   static const String addViewStory = '/story/view';

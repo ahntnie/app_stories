@@ -92,6 +92,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                       controller: _scrollController,
                       child: Column(
                         children: [
+                          Image.asset('assets/imgDonate.png'),
                           ...viewModel.currentChapter.images
                               .map((image) => Image.network(
                                     image,

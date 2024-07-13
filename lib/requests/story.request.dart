@@ -21,6 +21,18 @@ class StoryRequest {
     return responseData['total_stories'];
   }
 
+  Future<int> getCountNewStories(String type) async {
+    int count = 0;
+    final response = await dio
+        .get('${Api.hostApi}${Api.getCountNewStories}', queryParameters: {
+      "time_period": type,
+    });
+    print('Body số lượng new story: ${response.data}');
+    final responseData = response.data;
+    count = responseData['new_story_count'];
+    return count;
+  }
+
   Future<List<Story>> searchStory(String search,
       [List<int>? categoriesId]) async {
     List<Story> stories = [];
@@ -179,6 +191,22 @@ class StoryRequest {
     try {
       final response = await ApiService()
           .patchRequest('${Api.hostApi}${Api.approveStory}/$storyId', null);
+      if (response.statusCode == 200) {
+        errorString = null;
+      } else {
+        errorString = response.data['message'].toString();
+      }
+    } catch (e) {
+      errorString = e.toString();
+    }
+    return errorString;
+  }
+
+  Future<String?> completedStory(int storyId) async {
+    String? errorString;
+    try {
+      final response = await ApiService()
+          .patchRequest('${Api.hostApi}${Api.completedStory}/$storyId', null);
       if (response.statusCode == 200) {
         errorString = null;
       } else {

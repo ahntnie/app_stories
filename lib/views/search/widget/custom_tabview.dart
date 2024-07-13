@@ -1,5 +1,6 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/view_model/mystories.vm.dart';
 import 'package:app_stories/views/stories/widget/stories_card.dart';
 import 'package:flutter/material.dart';
 
@@ -81,6 +82,7 @@ class _CustomTabViewState extends State<CustomTabView>
             ),
           ),
           ...stories.map((story) => StoryCard(
+                viewModel: MyStoriesViewModel(),
                 data: story,
                 onTap: () {
                   ComicViewModel comicViewModel = ComicViewModel();

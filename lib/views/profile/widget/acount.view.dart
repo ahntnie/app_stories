@@ -21,6 +21,7 @@ class _AccountViewState extends State<AccountView> {
           viewModel.viewContext = context;
         },
         builder: (context, viewModel, child) {
+          print('Load lại giao diện: ${viewModel.currentUser!.name}');
           return BasePage(
               title: 'Tài khoản và bảo mật',
               body: Container(

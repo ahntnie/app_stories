@@ -1,6 +1,8 @@
 import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/models/story_model.dart';
+import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/views/stories/post_chapter.page.dart';
+import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_color.dart';
@@ -8,8 +10,13 @@ import '../../../view_model/mystories.vm.dart';
 
 class StoryCard extends StatelessWidget {
   final Story data;
+  final MyStoriesViewModel viewModel;
   final VoidCallback onTap;
-  StoryCard({super.key, required this.data, required this.onTap});
+  StoryCard(
+      {super.key,
+      required this.data,
+      required this.onTap,
+      required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +101,30 @@ class StoryCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  if (data.author!.name == viewModel.currentUser.name)
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: CustomButton(
+                            enable: data.isCompleted! ? false : true,
+                            color: !data.isCompleted!
+                                ? AppColor.primary
+                                : AppColor.buttonColor,
+                            title: Text(
+                              data.isCompleted!
+                                  ? "Đã hoàn thành"
+                                  : 'Hoàn thành',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: AppFontSize.sizeSmall),
+                            ),
+                            onPressed: () {
+                              viewModel.currentStory = data;
+                              viewModel.completedStory();
+                            }),
+                      ),
+                    ),
                   if (data.active == 0)
                     const Align(
                       alignment: Alignment.centerRight,
