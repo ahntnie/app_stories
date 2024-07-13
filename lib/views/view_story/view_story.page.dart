@@ -85,7 +85,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
               showAppBar: _showAppBar,
               title: viewModel.isBusy
                   ? ''
-                  : 'Chapter ${viewModel.currentChapter.chapterNumber.toString()}',
+                  : 'Chapter ${viewModel.currentChapter!.chapterNumber.toString()}',
               body: viewModel.isBusy
                   ? Center(child: GradientLoadingWidget())
                   : SingleChildScrollView(
@@ -93,7 +93,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                       child: Column(
                         children: [
                           Image.asset('assets/imgDonate.png'),
-                          ...viewModel.currentChapter.images
+                          ...viewModel.currentChapter!.images
                               .map((image) => Image.network(
                                     image,
                                     loadingBuilder: (BuildContext context,
@@ -134,7 +134,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                             onTap: () {
                               viewModel.currentChapter = viewModel
                                       .currentStory.chapters![
-                                  viewModel.currentChapter.chapterNumber - 2];
+                                  viewModel.currentChapter!.chapterNumber - 2];
                               viewModel.notifyListeners();
                             },
                             child: Image.asset(
@@ -178,7 +178,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                                       setState: setState,
                                       comicViewModel: viewModel,
                                       story: viewModel.currentStory,
-                                      chapter: viewModel.currentChapter,
+                                      chapter: viewModel.currentChapter!,
                                     );
                                   });
                                 },
@@ -194,7 +194,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                             onTap: () {
                               viewModel.currentChapter =
                                   viewModel.currentStory.chapters![
-                                      viewModel.currentChapter.chapterNumber];
+                                      viewModel.currentChapter!.chapterNumber];
                               viewModel.notifyListeners();
                             },
                             child: Image.asset(

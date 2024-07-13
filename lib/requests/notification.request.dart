@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/notification_model.dart';
 import 'package:app_stories/services/api_service.dart';
 
@@ -13,6 +14,8 @@ class NotificationRequest extends ApiService {
     List<Notification> notifications = [];
     Users currentUser =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    print(
+        'Đường dẫn: ${Api.hostApi}${Api.getNotificationByUserId}/${currentUser.id}');
     final response = await ApiService().getRequest(
         '${Api.hostApi}${Api.getNotificationByUserId}/${currentUser.id}');
     List<dynamic> lstNotification =
@@ -20,6 +23,23 @@ class NotificationRequest extends ApiService {
     notifications =
         lstNotification.map((notify) => Notification.fromJson(notify)).toList();
     return notifications;
+  }
+
+  Future<void> postNotification(String idUser, String? message, String? title,
+      int? is_read, int storyId, Chapter? chapter) async {
+    Users currentUser =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    idUser = currentUser.id;
+    Map<String, dynamic> notificationModel = {
+      'user_id': idUser,
+      'title': title,
+      'message': message,
+      'is_read': 0,
+      'story_id': storyId,
+      'chapter_id': chapter == null ? null : chapter.chapterId,
+    };
+    await ApiService().postNotifications(
+        '${Api.hostApi}${Api.postNotificationByAdmin}', notificationModel);
   }
 
   Future<String?> markAsReadNotification(int notifyId) async {

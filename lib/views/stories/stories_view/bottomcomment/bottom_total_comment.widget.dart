@@ -32,12 +32,12 @@ class _TotalCommentState extends State<TotalComment> {
     return ViewModelBuilder.reactive(
         disposeViewModel: false,
         viewModelBuilder: () => widget.comicViewModel,
-        // onViewModelReady: (viewModel) {
-        //   //viewModel.currentChapter = widget.chapter;
-        //   viewModel.currentStory = widget.story;
-        //   viewModel.viewContext = context;
-        //   viewModel.init();
-        // },
+        onViewModelReady: (viewModel) {
+          // //viewModel.currentChapter = widget.chapter;
+          // // viewModel.currentStory = widget.story;
+          // viewModel.viewContext = context;
+          // viewModel.init();
+        },
         builder: (context, viewModel, child) {
           return SingleChildScrollView(
             child: Padding(
@@ -84,6 +84,7 @@ class _TotalCommentState extends State<TotalComment> {
                                 itemCount: viewModel.comments.length,
                                 itemBuilder: (context, index) {
                                   return TotalCommentCard(
+                                      comicViewModel: viewModel,
                                       currentUserID: viewModel.idUser,
                                       comment: viewModel.comments[index]);
                                 }),
