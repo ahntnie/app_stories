@@ -40,6 +40,12 @@ class BrowseStoriesViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  Future<void> getAllStory() async {
+    setBusy(true);
+    stories = await request.getAllStories();
+    setBusy(false);
+  }
+
   nextDetailStory() {
     Navigator.push(
         viewContext,
@@ -76,6 +82,80 @@ class BrowseStoriesViewModel extends BaseViewModel {
             return PopUpWidget(
               icon: Image.asset("assets/ic_success.png"),
               title: 'Phê duyệt thành công',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            );
+          });
+      await getStoryNotActive();
+    }
+  }
+
+  Future<void> disableStory() async {
+    setBusy(true);
+    String? errorString =
+        await storyRequest.disableStory(currentStory.storyId!);
+    if (errorString != null) {
+      setBusy(false);
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Lỗi: $errorString',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
+    } else {
+      setBusy(false);
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_success.png"),
+              title: 'Vô hiệu hóa thành công',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            );
+          });
+      await getStoryNotActive();
+    }
+  }
+
+  Future<void> noApproveStory() async {
+    setBusy(true);
+    String? errorString =
+        await storyRequest.noApproveStory(currentStory.storyId!);
+    if (errorString != null) {
+      setBusy(false);
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Lỗi: $errorString',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
+    } else {
+      setBusy(false);
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_success.png"),
+              title: 'Truyện không được phê duyệt',
               leftText: 'Xác nhận',
               onLeftTap: () {
                 Navigator.pop(context);

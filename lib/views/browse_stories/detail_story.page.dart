@@ -1,4 +1,6 @@
+import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/story_model.dart';
+import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/post_stories.vm.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -217,19 +219,83 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: CustomButton(
-                        isLoading: viewModel.isBusy,
-                        onPressed: () async {
-                          await viewModel.approveStory();
-                        },
-                        title: const Text(
-                          'Phê duyệt truyện',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                    if (widget.data.active == 3)
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Đã từ chối duyệt",
+                              style: TextStyle(
+                                  color: AppColor.extraColor,
+                                  fontSize: AppFontSize.sizeMedium),
+                            )
+                          ],
                         ),
                       ),
-                    ),
+                    if (widget.data.active == 1)
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Truyện đã được phê duyệt thành công",
+                              style: TextStyle(
+                                  color: AppColor.extraColor,
+                                  fontSize: AppFontSize.sizeMedium),
+                            )
+                          ],
+                        ),
+                      ),
+                    if (widget.data.active == 2)
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Truyện đã bị vô hiệu hóa",
+                              style: TextStyle(
+                                  color: AppColor.extraColor,
+                                  fontSize: AppFontSize.sizeMedium),
+                            )
+                          ],
+                        ),
+                      ),
+                    if (widget.data.active == 0)
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          children: [
+                            CustomButton(
+                              color: AppColor.successColor,
+                              isLoading: viewModel.isBusy,
+                              onPressed: () async {
+                                await viewModel.approveStory();
+                              },
+                              title: const Text(
+                                'Phê duyệt truyện',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                            CustomButton(
+                              color: AppColor.unConfirmColor,
+                              isLoading: viewModel.isBusy,
+                              onPressed: () async {
+                                await viewModel.noApproveStory();
+                              },
+                              title: const Text(
+                                'Không duyệt',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),

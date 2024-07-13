@@ -8,14 +8,17 @@ class CustomButton extends StatefulWidget {
   final bool isLoading;
   bool enable;
   Color? color;
-  CustomButton({
-    super.key,
-    required this.title,
-    required this.onPressed,
-    this.isLoading = false,
-    this.color,
-    this.enable = true,
-  });
+  double? width;
+  double? height;
+  CustomButton(
+      {super.key,
+      required this.title,
+      required this.onPressed,
+      this.isLoading = false,
+      this.color,
+      this.enable = true,
+      this.height,
+      this.width});
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -27,6 +30,8 @@ class _CustomButtonState extends State<CustomButton> {
     return InkWell(
       onTap: widget.enable ? widget.onPressed : null,
       child: Container(
+        width: widget.width,
+        height: widget.height,
         decoration: BoxDecoration(
             color: widget.color ?? AppColor.buttonColor,
             borderRadius: BorderRadius.circular(10)),

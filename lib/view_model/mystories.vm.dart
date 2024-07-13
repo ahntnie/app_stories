@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/models/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
 
 import '../app/app_sp.dart';
@@ -29,13 +28,55 @@ class MyStoriesViewModel extends BaseViewModel {
   }
 
   nextPostChapter() {
-    Navigator.push(
-        viewContext,
-        MaterialPageRoute(
-            builder: (context) => PostChapterPage(
-                  data: currentStory,
-                  viewModel: this,
-                )));
+    if (currentStory.active == 1) {
+      Navigator.push(
+          viewContext,
+          MaterialPageRoute(
+              builder: (context) => PostChapterPage(
+                    data: currentStory,
+                    viewModel: this,
+                  )));
+    } else if (currentStory.active == 0) {
+      showDialog(
+        context: viewContext,
+        builder: (context) {
+          return PopUpWidget(
+            icon: Image.asset("assets/ic_success.png"),
+            title: 'Truyện đã đương đăng, nhưng chờ duyệt nhé!',
+            leftText: 'Xác nhận',
+            onLeftTap: () {
+              Navigator.pop(viewContext);
+            },
+          );
+        },
+      );
+    } else if (currentStory.active == 2) {
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Truyện bạn đã bị vô hiệu hóa!',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(viewContext);
+              },
+            );
+          });
+    } else if (currentStory.active == 3) {
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Truyện không đạt yêu cầu để duyệt!',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(viewContext);
+              },
+            );
+          });
+    }
   }
 
   Future<void> completedStory() async {

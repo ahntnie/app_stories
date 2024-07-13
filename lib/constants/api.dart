@@ -8,6 +8,8 @@ class Api {
   static const String postStory = '/stories';
   static const String getMyStories = '/stories';
   static const String approveStory = '/stories/approve';
+  static const String disableStory = '/stories/disable';
+  static const String noApproveStory = '/stories/noapprove';
   static const String getTotalStories = '/total/stories';
   static const String getCountNewStories = '/new/story';
   static const String completedStory = '/stories/completed';
