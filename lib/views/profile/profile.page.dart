@@ -6,6 +6,7 @@ import 'package:app_stories/styles/app_img.dart';
 import 'package:app_stories/view_model/mystories.vm.dart';
 import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/browse_stories/browse_stories.page.dart';
+import 'package:app_stories/views/managerstories/managerstories.dart';
 import 'package:app_stories/views/profile/widget/acount.view.dart';
 import 'package:app_stories/views/profile/widget/custom/menuitem.widget.dart';
 import 'package:app_stories/views/report/report.page.dart';
@@ -198,6 +199,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const CategoriesPage()));
+                          },
+                        ),
+                        CustomMenuButton(
+                          icon: Icons.description,
+                          text: 'Quản lí truyện',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ManagerStories()));
                           },
                         ),
                       ],

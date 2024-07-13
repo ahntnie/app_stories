@@ -149,6 +149,17 @@ class StoryRequest {
     return stories;
   }
 
+  Future<List<Story>> getAllStories() async {
+    List<Story> stories = [];
+    final response = await ApiService().getRequest(
+      '${Api.hostApi}${Api.getMyStories}',
+    );
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    stories = lstStory.map((e) => Story.fromJson(e)).toList();
+    return stories;
+  }
+
   Future<List<Story>> getStoriesIsActive(int pageIndex) async {
     List<Story> stories = [];
     final response = await ApiService().getRequest(
@@ -191,6 +202,38 @@ class StoryRequest {
     try {
       final response = await ApiService()
           .patchRequest('${Api.hostApi}${Api.approveStory}/$storyId', null);
+      if (response.statusCode == 200) {
+        errorString = null;
+      } else {
+        errorString = response.data['message'].toString();
+      }
+    } catch (e) {
+      errorString = e.toString();
+    }
+    return errorString;
+  }
+
+  Future<String?> disableStory(int storyId) async {
+    String? errorString;
+    try {
+      final response = await ApiService()
+          .patchRequest('${Api.hostApi}${Api.disableStory}/$storyId', null);
+      if (response.statusCode == 200) {
+        errorString = null;
+      } else {
+        errorString = response.data['message'].toString();
+      }
+    } catch (e) {
+      errorString = e.toString();
+    }
+    return errorString;
+  }
+
+  Future<String?> noApproveStory(int storyId) async {
+    String? errorString;
+    try {
+      final response = await ApiService()
+          .patchRequest('${Api.hostApi}${Api.noApproveStory}/$storyId', null);
       if (response.statusCode == 200) {
         errorString = null;
       } else {
