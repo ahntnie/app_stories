@@ -10,7 +10,7 @@ class Notification {
   DateTime createdAt;
   DateTime updatedAt;
   Story story;
-  Chapter chapter;
+  Chapter? chapter;
 
   Notification({
     required this.id,
@@ -35,7 +35,7 @@ class Notification {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       story: Story.fromJson(json["story"]),
-      chapter: Chapter.fromJson(json["chapter"]),
+      chapter: json["chapter"] == null ? null : Chapter.fromJson(json["chapter"]),
     );
   }
 

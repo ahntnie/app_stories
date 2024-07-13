@@ -1,4 +1,5 @@
 import 'package:app_stories/view_model/notification.vm.dart';
+import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_color.dart';
@@ -20,7 +21,7 @@ class NotificationCard extends StatelessWidget {
         notificationViewModel.notifyListeners();
       },
       child: Container(
-        height: MediaQuery.of(context).size.height / 10,
+        //height: MediaQuery.of(context).size.height / 10,
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -58,10 +59,35 @@ class NotificationCard extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
             Text(
               notification.message,
               style: const TextStyle(color: Colors.white),
             ),
+            if (notification.title == 'Thông báo báo cáo bình luận')
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomButton(
+                      color: Colors.red,
+                      title: Text(
+                        'Xóa bình luận',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {}),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CustomButton(
+                      title: Text(
+                        'Bỏ qua',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {}),
+                ],
+              )
           ],
         ),
       ),

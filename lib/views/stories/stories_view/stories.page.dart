@@ -1,3 +1,4 @@
+import 'package:app_stories/views/stories/stories_view/bottomcomment/widget/comment_card.wiget.dart';
 import 'package:app_stories/views/stories/stories_view/category/category.wiget.dart';
 import 'package:app_stories/views/stories/stories_view/summary/summary.widget.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import '../../../constants/app_color.dart';
 import '../../../models/story_model.dart';
 import '../../../styles/app_font.dart';
 import '../../../view_model/comic.vm.dart';
+import '../../../view_model/notification.vm.dart';
 import '../../../widget/base_page.dart';
+import '../../../widget/pop_up.dart';
 import '../../view_story/widget/chaptercard.wiget.dart';
 import 'bottomcomment/bottom_total_comment.widget.dart';
 import 'chapter/chapter.widget.dart';
@@ -69,7 +72,6 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
       },
       builder: (context, viewModel, child) {
         viewModel.viewContext = context;
-        print('Số lượng like: ${viewModel.currentStory.favouriteUser!.length}');
         return BasePage(
           showAppBar: false,
           isLoading: viewModel.isBusy,
@@ -101,6 +103,81 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               fontWeight: AppFontWeight.bold,
                               color: AppColor.extraColor),
                         ),
+                        (widget.data.author!.id != viewModel.currentUsers!.id &&
+                                viewModel.currentUsers!.role != 'admin')
+                            ? PopupMenuButton<int>(
+                                icon: Icon(
+                                  Icons.report,
+                                  size: 30,
+                                  color: AppColor.selectColor,
+                                ),
+                                onSelected: (item) {
+                                  NotificationViewModel notiViewModel =
+                                      NotificationViewModel();
+                                  notiViewModel.currentChapter =
+                                      viewModel.currentChapter;
+                                  notiViewModel.viewContext = context;
+                                  notiViewModel.currentStory =
+                                      viewModel.currentStory;
+                                  // notiViewModel.comment = widget.comment;
+                                  // notiViewModel.postNotification();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PopUpWidget(
+                                          icon: Image.asset(
+                                              "assets/ic_success.png"),
+                                          title: 'Đã gửi phản hồi',
+                                          leftText: 'Xác nhận',
+                                          onLeftTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      });
+                                },
+                                itemBuilder: (context) => [
+                                      PopupMenuItem<int>(
+                                          value: 0, child: Text('Báo cáo')),
+                                    ])
+                            : viewModel.currentUsers!.role == 'admin'
+                                ? PopupMenuButton<int>(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      size: 30,
+                                      color: AppColor.selectColor,
+                                    ),
+                                    onSelected: (item) async => {
+                                          // viewModel.commentStory =
+                                          //     widget.comment,
+                                          // // print('Nhấn xóa')
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return PopUpWidget(
+                                                  icon: Image.asset(
+                                                      "assets/ic_success.png"),
+                                                  title:
+                                                      'Bạn có xác nhận vô hiệu hóa truyện này truyện này?',
+                                                  leftText: 'Xác nhận',
+                                                  onLeftTap: () async {
+                                                    // await viewModel
+                                                    //     .deleteComment();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  rightText: 'Hủy',
+                                                  onRightTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                );
+                                              })
+                                        },
+                                    itemBuilder: (context) => [
+                                          PopupMenuItem<int>(
+                                              value: 0,
+                                              child: Text('Vô hiệu hóa')),
+                                        ])
+                                : Container(),
                       ],
                     ),
                     Text(
@@ -204,17 +281,18 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                     const SizedBox(height: 8),
                     if (viewModel.comments.isNotEmpty)
                       SizedBox(
-                        height: 200,
+                        height: 220,
                         child: ListView.builder(
                             shrinkWrap: true,
                             itemCount:
                                 viewModel.comments.take(5).toList().length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return CommentWidget(
-                                currentUserID: viewModel.idUser,
-                                story: viewModel.currentStory,
+                              return TotalCommentCard(
                                 comment: viewModel.comments[index],
+                                currentUserID: viewModel.idUser,
+                                comicViewModel: viewModel,
+                                isTotalComment: false,
                               );
                             }),
                       ),

@@ -24,7 +24,7 @@ class ComicViewModel extends BaseViewModel {
   late BuildContext viewContext;
   Story currentStory = Story();
   late Comment commentStory;
-  late Chapter currentChapter;
+  Chapter? currentChapter;
   List<Story> storiesIsActive = [];
   List<Story> storiesNew = [];
   StoryRequest request = StoryRequest();
@@ -54,6 +54,19 @@ class ComicViewModel extends BaseViewModel {
     await getCommentByStory();
     await getStoryNew();
     setBusy(false);
+    notifyListeners();
+  }
+
+  Future<void> postNotification(
+      String? message, String? title, int? is_read) async {
+    Map<String, dynamic> notificationModel = {
+      'user_id': idUser,
+      'title': title,
+      'message': message,
+      'is_read': 1
+    };
+    await ApiService().postNotifications(
+        '${Api.hostApi}${Api.postNotificationByAdmin}', notificationModel);
     notifyListeners();
   }
 
@@ -96,11 +109,18 @@ class ComicViewModel extends BaseViewModel {
     _commentModel = {
       'story_id': currentStory.storyId,
       'user_id': idUser,
-      'chapter_id': currentChapter.chapterId,
+      'chapter_id': currentChapter?.chapterId,
       'content': content
     };
     await apiService.postRequestComment(
         '${Api.hostApi}${Api.comment}', _commentModel);
+    notifyListeners();
+  }
+
+  Future<void> deleteComment() async {
+    int id = commentStory.commentId;
+    print('Api xóa: ${Api.hostApi}${Api.comment}/${id}');
+    await apiService.deleteRequest('${Api.hostApi}${Api.comment}/${id}');
     notifyListeners();
   }
 
@@ -128,7 +148,7 @@ class ComicViewModel extends BaseViewModel {
   }
 
   Future<void> getCommentByChapter() async {
-    int? chapterID = currentChapter.chapterId;
+    int? chapterID = currentChapter?.chapterId;
     Response infoResponse = await apiService.getRequest(
         '${Api.hostApi}${Api.comment}',
         queryParams: {"chapter_id": chapterID});
@@ -168,7 +188,7 @@ class ComicViewModel extends BaseViewModel {
         MaterialPageRoute(
             builder: (context) => ViewStoryPage(
                   story: currentStory,
-                  chapter: currentChapter,
+                  chapter: currentChapter!,
                   viewModel: this,
                 )));
   }

@@ -3,6 +3,7 @@ import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
+import 'package:app_stories/views/stories/stories_view/bottomcomment/widget/comment_card.wiget.dart';
 import 'package:app_stories/views/view_story/widget/commentcard.widget.dart';
 import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -80,8 +81,10 @@ class _CommentBottomState extends State<CommentBottom> {
                             child: ListView.builder(
                                 itemCount: viewModel.comments.length,
                                 itemBuilder: (context, index) {
-                                  return CommentCard(
-                                      comment: viewModel.comments[index]);
+                                  return TotalCommentCard(
+                                      comment: viewModel.comments[index],
+                                      currentUserID: viewModel.idUser,
+                                      comicViewModel: viewModel);
                                 }),
                           ),
                           const Divider(
@@ -112,7 +115,7 @@ class _CommentBottomState extends State<CommentBottom> {
                                   onPressed: () {
                                     viewModel.postComment(
                                         viewModel.currentStory.storyId,
-                                        viewModel.currentChapter.chapterId,
+                                        viewModel.currentChapter!.chapterId,
                                         viewModel.commentController.text);
                                     viewModel.commentController.clear();
                                     viewModel.getCommentByChapter();
