@@ -1,3 +1,5 @@
+import 'package:app_stories/models/comment_model.dart';
+import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/view_model/notification.vm.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -8,17 +10,21 @@ import '../../../models/notification_model.dart' as notification_model;
 // ignore: must_be_immutable
 class NotificationCard extends StatelessWidget {
   final NotificationViewModel notificationViewModel;
-  NotificationCard(
-      {super.key,
-      required this.notification,
-      required this.notificationViewModel});
+  //final ComicViewModel comicViewModel;
+  NotificationCard({
+    super.key,
+    required this.notification,
+    required this.notificationViewModel,
+  });
   notification_model.Notification notification;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await notificationViewModel.markAsReadNotification(notification);
-        notificationViewModel.notifyListeners();
+        if (notification.title != 'Thông báo báo cáo bình luận') {
+          await notificationViewModel.markAsReadNotification(notification);
+          notificationViewModel.notifyListeners();
+        }
       },
       child: Container(
         //height: MediaQuery.of(context).size.height / 10,
@@ -63,7 +69,7 @@ class NotificationCard extends StatelessWidget {
               height: 10,
             ),
             Text(
-              notification.message,
+              notification.message.split('/').last,
               style: const TextStyle(color: Colors.white),
             ),
             if (notification.title == 'Thông báo báo cáo bình luận')
@@ -76,7 +82,12 @@ class NotificationCard extends StatelessWidget {
                         'Xóa bình luận',
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {}),
+                      onPressed: () async {
+                        ComicViewModel comicViewModel = ComicViewModel();
+
+                        await comicViewModel.deleteCommentById(
+                            notification.message.split('/').first);
+                      }),
                   SizedBox(
                     width: 10,
                   ),

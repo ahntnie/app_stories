@@ -118,6 +118,7 @@ class ApiService {
       throw Exception('POST request error: $e');
     }
   }
+
   Future<Response> postNotifications(String url, Map<String, dynamic> data) async {
     try {
       final formData = FormData.fromMap(data);
