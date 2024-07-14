@@ -25,8 +25,8 @@ class NotificationRequest extends ApiService {
     return notifications;
   }
 
-  Future<void> postNotification(String idUser, String? message, String? title,
-      int? is_read, int storyId, Chapter? chapter) async {
+  Future<void> postNotificationByAdmin(String idUser, String? message,
+      String? title, int? is_read, int storyId, Chapter? chapter) async {
     Users currentUser =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
     idUser = currentUser.id;
@@ -38,6 +38,8 @@ class NotificationRequest extends ApiService {
       'story_id': storyId,
       'chapter_id': chapter == null ? null : chapter.chapterId,
     };
+    print(notificationModel);
+    print('${Api.hostApi}${Api.postNotificationByAdmin}');
     await ApiService().postNotifications(
         '${Api.hostApi}${Api.postNotificationByAdmin}', notificationModel);
   }

@@ -17,7 +17,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   Widget build(BuildContext context) {
     return Container(
       //height: 10,
-      padding: EdgeInsets.all(2.0), // Khoảng cách từ chữ đến viền container
+      margin: EdgeInsets.symmetric(horizontal: 5.0),
+      padding: EdgeInsets.all(2.0),
+      // Khoảng cách từ chữ đến viền container
       decoration: BoxDecoration(
           border: Border.all(color: AppColor.inwellColor),
           borderRadius: BorderRadius.circular(5)),

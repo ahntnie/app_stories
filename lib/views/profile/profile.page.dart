@@ -124,6 +124,45 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                       if (viewModel.currentUser!.role != 'admin' &&
                           viewModel.currentUser!.role == 'author') ...[
+                        if (viewModel.currentUser!.role == 'author')
+                          CustomMenuButton(
+                            icon: Icons.add_circle,
+                            text: 'Quản lý truyện đăng',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MyStoriesPage()));
+                            },
+                          ),
+                        if (viewModel.currentUser!.role == 'author')
+                          CustomMenuButton(
+                            icon: Icons.menu_book_sharp,
+                            text: 'Thống kê',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReportPage(
+                                          //profileViewModel: viewModel,
+                                          )));
+                            },
+                          ),
+                        if (viewModel.currentUser!.role == 'admin')
+                          CustomMenuButton(
+                            icon: Icons.menu_book_sharp,
+                            text: 'Thống kê',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReportAdminPage(
+                                            profileViewModel: viewModel,
+                                          )));
+                            },
+                          ),
+
                         CustomMenuButton(
                           icon: Icons.add_circle,
                           text: 'Quản lý truyện đăng',
@@ -147,6 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         )));
                           },
                         ),
+
                       ],
                       if (viewModel.currentUser!.role == 'admin') ...[
                         CustomMenuButton(

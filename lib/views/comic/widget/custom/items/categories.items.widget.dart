@@ -17,28 +17,25 @@ class CategoriesItems extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3,
+        crossAxisCount: 3,
+        childAspectRatio: 2,
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () async {
-            await homeViewModel.searchSotriesViewModel
-                .checkAndSearchStoriesByCategory(categories[index].categoryId);
-            homeViewModel.setIndex(1);
-          },
-          child: Card(
-            color: AppColor.selectColor,
-            child: Center(
-              child: Text(categories[index].name!,
-                  style: TextStyle(
-                      color: AppColor.extraColor,
-                      fontWeight: AppFontWeight.bold,
-                      fontSize: AppFontSize.sizeMedium)),
-            ),
-          ),
-        );
+            onTap: () async {
+              await homeViewModel.searchSotriesViewModel
+                  .checkAndSearchStoriesByCategory(
+                      categories[index].categoryId);
+              homeViewModel.setIndex(1);
+            },
+            child: Card(
+              color: AppColor.selectColor,
+              child: Center(
+                child: Text(categories[index].name!,
+                    style: TextStyle(color: Colors.white)),
+              ),
+            ));
       },
     );
   }

@@ -179,7 +179,6 @@ class ComicViewModel extends BaseViewModel {
 
   nextDetailStory() async {
     checkFavourite();
-    categories = currentStory.categories!;
     Navigator.push(
         viewContext,
         MaterialPageRoute(

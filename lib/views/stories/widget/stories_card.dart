@@ -86,9 +86,7 @@ class _StoryCardState extends State<StoryCard> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: widget.data.active == 0
-                    ? MainAxisAlignment.spaceBetween
-                    : MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     widget.data.title!,
@@ -98,10 +96,9 @@ class _StoryCardState extends State<StoryCard> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (widget.data.active != 0)
-                    const SizedBox(
-                      height: 30,
-                    ),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   Text(
                     'Chapter ${widget.data.chapterCount!.toString()}',
                     style: const TextStyle(
@@ -113,74 +110,104 @@ class _StoryCardState extends State<StoryCard> {
                   SizedBox(
                     height: 20,
                   ),
-                  if (widget.data.author!.name ==
-                      widget.viewModel.currentUser.name)
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 25),
-                        child: CustomButton(
-                            enable: widget.data.isCompleted! ? false : true,
-                            color: !widget.data.isCompleted!
-                                ? AppColor.primary
-                                : AppColor.buttonColor,
-                            title: Text(
-                              widget.data.isCompleted!
-                                  ? "Đã hoàn thành"
-                                  : 'Hoàn thành',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: AppFontSize.sizeSmall),
-                            ),
-                            onPressed: () {
-                              widget.viewModel.currentStory = widget.data;
-                              widget.viewModel.completedStory();
-                            }),
-                      ),
-                    ),
-                  if (widget.data.active == 0)
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Đang chờ duyệt',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  if (widget.data.active == 3 &&
-                      widget.data.author!.name !=
-                          widget.viewModel.currentUser.name)
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Đã duyệt',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  if (widget.data.active == 2 &&
-                      widget.data.author!.name !=
-                          widget.viewModel.currentUser.name)
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Đã vô hiệu hóa',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  if (widget.data.active == 1 &&
-                      widget.data.author!.name !=
-                          widget.viewModel.currentUser.name)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: CustomButton(
-                        color: AppColor.selectColor,
-                        //isLoading: viewModel.isBusy,
-                        onPressed: widget.onPressed!,
-                        title: const Text(
-                          'Vô hiệu hóa truyện',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                  if (widget.viewModel.currentUser.role == 'author') ...[
+                    if (widget.data.author!.name ==
+                        widget.viewModel.currentUser.name) ...[
+                      if (widget.data.active == 1)
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 25),
+                            child: CustomButton(
+                                enable: widget.data.isCompleted! ? false : true,
+                                color: !widget.data.isCompleted!
+                                    ? AppColor.primary
+                                    : AppColor.buttonColor,
+                                title: Text(
+                                  widget.data.isCompleted!
+                                      ? "Đã hoàn thành"
+                                      : 'Hoàn thành',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: AppFontSize.sizeSmall),
+                                ),
+                                onPressed: () {
+                                  widget.viewModel.currentStory = widget.data;
+                                  widget.viewModel.completedStory();
+                                }),
+                          ),
+                        ),
+                      if (widget.data.active == 0)
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Đang chờ duyệt',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      if (widget.data.active == 2)
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Đã vô hiệu hóa',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      if (widget.data.active == 3)
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Đang chờ duyệt lại',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                    ]
+                  ],
+                  if (widget.viewModel.currentUser.role == 'admin') ...[
+                    if (widget.data.active == 0)
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Đang chờ duyệt',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
-                    ),
+                    if (widget.data.active == 3 &&
+                        widget.data.author!.name !=
+                            widget.viewModel.currentUser.name)
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Đã duyệt',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    if (widget.data.active == 2 &&
+                        widget.data.author!.name !=
+                            widget.viewModel.currentUser.name)
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Đã vô hiệu hóa',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    if (widget.data.active == 1 &&
+                        widget.data.author!.name !=
+                            widget.viewModel.currentUser.name)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CustomButton(
+                          color: AppColor.selectColor,
+                          //isLoading: viewModel.isBusy,
+                          onPressed: widget.onPressed!,
+                          title: const Text(
+                            'Vô hiệu hóa truyện',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                      ),
+                  ],
                 ],
               ),
             ),

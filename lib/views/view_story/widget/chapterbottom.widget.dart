@@ -78,15 +78,29 @@ class _BottomChapterState extends State<BottomChapter> {
               child: ListView.builder(
                   itemCount: widget.story.chapters!.length,
                   itemBuilder: (context, index) {
-                    return ChapterCard(
-                      chapter: widget.story.chapters![index],
-                      viewModel: widget.viewModel,
-                      onPressed: () {
-                        widget.viewModel.currentChapter =
-                            widget.story.chapters![index];
-                        widget.viewModel.notifyListeners();
-                      },
-                    );
+                    if (widget.showNewStories) {
+                      return ChapterCard(
+                        chapter: widget.story.chapters![index],
+                        viewModel: widget.viewModel,
+                        onPressed: () {
+                          widget.viewModel.currentChapter =
+                              widget.story.chapters![index];
+                          widget.viewModel.notifyListeners();
+                        },
+                      );
+                    } else {
+                      final reversedChapters =
+                          widget.story.chapters!.reversed.toList();
+                      return ChapterCard(
+                        chapter: reversedChapters[index],
+                        viewModel: widget.viewModel,
+                        onPressed: () {
+                          widget.viewModel.currentChapter =
+                              reversedChapters[index];
+                          widget.viewModel.notifyListeners();
+                        },
+                      );
+                    }
                   }),
             )
           ],

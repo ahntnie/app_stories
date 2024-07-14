@@ -30,6 +30,7 @@ class _MyStoriesPageState extends State<MyStoriesPage> {
           viewModel.getMyStories();
         },
         builder: (context, viewModel, child) {
+          print('Load lại my stories');
           return BasePage(
             title: 'Quản lý truyện đăng',
             body: viewModel.isBusy
@@ -58,14 +59,17 @@ class _MyStoriesPageState extends State<MyStoriesPage> {
                               ),
                             ),
                           ),
-                          ...viewModel.myStories.map((story) => StoryCard(
-                                viewModel: viewModel,
-                                data: story,
-                                onTap: () {
-                                  viewModel.currentStory = story;
-                                  viewModel.nextPostChapter();
-                                },
-                              )),
+                          ...viewModel.myStories.map((story) {
+                            print('Load lại story card');
+                            return StoryCard(
+                              viewModel: viewModel,
+                              data: story,
+                              onTap: () {
+                                viewModel.currentStory = story;
+                                viewModel.nextPostChapter();
+                              },
+                            );
+                          }),
                         ],
                       ),
                     ),

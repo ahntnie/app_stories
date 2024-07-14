@@ -28,7 +28,8 @@ class MyStoriesViewModel extends BaseViewModel {
   }
 
   nextPostChapter() {
-    if (currentStory.active == 1) {
+    if (currentStory.active == 1 && currentStory.isCompleted == false) {
+      print('Hình nexPostChapter: ${currentStory.chapters!.first.images}');
       Navigator.push(
           viewContext,
           MaterialPageRoute(
@@ -36,13 +37,27 @@ class MyStoriesViewModel extends BaseViewModel {
                     data: currentStory,
                     viewModel: this,
                   )));
+    } else if (currentStory.active == 1 && currentStory.isCompleted == true) {
+      showDialog(
+        context: viewContext,
+        builder: (context) {
+          return PopUpWidget(
+            icon: Image.asset("assets/ic_success.png"),
+            title: 'Truyện đã hoàn thành',
+            leftText: 'Xác nhận',
+            onLeftTap: () {
+              Navigator.pop(viewContext);
+            },
+          );
+        },
+      );
     } else if (currentStory.active == 0) {
       showDialog(
         context: viewContext,
         builder: (context) {
           return PopUpWidget(
             icon: Image.asset("assets/ic_success.png"),
-            title: 'Truyện đã đương đăng, nhưng chờ duyệt nhé!',
+            title: 'Truyện đã được đăng, nhưng chờ duyệt nhé!',
             leftText: 'Xác nhận',
             onLeftTap: () {
               Navigator.pop(viewContext);

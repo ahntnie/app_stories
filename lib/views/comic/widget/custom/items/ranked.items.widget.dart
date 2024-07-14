@@ -32,7 +32,6 @@ class _RankedItemsState extends State<RankedItems> {
         viewModelBuilder: () => widget.comicViewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
-          // viewModel.init();
         },
         builder: (context, viewModel, child) {
           return InkWell(
@@ -175,8 +174,6 @@ class _RankedItemsState extends State<RankedItems> {
         result = 'Vừa mới đây';
       }
     }
-
-    print(result);
     return result.trim();
   }
 }
