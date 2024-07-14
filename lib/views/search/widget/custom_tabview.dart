@@ -1,6 +1,7 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/mystories.vm.dart';
+import 'package:app_stories/views/comic/widget/custom/items/ranked.items.widget.dart';
 import 'package:app_stories/views/stories/widget/stories_card.dart';
 import 'package:flutter/material.dart';
 
@@ -81,8 +82,8 @@ class _CustomTabViewState extends State<CustomTabView>
                   fontWeight: AppFontWeight.bold),
             ),
           ),
-          ...stories.map((story) => StoryCard(
-                viewModel: MyStoriesViewModel(),
+          ...stories.map((story) => RankedItems(
+                comicViewModel: ComicViewModel(),
                 data: story,
                 onTap: () {
                   ComicViewModel comicViewModel = ComicViewModel();

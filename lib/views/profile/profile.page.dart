@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           viewModel.currentUser!.role == 'author') ...[
                         CustomMenuButton(
                           icon: Icons.add_circle,
-                          text: 'Đăng truyện',
+                          text: 'Quản lý truyện đăng',
                           onTap: () {
                             Navigator.push(
                                 context,

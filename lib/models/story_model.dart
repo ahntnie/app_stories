@@ -19,6 +19,8 @@ class Story {
   int? totalView;
   int? totalComment;
   bool? isCompleted;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   Story({
     this.storyId,
     this.title,
@@ -35,6 +37,8 @@ class Story {
     this.totalComment,
     this.viewUsers,
     this.isCompleted,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -67,6 +71,8 @@ class Story {
           ? []
           : List<Users>.from(json['view_users'].map((x) => Users.fromJson(x))),
       isCompleted: json['is_completed'] == 1 ? true : false,
+      createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
     );
   }
 
@@ -83,6 +89,8 @@ class Story {
       'categories': List<dynamic>.from(categories!.map((x) => x)),
       'favourited_users': List<dynamic>.from(favouriteUser!.map((x) => x)),
       'author': author!.toJson(),
+      'created_at': createdAt!.toIso8601String(),
+      'updated_at': updatedAt!.toIso8601String(),
     };
   }
 }

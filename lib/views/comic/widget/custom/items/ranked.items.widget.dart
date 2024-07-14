@@ -1,4 +1,5 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/models/chapter_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
@@ -6,26 +7,36 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class RankedItems extends StatelessWidget {
-  RankedItems(
-      {super.key,
-      required this.tabName,
-      required this.data,
-      required this.onTap});
-  String tabName;
+class RankedItems extends StatefulWidget {
+  RankedItems({
+    super.key,
+    this.tabName,
+    required this.data,
+    required this.onTap,
+    required this.comicViewModel,
+  });
+  String? tabName;
   final Story data;
   final VoidCallback onTap;
+  ComicViewModel comicViewModel;
+  @override
+  State<RankedItems> createState() => _RankedItemsState();
+}
+
+class _RankedItemsState extends State<RankedItems> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-        viewModelBuilder: () => ComicViewModel(),
+        disposeViewModel: false,
+        viewModelBuilder: () => widget.comicViewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
           viewModel.init();
         },
         builder: (context, viewModel, child) {
+          viewModel.viewContext = context;
           return InkWell(
-            onTap: onTap,
+            onTap: widget.onTap,
             child: Container(
               margin: const EdgeInsets.only(top: 8),
               padding:
@@ -33,11 +44,11 @@ class RankedItems extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (data.coverImage!.first != null)
+                  if (widget.data.coverImage!.first != null)
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 4,
                       child: Image.network(
-                        data.coverImage!.first,
+                        widget.data.coverImage!.first,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
                             return ClipRRect(
@@ -72,7 +83,7 @@ class RankedItems extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          data.title!,
+                          widget.data.title!,
                           style: TextStyle(
                             fontSize: AppFontSize.sizeMedium,
                             color: AppColor.extraColor,
@@ -80,13 +91,57 @@ class RankedItems extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Chapter ${data.chapterCount!.toString()}',
+                          'Chapter ${widget.data.chapterCount!.toString()}',
                           style: TextStyle(
                             fontSize: AppFontSize.sizeSmall,
                             color: AppColor.inwellColor,
                             fontWeight: AppFontWeight.bold,
                           ),
                         ),
+                        Row(
+                          children: [
+                            const Icon(Icons.visibility, color: Colors.orange),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.data.totalView.toString(),
+                              style: TextStyle(
+                                  fontSize: AppFontSize.sizeSmall,
+                                  color: AppColor.extraColor),
+                            ),
+                            const SizedBox(width: 16),
+                            const Icon(Icons.favorite,
+                                color: AppColor.selectColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${widget.data.favouriteUser!.length}',
+                              style: TextStyle(
+                                  fontSize: AppFontSize.sizeSmall,
+                                  color: AppColor.extraColor),
+                            ),
+                            const SizedBox(width: 16),
+                            const Icon(Icons.comment, color: Colors.blue),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${widget.data.totalComment}',
+                              style: TextStyle(
+                                  fontSize: AppFontSize.sizeSmall,
+                                  color: AppColor.extraColor),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 80,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              timeDifference(
+                                  widget.data.createdAt!.toIso8601String()),
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                   ),
@@ -95,5 +150,32 @@ class RankedItems extends StatelessWidget {
             ),
           );
         });
+  }
+
+  String timeDifference(String inputTime) {
+    DateTime inputDateTime = DateTime.parse(inputTime).toUtc();
+    DateTime currentDateTime = DateTime.now().toUtc();
+    Duration duration = currentDateTime.difference(inputDateTime);
+
+    int days = duration.inDays;
+    int hours = duration.inHours % 24;
+    int minutes = duration.inMinutes % 60;
+
+    String result = '';
+
+    if (days > 0) {
+      result = '$days ngày trước';
+    }
+    if (days == 0) {
+      if (hours > 0) {
+        result += '$hours giờ trước';
+      }
+      if (result.isEmpty) {
+        result = 'Vừa mới đây';
+      }
+    }
+
+    print(result);
+    return result.trim();
   }
 }
