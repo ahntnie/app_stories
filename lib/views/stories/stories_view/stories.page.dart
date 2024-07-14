@@ -103,43 +103,81 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               fontWeight: AppFontWeight.bold,
                               color: AppColor.extraColor),
                         ),
-                        if (widget.data.author!.id !=
-                                viewModel.currentUsers!.id &&
-                            viewModel.currentUsers!.role != 'admin')
-                          PopupMenuButton<int>(
-                              icon: Icon(
-                                Icons.report,
-                                size: 30,
-                                color: AppColor.selectColor,
-                              ),
-                              onSelected: (item) {
-                                NotificationViewModel notiViewModel =
-                                    NotificationViewModel();
-                                notiViewModel.currentChapter =
-                                    viewModel.currentChapter;
-                                notiViewModel.viewContext = context;
-                                notiViewModel.currentStory =
-                                    viewModel.currentStory;
-                                // notiViewModel.comment = widget.comment;
-                                // notiViewModel.postNotification();
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return PopUpWidget(
-                                        icon: Image.asset(
-                                            "assets/ic_success.png"),
-                                        title: 'Đã gửi phản hồi',
-                                        leftText: 'Xác nhận',
-                                        onLeftTap: () {
-                                          Navigator.pop(context);
+                        (widget.data.author!.id != viewModel.currentUsers!.id &&
+                                viewModel.currentUsers!.role != 'admin')
+                            ? PopupMenuButton<int>(
+                                icon: Icon(
+                                  Icons.report,
+                                  size: 30,
+                                  color: AppColor.selectColor,
+                                ),
+                                onSelected: (item) {
+                                  NotificationViewModel notiViewModel =
+                                      NotificationViewModel();
+                                  notiViewModel.currentChapter =
+                                      viewModel.currentChapter;
+                                  notiViewModel.viewContext = context;
+                                  notiViewModel.currentStory =
+                                      viewModel.currentStory;
+                                  notiViewModel
+                                      .postNotificationReportStoriyByAdmin();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PopUpWidget(
+                                          icon: Image.asset(
+                                              "assets/ic_success.png"),
+                                          title: 'Đã gửi báo cáo truyện',
+                                          leftText: 'Xác nhận',
+                                          onLeftTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      });
+                                },
+                                itemBuilder: (context) => [
+                                      PopupMenuItem<int>(
+                                          value: 0, child: Text('Báo cáo')),
+                                    ])
+                            : viewModel.currentUsers!.role == 'admin'
+                                ? PopupMenuButton<int>(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      size: 30,
+                                      color: AppColor.selectColor,
+                                    ),
+                                    onSelected: (item) async => {
+                                          // viewModel.commentStory =
+                                          //     widget.comment,
+                                          // // print('Nhấn xóa')
+
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return PopUpWidget(
+                                                  icon: Image.asset(
+                                                      "assets/ic_success.png"),
+                                                  title:
+                                                      'Bạn có xác nhận vô hiệu hóa truyện này truyện này?',
+                                                  leftText: 'Xác nhận',
+                                                  onLeftTap: () async {
+                                                    // await viewModel
+                                                    //     .deleteComment();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  rightText: 'Hủy',
+                                                  onRightTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                );
+                                              })
                                         },
-                                      );
-                                    });
-                              },
-                              itemBuilder: (context) => [
-                                    PopupMenuItem<int>(
-                                        value: 0, child: Text('Báo cáo')),
-                                  ])
+                                    itemBuilder: (context) => [
+                                          PopupMenuItem<int>(
+                                              value: 0,
+                                              child: Text('Vô hiệu hóa')),
+                                        ])
+                                : Container(),
                       ],
                     ),
                     Text(
@@ -186,12 +224,15 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                           height: 30,
                           child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: viewModel.categories.length,
+                              itemCount:
+                                  viewModel.currentStory.categories!.length,
                               scrollDirection: Axis.horizontal,
+                              // padding: EdgeInsets.symmetric(horizontal: 10),
                               itemBuilder: (context, index) {
                                 return CategoryWidget(
                                   story: viewModel.currentStory,
-                                  category: viewModel.categories[index],
+                                  category:
+                                      viewModel.currentStory.categories![index],
                                 );
                               }),
                         ),
@@ -270,24 +311,34 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               color: AppColor.extraColor),
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            InkWell(
-                              child: Text(
-                                "Mới nhất",
-                                style: TextStyle(
-                                    fontSize: AppFontSize.sizeSmall,
-                                    color: AppColor.extraColor),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            InkWell(
-                              child: Text(
-                                "Cũ nhất",
-                                style: TextStyle(
-                                    fontSize: AppFontSize.sizeSmall,
-                                    color: AppColor.extraColor),
-                              ),
-                            ),
+                            TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showNewStories = true;
+                                  });
+                                },
+                                child: Text(
+                                  'Mới nhất',
+                                  style: TextStyle(
+                                      color: showNewStories
+                                          ? AppColor.selectColor
+                                          : AppColor.extraColor),
+                                )),
+                            TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showNewStories = false;
+                                  });
+                                },
+                                child: Text(
+                                  'Cũ nhất',
+                                  style: TextStyle(
+                                      color: showNewStories
+                                          ? AppColor.extraColor
+                                          : AppColor.selectColor),
+                                ))
                           ],
                         ),
                       ],
@@ -298,15 +349,30 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                       child: ListView.builder(
                           itemCount: widget.data.chapters!.length,
                           itemBuilder: (context, index) {
-                            return ChapterCard(
-                              chapter: widget.data.chapters![index],
-                              viewModel: viewModel,
-                              onPressed: () {
-                                viewModel.currentChapter =
-                                    viewModel.currentStory.chapters![index];
-                                viewModel.detailChapter();
-                              },
-                            );
+                            if (showNewStories) {
+                              return ChapterCard(
+                                chapter: widget.data.chapters![index],
+                                viewModel: widget.viewModel,
+                                onPressed: () {
+                                  viewModel.currentChapter =
+                                      viewModel.currentStory.chapters![index];
+                                  viewModel.detailChapter();
+                                },
+                              );
+                            } else {
+                              final reversedChapters =
+                                  widget.data.chapters!.reversed.toList();
+
+                              return ChapterCard(
+                                chapter: reversedChapters[index],
+                                viewModel: widget.viewModel,
+                                onPressed: () {
+                                  viewModel.currentChapter =
+                                      viewModel.currentStory.chapters![index];
+                                  viewModel.detailChapter();
+                                },
+                              );
+                            }
                           }),
                     ),
                   ],

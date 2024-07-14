@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 
 class ApiService {
   final Dio dio = Dio(BaseOptions(
-    connectTimeout: const Duration(seconds: 20), // 10 giây
-    receiveTimeout: const Duration(seconds: 20), // 10 giây
+    connectTimeout: const Duration(seconds: 60), // 10 giây
+    receiveTimeout: const Duration(seconds: 60), // 10 giây
   ));
 
   ApiService() {
@@ -119,7 +119,8 @@ class ApiService {
     }
   }
 
-  Future<Response> postNotifications(String url, Map<String, dynamic> data) async {
+  Future<Response> postNotifications(
+      String url, Map<String, dynamic> data) async {
     try {
       final formData = FormData.fromMap(data);
       Response response = await dio.post(
@@ -228,7 +229,7 @@ class ApiService {
       Response response;
       if (data != null) {
         final formData = FormData.fromMap(data);
-        response = await dio.put(
+        response = await dio.patch(
           url,
           data: formData,
           options: Options(

@@ -124,17 +124,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                       if (viewModel.currentUser!.role == 'admin' ||
                           viewModel.currentUser!.role == 'author') ...[
-                        CustomMenuButton(
-                          icon: Icons.add_circle,
-                          text: 'Quản lý truyện đăng',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MyStoriesPage()));
-                          },
-                        ),
+                        if (viewModel.currentUser!.role == 'author')
+                          CustomMenuButton(
+                            icon: Icons.add_circle,
+                            text: 'Quản lý truyện đăng',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MyStoriesPage()));
+                            },
+                          ),
                         if (viewModel.currentUser!.role == 'author')
                           CustomMenuButton(
                             icon: Icons.menu_book_sharp,

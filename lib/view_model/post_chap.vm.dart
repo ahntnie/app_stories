@@ -27,6 +27,8 @@ class PostChapViewModel extends BaseViewModel {
   TextEditingController titleChapterController = TextEditingController();
   List<File> downloadedFiles = [];
   bool isLoadImage = false;
+  List<int> oldIndex = [];
+  late Story oldStory;
 
   changeShowChapter() {
     showChapters = !showChapters;
@@ -75,9 +77,32 @@ class PostChapViewModel extends BaseViewModel {
   }
 
   Future<void> updateChapter() async {
-    await downloadImages();
-    await chapterRequest.updateChapter(
-        downloadedFiles, 'Truyện update', currentChapter.chapterId);
+    setBusy(true);
+    // await downloadImages();
+    // await chapterRequest.updateChapter(
+    //     downloadedFiles, 'Truyện update', currentChapter.chapterId);
+
+    String? errorString = await chapterRequest.updateImagesChapter(
+        oldIndex, currentStory.storyId!, currentChapter.chapterNumber);
+
+    oldIndex =
+        List.generate(currentChapter.images.length, (int index) => index);
+    print(oldIndex);
+    currentStory = await StoryRequest().getStoryById(currentStory.storyId!);
+    currentChapter = currentStory.chapters![currentChapter.chapterNumber - 1];
+    // print('Danh sách ảnh get về: ${currentStory.chapters!.first.images}');
+    // currentStory.chapters![currentChapter.chapterNumber - 1].images =
+    //     currentStory.chapters![currentChapter.chapterNumber - 1].images
+    //         .map((image) =>
+    //             '$image?timestamp=${DateTime.now().millisecondsSinceEpoch}')
+    //         .toList();
+    notifyListeners();
+    setBusy(false);
+
+    isLoadImage = true;
+    notifyListeners();
+    isLoadImage = false;
+    notifyListeners();
     Directory tempDir = await getTemporaryDirectory();
     await clearTempDirectory(tempDir);
   }

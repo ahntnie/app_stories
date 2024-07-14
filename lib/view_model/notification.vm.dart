@@ -37,15 +37,29 @@ class NotificationViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  postNotification() async {
+  postNotificationByAdmin() async {
     Users currentUser =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
     String idUser = currentUser.id;
     print('Comment bên vm: ${comment.content}');
-    await request.postNotification(
+    await request.postNotificationByAdmin(
         idUser,
         "${comment.commentId}/Tài khoản ${currentUser.name} đã báo cáo bình luận sau: '${comment.content}'. Vui lòng kiểm tra và xử lý sớm nhất có thể",
         "Thông báo báo cáo bình luận",
+        0,
+        currentStory.storyId!,
+        currentChapter);
+  }
+
+  postNotificationReportStoriyByAdmin() async {
+    Users currentUser =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    String idUser = currentUser.id;
+    print('Truyện báo cáo bên vm: ${currentStory.title}');
+    await request.postNotificationByAdmin(
+        idUser,
+        "Tài khoản ${currentUser.name} đã báo cáo truyện sau: '${currentStory.title}'. Vui lòng kiểm tra và xử lý sớm nhất có thể",
+        "Thông báo báo cáo truyện",
         0,
         currentStory.storyId!,
         currentChapter);

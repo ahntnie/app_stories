@@ -7,10 +7,12 @@ import '../view_image.page.dart';
 class ImageCard extends StatelessWidget {
   final String? urlImage;
   final File? fileImage;
+  final bool isLoad;
   const ImageCard({
     super.key,
     required this.urlImage,
     this.fileImage,
+    this.isLoad = false,
   });
 
   @override
@@ -42,8 +44,9 @@ class ImageCard extends StatelessWidget {
                   },
                 )
               : Image.network(
-                  // isLoad ? urlImageWithTimestamp : urlImage!,
-                  urlImageWithTimestamp,
+                  isLoad ? urlImageWithTimestamp : urlImage!,
+                 // urlImageWithTimestamp,
+                  //urlImage!,
                   width: MediaQuery.of(context).size.width / 4,
                   fit: BoxFit.fill,
                   loadingBuilder: (BuildContext context, Widget child,

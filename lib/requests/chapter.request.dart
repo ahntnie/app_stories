@@ -78,4 +78,26 @@ class ChapterRequest {
     }
     return errorString;
   }
+
+  Future<String?> updateImagesChapter(
+      List<int> order, int storyId, int chapterNumber) async {
+    print('Order: $order');
+    print({
+      "order": order.toString(),
+      "story_id": storyId,
+      "chapter_number": chapterNumber,
+    });
+    Dio dio = Dio();
+    final response = await dio.patch(
+      '${Api.hostApi}${Api.updateImages}',
+      data: {
+        "order": order.toString(),
+        "story_id": storyId,
+        "chapter_number": chapterNumber,
+      },
+    );
+
+    print('Body sửa ảnh chapter: ${response.data}');
+    return response.data.toString();
+  }
 }

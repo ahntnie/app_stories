@@ -4,11 +4,13 @@ import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/view_model/post_chap.vm.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/custom_button.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:reorderable_grid_view/reorderable_grid_view.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../view_model/mystories.vm.dart';
+import '../../widget/pop_up.dart';
 import 'widget/image_card.dart';
 
 class PostChapterPage extends StatefulWidget {
@@ -23,15 +25,33 @@ class PostChapterPage extends StatefulWidget {
 
 class _PostChapterPageState extends State<PostChapterPage> {
   bool showChapters = false;
+  late PostChapViewModel viewModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel = PostChapViewModel();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-      viewModelBuilder: () => PostChapViewModel(),
+      viewModelBuilder: () => viewModel,
       onViewModelReady: (viewModel) {
+        print('vào onViewModelReady');
         viewModel.viewContext = context;
         viewModel.currentStory = widget.data;
         viewModel.currentChapter = widget.data.chapters!.first;
+        viewModel.oldIndex = List.generate(
+            viewModel.currentChapter.images.length,
+            (int index) => int.parse(viewModel.currentChapter.images[index]
+                .split('/')
+                .last
+                .split('.')
+                .first
+                .split('_')
+                .last),
+            growable: true);
       },
       builder: (context, viewModel, child) {
         return BasePage(
@@ -109,6 +129,22 @@ class _PostChapterPageState extends State<PostChapterPage> {
                                 onTap: () {
                                   viewModel.currentChapter = chapter;
                                   viewModel.showAddChapter = false;
+                                  viewModel.oldIndex = List.generate(
+                                      viewModel.currentChapter.images.length,
+                                      (int index) => int.parse(viewModel
+                                          .currentChapter.images[index]
+                                          .split('/')
+                                          .last
+                                          .split('.')
+                                          .first
+                                          .split('_')
+                                          .last),
+                                      growable: true);
+                                  // viewModel.currentChapter.images = viewModel
+                                  //     .currentStory.chapters![index].images;
+                                  print('Nhấn đổi chap');
+                                  print(
+                                      'Thứ tự chỉnh sửa: ${viewModel.oldIndex}');
                                   viewModel.notifyListeners();
                                   // viewModel.getListImageChapter(
                                   //     chapter.chapterNumber - 1);
@@ -222,6 +258,7 @@ class _PostChapterPageState extends State<PostChapterPage> {
                                 if (newIndex == 0 || oldIndex == 0) {
                                   return;
                                 }
+
                                 final item = viewModel.newChapterImages
                                     .removeAt(oldIndex - 1);
                                 viewModel.newChapterImages
@@ -249,7 +286,7 @@ class _PostChapterPageState extends State<PostChapterPage> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5.0),
                                     child: ImageCard(
-                                      //isLoad: isLoadImage,
+                                      isLoad: true, //viewModel.isLoadImage,
                                       urlImage: viewModel
                                           .currentChapter.images[index],
                                     ),
@@ -257,9 +294,24 @@ class _PostChapterPageState extends State<PostChapterPage> {
                                 );
                               },
                               onReorder: (oldIndex, newIndex) {
-                                final item = viewModel.currentChapter.images
+                                print('newIndex: $newIndex');
+                                print('oldIndex: $oldIndex');
+                                final int index =
+                                    viewModel.oldIndex.removeAt(oldIndex);
+                                viewModel.oldIndex.insert(newIndex, index);
+                                final item = viewModel
+                                    .currentStory
+                                    .chapters![
+                                        viewModel.currentChapter.chapterNumber -
+                                            1]
+                                    .images
                                     .removeAt(oldIndex);
-                                viewModel.currentChapter.images
+                                viewModel
+                                    .currentStory
+                                    .chapters![
+                                        viewModel.currentChapter.chapterNumber -
+                                            1]
+                                    .images
                                     .insert(newIndex, item);
                                 viewModel.notifyListeners();
                               },
@@ -274,24 +326,68 @@ class _PostChapterPageState extends State<PostChapterPage> {
                   onTap: () async {
                     print('Nhấn cập nhật');
                     await viewModel.updateChapter();
+                    await widget.viewModel.getMyStories();
+                    // widget
+                    //     .viewModel
+                    //     .myStories
+                    //     .chapters![viewModel.currentChapter.chapterNumber - 1]
+                    //     .images = viewModel.currentChapter.images;
+                    // widget.viewModel.myStories
+                    //         .where((story) =>
+                    //             story.storyId == viewModel.currentStory.storyId)
+                    //         .toList()
+                    //         .first
+                    //         .chapters![viewModel.currentChapter.chapterNumber - 1]
+                    //         .images =
+                    //     viewModel
+                    //         .currentStory
+                    //         .chapters![
+                    //             viewModel.currentChapter.chapterNumber - 1]
+                    //         .images;
+                    // widget.viewModel.notifyListeners();
+                    print(widget.viewModel.myStories.length);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return PopUpWidget(
+                            icon: Image.asset("assets/ic_success.png"),
+                            title: 'Cập nhật truyện thành công',
+                            leftText: 'Xác nhận',
+                            onLeftTap: () {
+                              Navigator.pop(context);
+                            },
+                          );
+                        });
                   },
                   child: Container(
                     height: 70,
                     width: double.infinity,
                     color: AppColor.buttonColor,
                     alignment: Alignment.center,
-                    child: const Text(
-                      'Cập nhật',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: viewModel.isBusy
+                        ? CircularProgressIndicator()
+                        : const Text(
+                            'Cập nhật',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                          ),
                   ),
                 )
               : null,
         );
       },
     );
+  }
+
+  // Hàm kiểm tra thứ tự tăng dần
+  bool _isAscending(List<int> list) {
+    for (int i = 0; i < list.length - 1; i++) {
+      if (list[i] > list[i + 1]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
