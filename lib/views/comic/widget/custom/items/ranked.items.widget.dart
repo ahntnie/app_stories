@@ -19,6 +19,7 @@ class RankedItems extends StatefulWidget {
   final Story data;
   final VoidCallback onTap;
   ComicViewModel comicViewModel;
+
   @override
   State<RankedItems> createState() => _RankedItemsState();
 }
@@ -33,8 +34,8 @@ class _RankedItemsState extends State<RankedItems> {
           viewModel.viewContext = context;
         },
         builder: (context, viewModel, child) {
-          viewModel.viewContext = context;
           return InkWell(
+            //viewModel.viewContext = context;
             onTap: widget.onTap,
             child: Container(
               margin: const EdgeInsets.only(top: 8),

@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {},
                         ),
                       ],
-                      if (viewModel.currentUser!.role == 'admin' ||
+                      if (viewModel.currentUser!.role != 'admin' &&
                           viewModel.currentUser!.role == 'author') ...[
                         if (viewModel.currentUser!.role == 'author')
                           CustomMenuButton(
@@ -162,26 +162,47 @@ class _ProfilePageState extends State<ProfilePage> {
                                           )));
                             },
                           ),
-                      ],
-                      if (viewModel.currentUser!.role == 'admin') ...[
-                        // CustomMenuButton(
-                        //   icon: Icons.menu_book_sharp,
-                        //   text: 'Truyện đọc nhiều',
-                        //   onTap: () {},
-                        // ),
+
                         CustomMenuButton(
-                          icon: Icons.description,
-                          text: 'Phê duyệt truyện',
+                          icon: Icons.add_circle,
+                          text: 'Quản lý truyện đăng',
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const BrowseStoriesPage()));
+                                        const MyStoriesPage()));
                           },
                         ),
                         CustomMenuButton(
-                          icon: Icons.description,
+                          icon: Icons.menu_book_sharp,
+                          text: 'Thống kê',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReportPage(
+                                        //profileViewModel: viewModel,
+                                        )));
+                          },
+                        ),
+
+                      ],
+                      if (viewModel.currentUser!.role == 'admin') ...[
+                        CustomMenuButton(
+                          icon: Icons.menu_book_sharp,
+                          text: 'Thống kê',
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ReportAdminPage(
+                                          profileViewModel: viewModel,
+                                        )));
+                          },
+                        ),
+                        CustomMenuButton(
+                          icon: Icons.manage_accounts_sharp,
                           text: 'Phê duyệt tác giả',
                           onTap: () {
                             Navigator.push(
@@ -203,8 +224,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         CustomMenuButton(
-                          icon: Icons.description,
-                          text: 'Quản lí truyện',
+                          icon: Icons.menu_book,
+                          text: 'Quản lí truyện đăng',
                           onTap: () {
                             Navigator.push(
                                 context,
