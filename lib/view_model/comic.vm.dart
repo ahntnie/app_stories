@@ -124,6 +124,12 @@ class ComicViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> deleteCommentById(String id) async {
+    print('Api xóa: ${Api.hostApi}${Api.comment}/${id}');
+    await apiService.deleteRequest('${Api.hostApi}${Api.comment}/${id}');
+    notifyListeners();
+  }
+
   Future<void> postCommentStory(int? storyID, String content) async {
     _commentModel = {
       'story_id': currentStory.storyId,
@@ -173,6 +179,7 @@ class ComicViewModel extends BaseViewModel {
 
   nextDetailStory() async {
     checkFavourite();
+    categories = currentStory.categories!;
     Navigator.push(
         viewContext,
         MaterialPageRoute(

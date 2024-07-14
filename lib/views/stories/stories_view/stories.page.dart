@@ -103,81 +103,43 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               fontWeight: AppFontWeight.bold,
                               color: AppColor.extraColor),
                         ),
-                        (widget.data.author!.id != viewModel.currentUsers!.id &&
-                                viewModel.currentUsers!.role != 'admin')
-                            ? PopupMenuButton<int>(
-                                icon: Icon(
-                                  Icons.report,
-                                  size: 30,
-                                  color: AppColor.selectColor,
-                                ),
-                                onSelected: (item) {
-                                  NotificationViewModel notiViewModel =
-                                      NotificationViewModel();
-                                  notiViewModel.currentChapter =
-                                      viewModel.currentChapter;
-                                  notiViewModel.viewContext = context;
-                                  notiViewModel.currentStory =
-                                      viewModel.currentStory;
-                                  // notiViewModel.comment = widget.comment;
-                                  // notiViewModel.postNotification();
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return PopUpWidget(
-                                          icon: Image.asset(
-                                              "assets/ic_success.png"),
-                                          title: 'Đã gửi phản hồi',
-                                          leftText: 'Xác nhận',
-                                          onLeftTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      });
-                                },
-                                itemBuilder: (context) => [
-                                      PopupMenuItem<int>(
-                                          value: 0, child: Text('Báo cáo')),
-                                    ])
-                            : viewModel.currentUsers!.role == 'admin'
-                                ? PopupMenuButton<int>(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      size: 30,
-                                      color: AppColor.selectColor,
-                                    ),
-                                    onSelected: (item) async => {
-                                          // viewModel.commentStory =
-                                          //     widget.comment,
-                                          // // print('Nhấn xóa')
-
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return PopUpWidget(
-                                                  icon: Image.asset(
-                                                      "assets/ic_success.png"),
-                                                  title:
-                                                      'Bạn có xác nhận vô hiệu hóa truyện này truyện này?',
-                                                  leftText: 'Xác nhận',
-                                                  onLeftTap: () async {
-                                                    // await viewModel
-                                                    //     .deleteComment();
-                                                    Navigator.pop(context);
-                                                  },
-                                                  rightText: 'Hủy',
-                                                  onRightTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                );
-                                              })
+                        if (widget.data.author!.id !=
+                                viewModel.currentUsers!.id &&
+                            viewModel.currentUsers!.role != 'admin')
+                          PopupMenuButton<int>(
+                              icon: Icon(
+                                Icons.report,
+                                size: 30,
+                                color: AppColor.selectColor,
+                              ),
+                              onSelected: (item) {
+                                NotificationViewModel notiViewModel =
+                                    NotificationViewModel();
+                                notiViewModel.currentChapter =
+                                    viewModel.currentChapter;
+                                notiViewModel.viewContext = context;
+                                notiViewModel.currentStory =
+                                    viewModel.currentStory;
+                                // notiViewModel.comment = widget.comment;
+                                // notiViewModel.postNotification();
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return PopUpWidget(
+                                        icon: Image.asset(
+                                            "assets/ic_success.png"),
+                                        title: 'Đã gửi phản hồi',
+                                        leftText: 'Xác nhận',
+                                        onLeftTap: () {
+                                          Navigator.pop(context);
                                         },
-                                    itemBuilder: (context) => [
-                                          PopupMenuItem<int>(
-                                              value: 0,
-                                              child: Text('Vô hiệu hóa')),
-                                        ])
-                                : Container(),
+                                      );
+                                    });
+                              },
+                              itemBuilder: (context) => [
+                                    PopupMenuItem<int>(
+                                        value: 0, child: Text('Báo cáo')),
+                                  ])
                       ],
                     ),
                     Text(

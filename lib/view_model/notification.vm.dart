@@ -44,7 +44,7 @@ class NotificationViewModel extends BaseViewModel {
     print('Comment bên vm: ${comment.content}');
     await request.postNotification(
         idUser,
-        "Tài khoản ${currentUser.name} đã báo cáo bình luận sau: '${comment.content}'. Vui lòng kiểm tra và xử lý sớm nhất có thể",
+        "${comment.commentId}/Tài khoản ${currentUser.name} đã báo cáo bình luận sau: '${comment.content}'. Vui lòng kiểm tra và xử lý sớm nhất có thể",
         "Thông báo báo cáo bình luận",
         0,
         currentStory.storyId!,
@@ -94,7 +94,7 @@ class NotificationViewModel extends BaseViewModel {
       //               viewModel: ComicViewModel(),
       //               chapter: notify.chapter!,
       //             )));
-      
+
       await getNotificationByUserId();
     } else {
       showDialog(
