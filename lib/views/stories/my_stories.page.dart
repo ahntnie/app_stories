@@ -31,7 +31,7 @@ class _MyStoriesPageState extends State<MyStoriesPage> {
         },
         builder: (context, viewModel, child) {
           return BasePage(
-            title: 'Đăng truyện',
+            title: 'Quản lý truyện đăng',
             body: viewModel.isBusy
                 ? Center(child: GradientLoadingWidget())
                 : SingleChildScrollView(

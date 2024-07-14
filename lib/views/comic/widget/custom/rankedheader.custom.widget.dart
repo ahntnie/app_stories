@@ -3,15 +3,20 @@ import 'package:app_stories/views/comic/widget/custom/items/ranked.items.widget.
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class RankedHeader extends StatelessWidget {
+class RankedHeader extends StatefulWidget {
   final ComicViewModel viewModel;
   const RankedHeader({super.key, required this.viewModel});
 
   @override
+  State<RankedHeader> createState() => _RankedHeaderState();
+}
+
+class _RankedHeaderState extends State<RankedHeader> {
+  @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         disposeViewModel: false,
-        viewModelBuilder: () => viewModel,
+        viewModelBuilder: () => widget.viewModel,
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
         },
@@ -38,6 +43,9 @@ class RankedHeader extends StatelessWidget {
                           children: List.generate(
                               viewModel.storiesIsActive.length, (index) {
                             return RankedItems(
+                              // chapter: viewModel.currentChapter =
+                              //     viewModel.currentChapter!,
+                              comicViewModel: viewModel,
                               tabName: 'Top ngày',
                               data: viewModel.storiesIsActive[index],
                               onTap: () {
@@ -56,6 +64,9 @@ class RankedHeader extends StatelessWidget {
                           children: List.generate(
                               viewModel.storiesIsActive.length, (index) {
                             return RankedItems(
+                              // chapter: viewModel.currentChapter =
+                              //     viewModel.currentChapter!,
+                              comicViewModel: viewModel,
                               tabName: 'Top tuần',
                               data: viewModel.storiesIsActive[index],
                               onTap: () {
@@ -73,6 +84,9 @@ class RankedHeader extends StatelessWidget {
                           children: List.generate(
                               viewModel.storiesIsActive.length, (index) {
                             return RankedItems(
+                              // chapter: viewModel.currentChapter =
+                              //     viewModel.currentChapter!,
+                              comicViewModel: viewModel,
                               tabName: 'Top tháng',
                               data: viewModel.storiesIsActive[index],
                               onTap: () {
