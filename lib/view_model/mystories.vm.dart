@@ -65,6 +65,13 @@ class MyStoriesViewModel extends BaseViewModel {
           );
         },
       );
+      // Navigator.push(
+      //     viewContext,
+      //     MaterialPageRoute(
+      //         builder: (context) => PostChapterPage(
+      //               data: currentStory,
+      //               viewModel: this,
+      //             )));
     } else if (currentStory.active == 2) {
       showDialog(
           context: viewContext,
@@ -84,11 +91,21 @@ class MyStoriesViewModel extends BaseViewModel {
           builder: (context) {
             return PopUpWidget(
               icon: Image.asset("assets/ic_error.png"),
-              title: 'Truyện không đạt yêu cầu để duyệt!',
+              title: 'Truyện không đạt yêu cầu để duyệt!. Xác nhận để sửa',
               leftText: 'Xác nhận',
               onLeftTap: () {
-                Navigator.pop(viewContext);
+                Navigator.pop(context);
+                Navigator.push(
+                    viewContext,
+                    MaterialPageRoute(
+                        builder: (context) => PostChapterPage(
+                              data: currentStory,
+                              viewModel: this,
+                            )));
               },
+              twoButton: true,
+              rightText: 'Hủy',
+              onRightTap: () {},
             );
           });
     }

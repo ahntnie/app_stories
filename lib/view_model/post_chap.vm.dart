@@ -81,7 +81,9 @@ class PostChapViewModel extends BaseViewModel {
     // await downloadImages();
     // await chapterRequest.updateChapter(
     //     downloadedFiles, 'Truyện update', currentChapter.chapterId);
-
+  if(currentStory.active != 0) {
+    
+  }
     String? errorString = await chapterRequest.updateImagesChapter(
         oldIndex, currentStory.storyId!, currentChapter.chapterNumber);
 

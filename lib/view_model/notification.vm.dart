@@ -51,7 +51,7 @@ class NotificationViewModel extends BaseViewModel {
         currentChapter);
   }
 
-  postNotificationReportStoriyByAdmin() async {
+  postNotificationReportStoryByAdmin() async {
     Users currentUser =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
     String idUser = currentUser.id;

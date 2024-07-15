@@ -62,94 +62,96 @@ class _ProfilePageState extends State<ProfilePage> {
             //left: MediaQuery.of(context).size.width * 0.06),
             child: viewModel.isBusy
                 ? const Center(child: CircularProgressIndicator())
-                : Column(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.07,
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.07,
+                            ),
+                            CircleAvatar(
+                              backgroundImage: AssetImage(Img.imgAVT),
+                              minRadius: 45,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.1,
+                            ),
+                            Text(
+                              viewModel.currentUser!.name.toString(),
+                              style: TextStyle(
+                                  color: AppColor.extraColor,
+                                  fontSize: AppFontSize.sizeMedium),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.width * 0.1,
+                        ),
+                        CustomMenuButton(
+                          icon: Icons.security,
+                          text: 'Tài khoản và Bảo mật',
+                          onTap: () {
+                            // Navigator.pop(context);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => AccountView(
+                                        profileViewModel: viewModel,
+                                      )),
+                            ); //
+                          },
+                        ),
+                        if (viewModel.currentUser!.role != 'admin') ...[
+                          CustomMenuButton(
+                            icon: Icons.feedback,
+                            text: 'Phản hồi ý kiến',
+                            onTap: () {},
                           ),
-                          CircleAvatar(
-                            backgroundImage: AssetImage(Img.imgAVT),
-                            minRadius: 45,
+                          CustomMenuButton(
+                            icon: Icons.info,
+                            text: 'Giới thiệu về chúng tôi',
+                            onTap: () {},
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
+                          CustomMenuButton(
+                            icon: Icons.lock,
+                            text: 'Chính sách bảo mật',
+                            onTap: () {},
                           ),
-                          Text(
-                            viewModel.currentUser!.name.toString(),
-                            style: TextStyle(
-                                color: AppColor.extraColor,
-                                fontSize: AppFontSize.sizeMedium),
-                          )
+                          CustomMenuButton(
+                            icon: Icons.description,
+                            text: 'Điều khoản dịch vụ',
+                            onTap: () {},
+                          ),
                         ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.1,
-                      ),
-                      CustomMenuButton(
-                        icon: Icons.security,
-                        text: 'Tài khoản và Bảo mật',
-                        onTap: () {
-                          // Navigator.pop(context);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => AccountView(
-                                      profileViewModel: viewModel,
-                                    )),
-                          ); //
-                        },
-                      ),
-                      if (viewModel.currentUser!.role != 'admin') ...[
-                        CustomMenuButton(
-                          icon: Icons.feedback,
-                          text: 'Phản hồi ý kiến',
-                          onTap: () {},
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.info,
-                          text: 'Giới thiệu về chúng tôi',
-                          onTap: () {},
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.lock,
-                          text: 'Chính sách bảo mật',
-                          onTap: () {},
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.description,
-                          text: 'Điều khoản dịch vụ',
-                          onTap: () {},
-                        ),
-                      ],
-                      if (viewModel.currentUser!.role != 'admin' &&
-                          viewModel.currentUser!.role == 'author') ...[
-                        if (viewModel.currentUser!.role == 'author')
-                          CustomMenuButton(
-                            icon: Icons.add_circle,
-                            text: 'Quản lý truyện đăng',
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MyStoriesPage()));
-                            },
-                          ),
-                        if (viewModel.currentUser!.role == 'author')
-                          CustomMenuButton(
-                            icon: Icons.menu_book_sharp,
-                            text: 'Thống kê',
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ReportPage(
-                                          //profileViewModel: viewModel,
-                                          )));
-                            },
-                          ),
-                        if (viewModel.currentUser!.role == 'admin')
+                        if (viewModel.currentUser!.role != 'admin' &&
+                            viewModel.currentUser!.role == 'author') ...[
+                          if (viewModel.currentUser!.role == 'author')
+                            CustomMenuButton(
+                              icon: Icons.add_circle,
+                              text: 'Quản lý truyện đăng',
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MyStoriesPage()));
+                              },
+                            ),
+                          if (viewModel.currentUser!.role == 'author')
+                            CustomMenuButton(
+                              icon: Icons.menu_book_sharp,
+                              text: 'Thống kê',
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReportPage(
+                                            //profileViewModel: viewModel,
+                                            )));
+                              },
+                            ),
+                        ],
+                        if (viewModel.currentUser!.role == 'admin') ...[
                           CustomMenuButton(
                             icon: Icons.menu_book_sharp,
                             text: 'Thống kê',
@@ -162,79 +164,41 @@ class _ProfilePageState extends State<ProfilePage> {
                                           )));
                             },
                           ),
-
-                        CustomMenuButton(
-                          icon: Icons.add_circle,
-                          text: 'Quản lý truyện đăng',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MyStoriesPage()));
-                          },
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.menu_book_sharp,
-                          text: 'Thống kê',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ReportPage(
-                                        //profileViewModel: viewModel,
-                                        )));
-                          },
-                        ),
-
+                          CustomMenuButton(
+                            icon: Icons.manage_accounts_sharp,
+                            text: 'Phê duyệt tác giả',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BrowseAuthorPage()));
+                            },
+                          ),
+                          CustomMenuButton(
+                            icon: Icons.description,
+                            text: 'Quản lí thể loại',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CategoriesPage()));
+                            },
+                          ),
+                          CustomMenuButton(
+                            icon: Icons.menu_book,
+                            text: 'Quản lí truyện đăng',
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ManagerStories()));
+                            },
+                          ),
+                        ],
                       ],
-                      if (viewModel.currentUser!.role == 'admin') ...[
-                        CustomMenuButton(
-                          icon: Icons.menu_book_sharp,
-                          text: 'Thống kê',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ReportAdminPage(
-                                          profileViewModel: viewModel,
-                                        )));
-                          },
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.manage_accounts_sharp,
-                          text: 'Phê duyệt tác giả',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const BrowseAuthorPage()));
-                          },
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.description,
-                          text: 'Quản lí thể loại',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CategoriesPage()));
-                          },
-                        ),
-                        CustomMenuButton(
-                          icon: Icons.menu_book,
-                          text: 'Quản lí truyện đăng',
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ManagerStories()));
-                          },
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
           ),
         );
