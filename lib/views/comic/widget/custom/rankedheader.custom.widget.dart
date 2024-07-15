@@ -34,8 +34,10 @@ class _RankedHeaderState extends State<RankedHeader> {
                     Tab(text: 'Top tháng'),
                   ],
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.width / 1,
+                Container(
+                  height: viewModel.storiesIsActive.length > 1
+                      ? MediaQuery.of(context).size.width
+                      : MediaQuery.of(context).size.height / 5,
                   child: TabBarView(
                     children: [
                       SingleChildScrollView(
