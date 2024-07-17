@@ -4,6 +4,7 @@ import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,11 @@ class SignUpViewModel extends BaseViewModel {
   }
 
   Future<void> signup() async {
+    setBusy(true);
+    if (emailError.isNotEmpty) {
+      showCheckEmailSnackBar(viewContext);
+      return;
+    }
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -95,14 +101,27 @@ class SignUpViewModel extends BaseViewModel {
         final apiService = ApiService();
         await apiService.postRequestUser(
             '${Api.hostApi}${Api.getUser}', userModel.toJson());
+        showSuccessSnackBar(viewContext);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        emailError = 'Email đã được đăng ký';
+        showCheckEmailSnackBar(viewContext);
+      } else {
+        print('Error: ${e.message}');
       }
     } catch (e) {
       print('Error: ${e.toString()}');
     }
+    setBusy(false);
     notifyListeners();
   }
 
   Future<void> signupAuthor() async {
+    if (emailError.isNotEmpty) {
+      showCheckEmailSnackBar(viewContext);
+      return;
+    }
     try {
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
@@ -125,11 +144,30 @@ class SignUpViewModel extends BaseViewModel {
         await apiService.postRequestUser(
             '${Api.hostApi}${Api.getUser}', userModel.toJson());
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        emailError = 'Email đã được đăng ký';
+        showCheckEmailSnackBar(viewContext);
+      } else {
+        print('Error: ${e.message}');
+      }
     } catch (e) {
       print('Error: ${e.toString()}');
     }
     notifyListeners();
   }
+
+  // Future<void> checkEmail(TextEditingController email) async {
+  //   try {
+  //     final List<String> signInMethods =
+  //         await _auth(email.text);
+  //     if (signInMethods.isNotEmpty) {
+  //       showCheckEmailSnackBar(viewContext);
+  //     } else {
+  //       showSuccessSnackBar(viewContext);
+  //     }
+  //   } catch (e) {}
+  // }
 
   void validateAccountName() {
     final accountName = accountNameController.text;
@@ -179,8 +217,9 @@ class SignUpViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-//hàm kiểm tra email có hợp lệ hay không
 
+//hàm kiểm tra email có hợp lệ hay không
+  void checkEmail() {}
   void validateEmail() {
     final email = emailController.text.trim();
     if (email.isEmpty) {
@@ -194,11 +233,22 @@ class SignUpViewModel extends BaseViewModel {
   }
 
   bool _isValidEmail(String email) {
-    // Biểu thức chính quy để kiểm tra định dạng email
-    //const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-    const pattern = r'^[\w-\.]+@gmail\.com$';
+    // Biểu thức chính quy để kiểm tra định dạng email hợp lệ
+    const pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
     final regex = RegExp(pattern);
-    return regex.hasMatch(email);
+
+    // Kiểm tra định dạng email
+    if (!regex.hasMatch(email)) {
+      return false;
+    }
+
+    // Kiểm tra để tránh tên miền sai như @gemail.com
+    final domain = email.split('@').last;
+    if (domain == 'gemail.com') {
+      return false;
+    }
+
+    return true;
   }
 
   void showSuccessSnackBar(BuildContext context) {
@@ -240,7 +290,7 @@ class SignUpViewModel extends BaseViewModel {
             ),
             const SizedBox(width: 5),
             Text(
-              emailCheck,
+              'Email đã được sử dụng',
               style: TextStyle(fontSize: AppFontSize.sizeMedium),
             ),
           ],
@@ -262,7 +312,7 @@ class SignUpViewModel extends BaseViewModel {
             ),
             const SizedBox(width: 5),
             Text(
-              'Đăng ký thất bại.',
+              'Đăng ký thất bại',
               style: TextStyle(fontSize: AppFontSize.sizeMedium),
             ),
           ],
