@@ -93,21 +93,20 @@ class ComicViewModel extends BaseViewModel {
   }
 
   Future<void> getStoryFavourite() async {
+    setBusy(true);
     currentUsers = Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
     idUser = currentUsers!.id;
-    // print('id user: $idUser');
     Response response = await apiService
         .getRequest('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
-    print('dataa: ${response.data}');
-
-    //print(idUser);
+    print('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
+    print('hahaha: ${response.data}');
     final responseData = jsonDecode(jsonEncode(response.data));
-    //print(responseData);
     List<dynamic> lstStory = responseData['data'];
 
     storiesFavourite = lstStory.map((e) => Story.fromJson(e)).toList();
     print(storiesFavourite);
-    // notifyListeners();
+    setBusy(false);
+    notifyListeners();
   }
 
   Future<void> postFavourite(int? storyID) async {
@@ -192,7 +191,10 @@ class ComicViewModel extends BaseViewModel {
   checkFavourite() {
     isFavourite = false;
     if (currentStory.favouriteUser != null) {
+      print('Vào check');
       for (var user in currentStory.favouriteUser!) {
+        print('Vào for: ${user.name}');
+
         if (user.id == idUser) {
           isFavourite = true;
           break;
@@ -203,7 +205,6 @@ class ComicViewModel extends BaseViewModel {
   }
 
   nextDetailStory() async {
-    categories = currentStory.categories!;
     checkFavourite();
     Navigator.push(
         viewContext,

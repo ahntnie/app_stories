@@ -5,5 +5,5 @@ class AppSPKey {
   static const String userinfo = 'userinfo';
   static const String token = 'token';
   static const String currrentUser = 'currentUser';
-  static const String timeuse = 'timeuse';
+  static const String timers = 'timers';
 }

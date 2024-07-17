@@ -271,4 +271,19 @@ class StoryRequest {
         .postRequest('${Api.hostApi}${Api.addViewStory}/$storyId', formData);
     final responseData = response.data;
   }
+
+  Future<List<Story>> getStoryView() async {
+    List<Story> listStory = [];
+    Users currentUsers =
+        Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    String idUser = currentUsers.id;
+    Response response = await ApiService()
+        .getRequest('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
+    print('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
+    print('hahaha: ${response.data}');
+    final responseData = jsonDecode(jsonEncode(response.data));
+    List<dynamic> lstStory = responseData['data'];
+    listStory = lstStory.map((e) => Story.fromJson(e)).toList();
+    return listStory;
+  }
 }

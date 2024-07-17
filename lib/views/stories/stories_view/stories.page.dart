@@ -69,15 +69,16 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
       disposeViewModel: false,
       viewModelBuilder: () => widget.viewModel,
       onViewModelReady: (viewModel) async {
+        viewModel.checkFavourite();
         await viewModel.getCommentByStory();
         if (AppSP.get(AppSPKey.currrentUser) != null &&
             AppSP.get(AppSPKey.currrentUser) != '') {
-          await viewModel.checkFavourite();
           await widget.viewModel.addViewStory();
         }
       },
       builder: (context, viewModel, child) {
         viewModel.viewContext = context;
+        print('Truyện hiện tại: ${viewModel.currentStory.title}');
         return BasePage(
           showAppBar: false,
           isLoading: viewModel.isBusy,

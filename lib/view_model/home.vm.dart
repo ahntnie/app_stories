@@ -34,6 +34,7 @@ class HomeViewModel extends BaseViewModel {
       SearchPage(
         homeViewModel: this,
         viewModel: searchSotriesViewModel,
+        comicViewModel: comicViewModel,
       ),
       ProfilePage(
         viewModel: profileViewModel,

@@ -231,11 +231,9 @@ class LoginViewModel extends BaseViewModel {
           Future.delayed(const Duration(seconds: 1), () {
             // Sau 3 giây
             ScaffoldMessenger.of(context).hideCurrentSnackBar(); //
-            // Navigator.of(context).pop();
-            // Navigator.pop(context);
-            Navigator.of(context).pop();
-            Navigator.of(context).push(
+            Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const HomePage()),
+              (router) => false,
             ); // Chuyển sang trang HomePage
           });
         },
