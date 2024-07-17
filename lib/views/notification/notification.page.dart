@@ -1,12 +1,10 @@
 import 'package:app_stories/constants/app_color.dart';
-import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/view_model/notification.vm.dart';
-import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:app_stories/widget/base_page.dart';
-import 'package:app_stories/widget/custom_button.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../app/app_sp.dart';
@@ -42,9 +40,32 @@ class _NotificationPageState extends State<NotificationPage> {
                     ? ListView.builder(
                         itemCount: viewModel.notifications.length,
                         itemBuilder: (context, index) {
-                          return NotificationCard(
-                            notificationViewModel: viewModel,
-                            notification: viewModel.notifications[index],
+                          return Slidable(
+                            key: Key(viewModel.notifications[index].id
+                                .toString()), // You can use any unique key here
+                            direction: Axis.horizontal,
+                            child: NotificationCard(
+                              notificationViewModel: viewModel,
+                              notification: viewModel.notifications[index],
+                            ),
+                            endActionPane: ActionPane(
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  borderRadius: BorderRadius.circular(10),
+                                  onPressed: (context) => {
+                                    viewModel.deleteNotification(
+                                        viewModel.notifications[index].id)
+                                    //print(viewModel.notifications[index].id)
+                                  },
+                                  backgroundColor: Colors.red,
+                                  foregroundColor: AppColor.extraColor,
+                                  icon: Icons.delete,
+                                  autoClose: true,
+                                  label: 'Xóa',
+                                ),
+                              ],
+                            ),
                           );
                         },
                       )

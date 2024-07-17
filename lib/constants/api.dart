@@ -42,6 +42,7 @@ class Api {
   //Notification
   static const String getNotificationByUserId = '/notifications/user';
   static const String markAsReadNotification = '/notifications/read';
+  static const String deleNotification = '/notifications/delete';
 
   //Notification admin
   static const String postNotificationByAdmin = '/notifications/toadmin';
