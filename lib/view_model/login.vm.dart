@@ -101,6 +101,7 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<User?> loginUsingEmailPassword() async {
+    setBusy(true);
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
@@ -115,6 +116,7 @@ class LoginViewModel extends BaseViewModel {
       //   await signInAndCheckDevice(
       //       emailController.text, passwordController.text);
       // }
+      setBusy(false);
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
         print("Không tìm thấy user");

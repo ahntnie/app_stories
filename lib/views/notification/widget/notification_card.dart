@@ -21,7 +21,9 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if (notification.title != 'Thông báo báo cáo bình luận') {
+        if (notification.title != 'Thông báo báo cáo bình luận' &&
+            notification.title != 'Yêu cầu duyệt truyện' &&
+            notification.title != 'Thông báo !') {
           await notificationViewModel.markAsReadNotification(notification);
           notificationViewModel.notifyListeners();
         }
@@ -31,7 +33,7 @@ class NotificationCard extends StatelessWidget {
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
             color: AppColor.bottomSheetColor),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

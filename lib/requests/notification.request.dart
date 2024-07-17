@@ -45,6 +45,12 @@ class NotificationRequest extends ApiService {
         '${Api.hostApi}${Api.postNotificationByAdmin}', notificationModel);
   }
 
+  Future<void> deleteNotification(int id) async {
+    final response =
+        await dio.delete('${Api.hostApi}${Api.deleNotification}/$id');
+    print('Body xóa thông báo: ${response.data}');
+  }
+
   Future<String?> markAsReadNotification(int notifyId) async {
     String? errorString;
     try {
