@@ -4,11 +4,14 @@ import 'package:app_stories/styles/app_img.dart';
 import 'package:app_stories/view_model/login.vm.dart';
 import 'package:app_stories/view_model/notification.vm.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
+import 'package:app_stories/views/splash/splash.page.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:app_stories/models/notification_model.dart'
     as notification_model;
 
+import '../app/app_sp.dart';
+import '../app/app_sp_key.dart';
 import '../requests/notification.request.dart';
 import '../views/notification/notification.page.dart';
 import 'loading_shimmer.dart';
@@ -122,13 +125,20 @@ class _BasePageState extends State<BasePage> {
                           ? ViewModelBuilder.reactive(
                               viewModelBuilder: () => notificationViewModel,
                               onViewModelReady: (viewModel) async {
-                                await viewModel.getNotificationByUserId();
+                                if (AppSP.get(AppSPKey.currrentUser) != null &&
+                                    AppSP.get(AppSPKey.currrentUser) != '') {
+                                  await viewModel.getNotificationByUserId();
+                                }
                               },
                               builder: (context, viewModel, child) {
-                                unReadNotify = viewModel.notifications
-                                    .where((notify) => !notify.isRead)
-                                    .toList()
-                                    .length;
+                                if (AppSP.get(AppSPKey.currrentUser) != null &&
+                                    AppSP.get(AppSPKey.currrentUser) != '') {
+                                  unReadNotify = viewModel.notifications
+                                      .where((notify) => !notify.isRead)
+                                      .toList()
+                                      .length;
+                                }
+
                                 return IconButton(
                                     onPressed: () {
                                       Navigator.push(
@@ -179,7 +189,7 @@ class _BasePageState extends State<BasePage> {
                                     Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const LoginPage()),
+                                              const SplashPage()),
                                       (router) => false,
                                     );
                                   },

@@ -9,6 +9,11 @@ import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../../app/app_sp.dart';
+import '../../../../app/app_sp_key.dart';
+import '../../../../widget/pop_up.dart';
+import '../../../authentication/login.page.dart';
+
 class TotalComment extends StatefulWidget {
   TotalComment({
     super.key,
@@ -116,11 +121,43 @@ class _TotalCommentState extends State<TotalComment> {
                                   icon: const Icon(Icons.send,
                                       color: AppColor.extraColor),
                                   onPressed: () async {
-                                    await viewModel.postCommentStory(
-                                        viewModel.currentStory.storyId,
-                                        viewModel.commenStorytController.text);
-                                    viewModel.commenStorytController.clear();
-                                    await viewModel.getCommentByStory();
+                                    if (AppSP.get(AppSPKey.currrentUser) !=
+                                            null &&
+                                        AppSP.get(AppSPKey.currrentUser) !=
+                                            '') {
+                                      await viewModel.postCommentStory(
+                                          viewModel.currentStory.storyId,
+                                          viewModel
+                                              .commenStorytController.text);
+                                      viewModel.commenStorytController.clear();
+                                      await viewModel.getCommentByStory();
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return PopUpWidget(
+                                              icon: Image.asset(
+                                                  "assets/ic_error.png"),
+                                              title:
+                                                  'Bạn cần đăng nhập để bình luận',
+                                              leftText: 'Đăng nhập',
+                                              onLeftTap: () {
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          LoginPage(),
+                                                    ));
+                                              },
+                                              twoButton: true,
+                                              onRightTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              rightText: 'Hủy',
+                                            );
+                                          });
+                                    }
                                   },
                                 ),
                               ],

@@ -16,6 +16,7 @@ import 'package:app_stories/views/report/report.page.dart';
 import 'package:app_stories/views/stories/my_stories.page.dart';
 import 'package:app_stories/views/stories/post_stories.dart';
 import 'package:app_stories/widget/base_page.dart';
+import 'package:app_stories/widget/next_login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,36 +42,36 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late ComicViewModel comicViewModel;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
-        viewModelBuilder: () => widget.viewModel,
-        disposeViewModel: false,
-        onViewModelReady: (viewModel) {
-          viewModel.viewContext = context;
+      viewModelBuilder: () => widget.viewModel,
+      disposeViewModel: false,
+      onViewModelReady: (viewModel) async {
+        viewModel.viewContext = context;
+        if ((AppSP.get(AppSPKey.currrentUser) != null &&
+            AppSP.get(AppSPKey.currrentUser) != '')) {
           viewModel.currentUser =
               Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
           viewModel.notifyListeners();
-        },
-        builder: (context, viewModel, child) {
-          return ViewModelBuilder.reactive(
-            viewModelBuilder: () => ComicViewModel(),
-            disposeViewModel: false,
-            onViewModelReady: (viewModel) {
-              viewModel.viewContext = context;
-              viewModel.getStoryFavourite();
-            },
-            builder: (context, comicViewModel, child) {
-              print(
-                  "Kết quả if ${(viewModel.currentUser!.role == 'admin' || viewModel.currentUser!.role == 'author')}");
-              return BasePage(
-                showLeading: false,
-                title: 'Cá nhân',
-                showLogout: true,
-                body: Container(
+          comicViewModel = ComicViewModel();
+          await comicViewModel.getStoryFavourite();
+        }
+      },
+      builder: (context, viewModel, child) {
+        return BasePage(
+          showLeading: false,
+          title: 'Cá nhân',
+          showLogout: (AppSP.get(AppSPKey.currrentUser) != null &&
+                  AppSP.get(AppSPKey.currrentUser) != '')
+              ? true
+              : false,
+          body: (AppSP.get(AppSPKey.currrentUser) != null &&
+                  AppSP.get(AppSPKey.currrentUser) != '')
+              ? Container(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.05),
-                  //left: MediaQuery.of(context).size.width * 0.06),
                   child: viewModel.isBusy
                       ? const Center(child: CircularProgressIndicator())
                       : SingleChildScrollView(
@@ -233,10 +234,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             ],
                           ),
                         ),
+                )
+              : NextLoginPage(
+                  title: 'Bạn cần đăng nhập',
                 ),
-              );
-            },
-          );
-        });
+        );
+      },
+    );
   }
 }

@@ -130,7 +130,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                                 ),
                                 (widget.comment.userId !=
                                             widget.currentUserID &&
-                                        viewModel.currentUser.role != 'admin')
+                                        viewModel.currentUser!.role != 'admin')
                                     ? PopupMenuButton<int>(
                                         icon: Icon(
                                           Icons.report,
