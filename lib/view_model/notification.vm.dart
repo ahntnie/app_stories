@@ -14,6 +14,7 @@ import 'package:stacked/stacked.dart';
 
 import '../models/story_model.dart';
 import '../requests/story.request.dart';
+import '../views/stories/stories_view/stories.page.dart';
 import '../views/view_story/view_story.page.dart';
 import '../widget/pop_up.dart';
 import 'comic.vm.dart';
@@ -28,10 +29,15 @@ class NotificationViewModel extends BaseViewModel {
   List<notification_model.Notification> notifications = [];
   NotificationRequest request = NotificationRequest();
   Users? currentUser;
+  int unReadNotify = 0;
 
   Future<void> getNotificationByUserId() async {
     setBusy(true);
     notifications = await request.getNotification();
+    unReadNotify =
+        notifications.where((notify) => !notify.isRead).toList().length;
+    print('Số thông báo: ${unReadNotify}');
+    print('Get xong thông báo');
     setBusy(false);
     notifyListeners();
   }
@@ -69,14 +75,32 @@ class NotificationViewModel extends BaseViewModel {
     Story story = await StoryRequest().getStoryById(notify.story.storyId!);
     String? errorString = await request.markAsReadNotification(notify.id);
     if (errorString == null) {
-      Navigator.push(
-          viewContext,
-          MaterialPageRoute(
-              builder: (context) => ViewStoryPage(
-                    story: story,
-                    viewModel: ComicViewModel(),
-                    chapter: notify.chapter!,
-                  )));
+      if (notify.title == 'Thông báo báo cáo truyện') {
+        ComicViewModel comicViewModel = ComicViewModel();
+        comicViewModel.viewContext = viewContext;
+        comicViewModel.currentStory = notify.story;
+        comicViewModel.currentChapter = notify.chapter;
+        comicViewModel.checkFavourite();
+        print(
+            'Số lượng chapter: ${comicViewModel.currentStory.chapters?.length}');
+        Navigator.push(
+            viewContext,
+            MaterialPageRoute(
+                builder: (context) => ComicDetailPage(
+                      data: notify.story,
+                      viewModel: comicViewModel,
+                    )));
+      } else {
+        Navigator.push(
+            viewContext,
+            MaterialPageRoute(
+                builder: (context) => ViewStoryPage(
+                      story: story,
+                      viewModel: ComicViewModel(),
+                      chapter: notify.chapter!,
+                    )));
+      }
+
       await getNotificationByUserId();
     } else {
       showDialog(

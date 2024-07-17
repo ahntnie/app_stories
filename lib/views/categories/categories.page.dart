@@ -3,6 +3,7 @@ import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../constants/app_color.dart';
@@ -16,6 +17,13 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  void _onRefresh(CategoriesViewModel viewModel) async {
+    await viewModel.getAllCategory();
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -28,14 +36,18 @@ class _CategoriesPageState extends State<CategoriesPage> {
               isLoading: viewModel.isBusy,
               showAppBar: true,
               title: 'Quản lí thể loại',
-              body: ListView.builder(
-                itemCount: viewModel.categories.length,
-                itemBuilder: (context, index) {
-                  return CategoryItem(
-                    viewModel: viewModel,
-                    data: viewModel.categories[index],
-                  );
-                },
+              body: SmartRefresher(
+                controller: _refreshController,
+                onRefresh: () => _onRefresh(viewModel),
+                child: ListView.builder(
+                  itemCount: viewModel.categories.length,
+                  itemBuilder: (context, index) {
+                    return CategoryItem(
+                      viewModel: viewModel,
+                      data: viewModel.categories[index],
+                    );
+                  },
+                ),
               ),
               floatingActionButton: FloatingActionButton(
                 backgroundColor: AppColor.buttonColor,

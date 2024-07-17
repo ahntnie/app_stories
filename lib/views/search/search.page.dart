@@ -1,5 +1,6 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/category_model.dart';
+import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/views/search/widget/custom_tabview.dart';
 import 'package:app_stories/widget/base_page.dart';
@@ -7,6 +8,7 @@ import 'package:app_stories/widget/search_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../view_model/home.vm.dart';
@@ -29,6 +31,18 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  void _onRefresh() async {
+    await widget.viewModel.init();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await widget.viewModel.init();
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -69,10 +83,17 @@ class _SearchPageState extends State<SearchPage> {
                   ? GradientLoadingWidget(
                       showFull: true,
                     )
-                  : CustomTabView(
-                      comicViewModel: widget.comicViewModel,
-                      title: '', //viewModel.currentCategory?.name ?? 'Tất cả',
-                      viewModel: viewModel,
+                  : SmartRefresher(
+                      controller: _refreshController,
+                      onRefresh: _onRefresh,
+                      //onLoading: _onLoading,
+                     // enablePullUp: true,
+                      child: CustomTabView(
+                        comicViewModel: widget.comicViewModel,
+                        title:
+                            '', //viewModel.currentCategory?.name ?? 'Tất cả',
+                        viewModel: viewModel,
+                      ),
                     ));
         });
   }

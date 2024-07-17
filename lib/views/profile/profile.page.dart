@@ -70,13 +70,15 @@ class _ProfilePageState extends State<ProfilePage> {
           body: (AppSP.get(AppSPKey.currrentUser) != null &&
                   AppSP.get(AppSPKey.currrentUser) != '')
               ? Container(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05),
                   child: viewModel.isBusy
                       ? const Center(child: CircularProgressIndicator())
                       : SingleChildScrollView(
                           child: Column(
                             children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
+                              ),
                               Row(
                                 children: [
                                   SizedBox(
@@ -130,7 +132,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 text: 'Lịch sử đọc truyện',
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ViewStory()));
+                                      builder: (context) => ViewStory(
+                                            comicViewModel: comicViewModel,
+                                          )));
                                 },
                               ),
                               if (viewModel.currentUser!.role != 'admin') ...[

@@ -6,6 +6,7 @@ import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/loading_shimmer.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 
 class ManagerStories extends StatefulWidget {
@@ -16,40 +17,49 @@ class ManagerStories extends StatefulWidget {
 }
 
 class _ManagerStoriesState extends State<ManagerStories> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  void _onRefresh(BrowseStoriesViewModel viewModel) async {
+    await viewModel.getAllStory();
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => BrowseStoriesViewModel(),
         onViewModelReady: (viewModel) {
           viewModel.viewContext = context;
-          //viewModel.currentStory =
           viewModel.getAllStory();
-          // viewModel.getAllCategory();
         },
         builder: (context, viewModel, child) {
           return BasePage(
             showAppBar: true,
-            title: 'Quản lý truyện',
+            title: 'Quản lí truyện',
             body: viewModel.isBusy
                 ? Center(child: GradientLoadingWidget())
-                : ListView.builder(
-                    itemCount: viewModel.stories.length,
-                    itemBuilder: (context, index) {
-                      return StoryCard(
-                        viewModel: MyStoriesViewModel(),
-                        data: viewModel.stories[index],
-                        onTap: () {
-                          viewModel.currentStory = viewModel.stories[index];
-                          viewModel.nextDetailStory();
-                        },
-                        onPressed: () {
-                          print('nhan');
-                          viewModel.currentStory = viewModel.stories[index];
-                          //viewModel.getAllStory();
-                          viewModel.disableStory();
-                        },
-                      );
-                    }),
+                : SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: () => _onRefresh(viewModel),
+                    child: ListView.builder(
+                        itemCount: viewModel.stories.length,
+                        itemBuilder: (context, index) {
+                          return StoryCard(
+                            viewModel: MyStoriesViewModel(),
+                            data: viewModel.stories[index],
+                            onTap: () {
+                              viewModel.currentStory = viewModel.stories[index];
+                              viewModel.nextDetailStory();
+                            },
+                            onPressed: () {
+                              print('nhan');
+                              viewModel.currentStory = viewModel.stories[index];
+                              //viewModel.getAllStory();
+                              viewModel.disableStory();
+                            },
+                          );
+                        }),
+                  ),
           );
         });
   }

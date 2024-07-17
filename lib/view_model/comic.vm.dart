@@ -38,6 +38,7 @@ class ComicViewModel extends BaseViewModel {
   TextEditingController commenStorytController = TextEditingController();
   StoryRequest storyRequest = StoryRequest();
   bool isCategoriesVisible = false;
+  bool showNewStories = false;
   late Map<String, dynamic> _commentModel;
   Map<String, dynamic>? get commentModel => _commentModel;
   String idUser = '';

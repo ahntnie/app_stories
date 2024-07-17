@@ -78,7 +78,6 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
       },
       builder: (context, viewModel, child) {
         viewModel.viewContext = context;
-        print('Truyện hiện tại: ${viewModel.currentStory.title}');
         return BasePage(
           showAppBar: false,
           isLoading: viewModel.isBusy,
@@ -223,7 +222,8 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                           height: 30,
                           child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: viewModel.categories.length,
+                              itemCount:
+                                  viewModel.currentStory.categories!.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 return CategoryWidget(
@@ -282,6 +282,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                       SizedBox(
                         height: 220,
                         child: ListView.builder(
+                            reverse: true,
                             shrinkWrap: true,
                             itemCount:
                                 viewModel.comments.take(5).toList().length,
@@ -307,24 +308,32 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               color: AppColor.extraColor),
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            InkWell(
-                              child: Text(
-                                "Mới nhất",
-                                style: TextStyle(
-                                    fontSize: AppFontSize.sizeSmall,
-                                    color: AppColor.extraColor),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            InkWell(
-                              child: Text(
-                                "Cũ nhất",
-                                style: TextStyle(
-                                    fontSize: AppFontSize.sizeSmall,
-                                    color: AppColor.extraColor),
-                              ),
-                            ),
+                            TextButton(
+                                onPressed: () {
+                                  viewModel.showNewStories = true;
+                                  viewModel.notifyListeners();
+                                },
+                                child: Text(
+                                  'Mới nhất',
+                                  style: TextStyle(
+                                      color: viewModel.showNewStories
+                                          ? AppColor.selectColor
+                                          : AppColor.extraColor),
+                                )),
+                            TextButton(
+                                onPressed: () {
+                                  viewModel.showNewStories = false;
+                                  viewModel.notifyListeners();
+                                },
+                                child: Text(
+                                  'Cũ nhất',
+                                  style: TextStyle(
+                                      color: viewModel.showNewStories
+                                          ? AppColor.extraColor
+                                          : AppColor.selectColor),
+                                ))
                           ],
                         ),
                       ],
@@ -335,16 +344,31 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                       child: ListView.builder(
                           itemCount: widget.data.chapters!.length,
                           itemBuilder: (context, index) {
-                            return ChapterCard(
-                              chapter: widget.data.chapters![index],
-                              viewModel: viewModel,
-                              onPressed: () {
-                                viewModel.currentChapter =
-                                    viewModel.currentStory.chapters![index];
-                                viewModel.viewContext = context;
-                                viewModel.detailChapter();
-                              },
-                            );
+                            if (viewModel.showNewStories) {
+                              return ChapterCard(
+                                chapter: widget.data.chapters![index],
+                                viewModel: viewModel,
+                                onPressed: () {
+                                  viewModel.currentChapter =
+                                      viewModel.currentStory.chapters![index];
+                                  viewModel.viewContext = context;
+                                  viewModel.detailChapter();
+                                },
+                              );
+                            } else {
+                              List<dynamic> listChapter = viewModel
+                                  .currentStory.chapters!.reversed
+                                  .toList();
+                              return ChapterCard(
+                                chapter: listChapter[index],
+                                viewModel: viewModel,
+                                onPressed: () {
+                                  viewModel.currentChapter = listChapter[index];
+                                  viewModel.viewContext = context;
+                                  viewModel.detailChapter();
+                                },
+                              );
+                            }
                           }),
                     ),
                   ],

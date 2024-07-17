@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/styles/app_img.dart';
+import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/view_model/login.vm.dart';
 import 'package:app_stories/view_model/notification.vm.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
@@ -56,7 +59,7 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage> {
   NotificationRequest request = NotificationRequest();
   NotificationViewModel notificationViewModel = NotificationViewModel();
-  int unReadNotify = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -128,16 +131,16 @@ class _BasePageState extends State<BasePage> {
                                 if (AppSP.get(AppSPKey.currrentUser) != null &&
                                     AppSP.get(AppSPKey.currrentUser) != '') {
                                   await viewModel.getNotificationByUserId();
+                                  // Timer.periodic(Duration(minutes: 1),
+                                  //     (timer) async {
+                                  //   print('Vào lấy thông báo');
+                                  //   await viewModel.getNotificationByUserId();
+                                  // });
                                 }
                               },
                               builder: (context, viewModel, child) {
                                 if (AppSP.get(AppSPKey.currrentUser) != null &&
-                                    AppSP.get(AppSPKey.currrentUser) != '') {
-                                  unReadNotify = viewModel.notifications
-                                      .where((notify) => !notify.isRead)
-                                      .toList()
-                                      .length;
-                                }
+                                    AppSP.get(AppSPKey.currrentUser) != '') {}
 
                                 return IconButton(
                                     onPressed: () {
@@ -157,7 +160,7 @@ class _BasePageState extends State<BasePage> {
                                           color: AppColor.extraColor,
                                           size: 30,
                                         ),
-                                        if (unReadNotify != 0)
+                                        if (viewModel.unReadNotify != 0)
                                           Positioned(
                                             left: 12,
                                             child: Container(
@@ -169,7 +172,8 @@ class _BasePageState extends State<BasePage> {
                                               ),
                                               child: Center(
                                                 child: Text(
-                                                  unReadNotify.toString(),
+                                                  viewModel.unReadNotify
+                                                      .toString(),
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 10,

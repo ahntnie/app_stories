@@ -108,13 +108,13 @@ class LoginViewModel extends BaseViewModel {
       Response infoResponse = await ApiService()
           .getRequest('${Api.hostApi}${Api.getUser}/${user!.uid}');
       AppSP.set(AppSPKey.currrentUser, jsonEncode(infoResponse.data));
-      Users currentUser =
-          Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
-      if (currentUser.role == 'admin') {
-        print('Lấy đúng tài khoản admin');
-        await signInAndCheckDevice(
-            emailController.text, passwordController.text);
-      }
+      // Users currentUser =
+      //     Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+      // if (currentUser.role == 'admin') {
+      //   print('Lấy đúng tài khoản admin');
+      //   await signInAndCheckDevice(
+      //       emailController.text, passwordController.text);
+      // }
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
         print("Không tìm thấy user");
