@@ -14,10 +14,11 @@ class NotificationRequest extends ApiService {
     List<Notification> notifications = [];
     Users currentUser =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
-    print(
-        'Đường dẫn: ${Api.hostApi}${Api.getNotificationByUserId}/${currentUser.id}');
     final response = await ApiService().getRequest(
         '${Api.hostApi}${Api.getNotificationByUserId}/${currentUser.id}');
+    print(
+        'Đường dẫn: ${Api.hostApi}${Api.getNotificationByUserId}/${currentUser.id}');
+    print('Body thông báo: ${response.data}');
     List<dynamic> lstNotification =
         jsonDecode(jsonEncode(response.data["data"]));
     notifications =

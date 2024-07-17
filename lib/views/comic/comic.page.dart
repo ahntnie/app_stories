@@ -11,6 +11,7 @@ import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../view_model/home.vm.dart';
 
@@ -25,6 +26,19 @@ class ComicPage extends StatefulWidget {
 }
 
 class _ComicPageState extends State<ComicPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    await widget.viewModel.init();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await widget.viewModel.init();
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -41,72 +55,75 @@ class _ComicPageState extends State<ComicPage> {
               showLogo: true,
               showAppBar: true,
               showLeading: false,
-              body: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SectionHeader(
-                      title: 'Truyện mới',
-                      onPressed: () {
-                        widget.homeViewModel.setIndex(1);
-                      },
-                    ),
-                    SizedBox(
-                      height: 220,
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: viewModel.storiesNew.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return NewStoriesItems(
-                              data: viewModel.storiesNew[index],
-                              onTap: () {
-                                viewModel.currentStory =
-                                    viewModel.storiesNew[index];
-                                viewModel.viewContext = context;
-                                viewModel.nextDetailStory();
-                              },
-                            );
-                          }),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          viewModel.isCategoriesVisible =
-                              !viewModel.isCategoriesVisible;
-                        });
-                      },
-                      child: SectionHeader(
-                        title: 'Phân loại truyện',
+              body: SmartRefresher(
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                //onLoading: _onLoading,
+                //enablePullUp: true,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SectionHeader(
+                        title: 'Truyện mới',
                         onPressed: () {
                           widget.homeViewModel.setIndex(1);
                         },
                       ),
-                    ),
-
-                    AnimatedSize(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      child: viewModel.isCategoriesVisible
-                          ? CategoriesItems(
-                              homeViewModel: widget.homeViewModel,
-                              categories: viewModel.categories.take(6).toList(),
-                            )
-                          : Container(),
-                    ),
-                    // CategoriesItems(
-                    //     homeViewModel: widget.homeViewModel,
-                    //     categories: viewModel.categories.take(6).toList()),
-                    SectionHeader(
-                      title: 'BXH hot',
-                      onPressed: () {
-                        widget.homeViewModel.setIndex(1);
-                      },
-                    ),
-                    RankedHeader(
-                      viewModel: viewModel,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 220,
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: viewModel.storiesNew.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return NewStoriesItems(
+                                data: viewModel.storiesNew[index],
+                                onTap: () {
+                                  viewModel.currentStory =
+                                      viewModel.storiesNew[index];
+                                  viewModel.viewContext = context;
+                                  viewModel.nextDetailStory();
+                                },
+                              );
+                            }),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            viewModel.isCategoriesVisible =
+                                !viewModel.isCategoriesVisible;
+                          });
+                        },
+                        child: SectionHeader(
+                          title: 'Phân loại truyện',
+                          onPressed: () {
+                            widget.homeViewModel.setIndex(1);
+                          },
+                        ),
+                      ),
+                      AnimatedSize(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        child: viewModel.isCategoriesVisible
+                            ? CategoriesItems(
+                                homeViewModel: widget.homeViewModel,
+                                categories:
+                                    viewModel.categories.take(6).toList(),
+                              )
+                            : Container(),
+                      ),
+                      SectionHeader(
+                        title: 'BXH hot',
+                        onPressed: () {
+                          widget.homeViewModel.setIndex(1);
+                        },
+                      ),
+                      RankedHeader(
+                        viewModel: viewModel,
+                      ),
+                    ],
+                  ),
                 ),
               ));
         });

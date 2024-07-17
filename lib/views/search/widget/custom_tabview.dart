@@ -92,26 +92,28 @@ class _CustomTabViewState extends State<CustomTabView>
             ),
           ),
           ...stories.map((story) => RankedItems(
-                comicViewModel: ComicViewModel(),
+                comicViewModel: widget.comicViewModel,
                 data: story,
                 onTap: () {
-                  ComicViewModel comicViewModel = ComicViewModel();
-                  comicViewModel.currentUsers =
+                  widget.comicViewModel.currentUsers =
                       AppSP.get(AppSPKey.currrentUser) != null &&
                               AppSP.get(AppSPKey.currrentUser) != ''
                           ? Users.fromJson(
                               jsonDecode(AppSP.get(AppSPKey.currrentUser)))
                           : null;
-                  if (comicViewModel.currentUsers != null)
-                    comicViewModel.idUser = comicViewModel.currentUsers!.id;
-                  comicViewModel.currentStory = story;
-                  comicViewModel.checkFavourite();
+                  if (widget.comicViewModel.currentUsers != null)
+                    widget.comicViewModel.idUser =
+                        widget.comicViewModel.currentUsers!.id;
+                  print(
+                      'Số like: ${widget.comicViewModel.currentStory.favouriteUser!.length}');
+                  widget.comicViewModel.currentStory = story;
+                  widget.comicViewModel.checkFavourite();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ComicDetailPage(
                                 data: story,
-                                viewModel: comicViewModel,
+                                viewModel: widget.comicViewModel,
                               )));
                 },
               )),

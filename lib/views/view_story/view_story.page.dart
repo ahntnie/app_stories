@@ -132,9 +132,13 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                         children: [
                           InkWell(
                             onTap: () {
-                              viewModel.currentChapter = viewModel
-                                      .currentStory.chapters![
-                                  viewModel.currentChapter!.chapterNumber - 2];
+                              if (viewModel.currentChapter!.chapterNumber > 1) {
+                                viewModel.currentChapter = viewModel
+                                        .currentStory.chapters![
+                                    viewModel.currentChapter!.chapterNumber -
+                                        2];
+                              }
+
                               viewModel.notifyListeners();
                             },
                             child: Image.asset(
@@ -192,9 +196,15 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                           ),
                           InkWell(
                             onTap: () {
-                              viewModel.currentChapter =
-                                  viewModel.currentStory.chapters![
-                                      viewModel.currentChapter!.chapterNumber];
+                              print(viewModel.currentChapter!.chapterNumber);
+                              print(viewModel.currentStory.chapterCount!);
+                              if (viewModel.currentChapter!.chapterNumber <
+                                  viewModel.currentStory.chapterCount!) {
+                                viewModel.currentChapter = viewModel
+                                        .currentStory.chapters![
+                                    viewModel.currentChapter!.chapterNumber];
+                              }
+
                               viewModel.notifyListeners();
                             },
                             child: Image.asset(
