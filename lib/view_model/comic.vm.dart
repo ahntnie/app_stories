@@ -45,11 +45,13 @@ class ComicViewModel extends BaseViewModel {
   List<Comment> comments = [];
   int pageIndex = 1;
   Future<void> init() async {
-    currentUsers = Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
-    idUser = currentUsers!.id;
+    currentUsers = AppSP.get(AppSPKey.currrentUser) != null &&
+            AppSP.get(AppSPKey.currrentUser) != ''
+        ? Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)))
+        : null;
+    if (currentUsers != null) idUser = currentUsers!.id;
     setBusy(true);
     await getStoryActive();
-    await ProfileViewModel().fetchCurrentUser();
     categories = await CategoryRequest().getCategories();
     await getCommentByStory();
     await getStoryNew();

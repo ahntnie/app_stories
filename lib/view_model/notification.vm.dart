@@ -27,8 +27,7 @@ class NotificationViewModel extends BaseViewModel {
   TextEditingController title = TextEditingController();
   List<notification_model.Notification> notifications = [];
   NotificationRequest request = NotificationRequest();
-  Users currentUser =
-      Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+  Users? currentUser;
 
   Future<void> getNotificationByUserId() async {
     setBusy(true);

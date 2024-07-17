@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../app/app_sp.dart';
+import '../../../app/app_sp_key.dart';
 import '../../../constants/app_color.dart';
 import '../../../models/story_model.dart';
 import '../../../styles/app_font.dart';
@@ -12,6 +14,7 @@ import '../../../view_model/comic.vm.dart';
 import '../../../view_model/notification.vm.dart';
 import '../../../widget/base_page.dart';
 import '../../../widget/pop_up.dart';
+import '../../authentication/login.page.dart';
 import '../../view_story/widget/chaptercard.wiget.dart';
 import 'bottomcomment/bottom_total_comment.widget.dart';
 import 'chapter/chapter.widget.dart';
@@ -67,8 +70,11 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
       viewModelBuilder: () => widget.viewModel,
       onViewModelReady: (viewModel) async {
         await viewModel.getCommentByStory();
-        await viewModel.checkFavourite();
-        await widget.viewModel.addViewStory();
+        if (AppSP.get(AppSPKey.currrentUser) != null &&
+            AppSP.get(AppSPKey.currrentUser) != '') {
+          await viewModel.checkFavourite();
+          await widget.viewModel.addViewStory();
+        }
       },
       builder: (context, viewModel, child) {
         viewModel.viewContext = context;
@@ -104,8 +110,8 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               color: AppColor.extraColor),
                         ),
                         if (widget.data.author!.id !=
-                                viewModel.currentUsers!.id &&
-                            viewModel.currentUsers!.role != 'admin')
+                                viewModel.currentUsers?.id &&
+                            viewModel.currentUsers?.role != 'admin')
                           PopupMenuButton<int>(
                               icon: Icon(
                                 Icons.report,
@@ -113,29 +119,58 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                                 color: AppColor.selectColor,
                               ),
                               onSelected: (item) {
-                                NotificationViewModel notiViewModel =
-                                    NotificationViewModel();
-                                notiViewModel.currentChapter =
-                                    viewModel.currentChapter;
-                                notiViewModel.viewContext = context;
-                                notiViewModel.currentStory =
-                                    viewModel.currentStory;
-                                // notiViewModel.comment = widget.comment;
-                                notiViewModel
-                                    .postNotificationReportStoryByAdmin();
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return PopUpWidget(
-                                        icon: Image.asset(
-                                            "assets/ic_success.png"),
-                                        title: 'Đã gửi phản hồi',
-                                        leftText: 'Xác nhận',
-                                        onLeftTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    });
+                                if (AppSP.get(AppSPKey.currrentUser) != null &&
+                                    AppSP.get(AppSPKey.currrentUser) != '') {
+                                  NotificationViewModel notiViewModel =
+                                      NotificationViewModel();
+                                  notiViewModel.currentChapter =
+                                      viewModel.currentChapter;
+                                  notiViewModel.viewContext = context;
+                                  notiViewModel.currentStory =
+                                      viewModel.currentStory;
+                                  // notiViewModel.comment = widget.comment;
+                                  notiViewModel
+                                      .postNotificationReportStoryByAdmin();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PopUpWidget(
+                                          icon: Image.asset(
+                                              "assets/ic_success.png"),
+                                          title: 'Đã gửi phản hồi',
+                                          leftText: 'Xác nhận',
+                                          onLeftTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      });
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PopUpWidget(
+                                          icon: Image.asset(
+                                              "assets/ic_error.png"),
+                                          title:
+                                              'Bạn cần đăng nhập để báo cáo truyện',
+                                          leftText: 'Đăng nhập',
+                                          onLeftTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage(),
+                                                ));
+                                          },
+                                          twoButton: true,
+                                          onRightTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          rightText: 'Hủy',
+                                        );
+                                      });
+                                }
                               },
                               itemBuilder: (context) => [
                                     PopupMenuItem<int>(
@@ -305,6 +340,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                               onPressed: () {
                                 viewModel.currentChapter =
                                     viewModel.currentStory.chapters![index];
+                                viewModel.viewContext = context;
                                 viewModel.detailChapter();
                               },
                             );
@@ -338,9 +374,35 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                 right: 10,
                 child: InkWell(
                   onTap: () async {
-                    await viewModel.postFavourite(widget.data.storyId);
-                    await viewModel.getStoryActive();
-                    await viewModel.getStoryNew();
+                    if ((AppSP.get(AppSPKey.currrentUser) != null &&
+                        AppSP.get(AppSPKey.currrentUser) != '')) {
+                      await viewModel.postFavourite(widget.data.storyId);
+                      await viewModel.getStoryActive();
+                      await viewModel.getStoryNew();
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PopUpWidget(
+                              icon: Image.asset("assets/ic_error.png"),
+                              title: 'Bạn cần đăng nhập để theo dõi truyện',
+                              leftText: 'Đăng nhập',
+                              onLeftTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LoginPage(),
+                                    ));
+                              },
+                              twoButton: true,
+                              onRightTap: () {
+                                Navigator.pop(context);
+                              },
+                              rightText: 'Hủy',
+                            );
+                          });
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

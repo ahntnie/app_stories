@@ -42,8 +42,11 @@ class _SplashPageState extends State<SplashPage> {
         precacheImage(const AssetImage('assets/imgStart.png'), context);
       });
       // Chuyển sang màn hình tiếp theo
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (context) => const LoginPage()),
+      // );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   }

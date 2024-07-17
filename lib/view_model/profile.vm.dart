@@ -30,8 +30,7 @@ class ProfileViewModel extends BaseViewModel {
   TextEditingController newRePasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController currentPasswordController = TextEditingController();
-  Users? currentUser =
-      Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+  Users? currentUser;
   int totalStories = 0;
 
   Future<void> fetchCurrentUser() async {

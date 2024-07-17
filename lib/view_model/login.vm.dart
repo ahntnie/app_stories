@@ -7,22 +7,21 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
-import 'package:app_stories/view_model/profile.vm.dart';
-import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:app_stories/views/authentication/signup.page.dart';
 import 'package:app_stories/views/home/home.page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class LoginViewModel extends BaseViewModel {
   late BuildContext viewContext;
   FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -108,8 +107,14 @@ class LoginViewModel extends BaseViewModel {
       user = userCredential.user;
       Response infoResponse = await ApiService()
           .getRequest('${Api.hostApi}${Api.getUser}/${user!.uid}');
-      print('User body: ${infoResponse.data}');
       AppSP.set(AppSPKey.currrentUser, jsonEncode(infoResponse.data));
+      Users currentUser =
+          Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+      if (currentUser.role == 'admin') {
+        print('Lấy đúng tài khoản admin');
+        await signInAndCheckDevice(
+            emailController.text, passwordController.text);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
         print("Không tìm thấy user");
@@ -117,6 +122,62 @@ class LoginViewModel extends BaseViewModel {
     }
     notifyListeners();
     return user;
+  }
+
+  Future<void> sendConfirmationEmail(String email) async {
+    final Email confirmationEmail = Email(
+      body:
+          'Có thiết bị mới vừa đăng nhập vào tài khoản của bạn. Nếu không phải bạn, hãy kiểm tra lại bảo mật tài khoản của mình.',
+      subject: 'Xác nhận đăng nhập mới',
+      recipients: [email],
+      isHTML: false,
+    );
+    print('Chuẩn bị gửi mail');
+    await FlutterEmailSender.send(confirmationEmail);
+  }
+
+  Future<void> storeDeviceInfo() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      String deviceId = androidInfo.id;
+
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('devices')
+          .doc(deviceId)
+          .set({
+        'deviceId': deviceId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  Future<void> signIn(String email, String password) async {
+    await auth.signInWithEmailAndPassword(email: email, password: password);
+    await storeDeviceInfo();
+  }
+
+  Future<void> checkForNewDeviceAndSendEmail() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      QuerySnapshot deviceDocs = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('devices')
+          .get();
+
+      if (deviceDocs.docs.length > 1) {
+        await sendConfirmationEmail(user.email!);
+      }
+    }
+  }
+
+  Future<void> signInAndCheckDevice(String email, String password) async {
+    await signIn(email, password);
+    await checkForNewDeviceAndSendEmail();
   }
 
   void validatePassword() {

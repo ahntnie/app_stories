@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../../../app/app_sp.dart';
+import '../../../../../app/app_sp_key.dart';
+import '../../../../authentication/login.page.dart';
+
 class TotalCommentCard extends StatefulWidget {
   TotalCommentCard(
       {super.key,
@@ -121,7 +125,7 @@ class _TotalCommentCardState extends State<TotalCommentCard> {
                           ),
                         ),
                         if (widget.comment.userId != widget.currentUserID &&
-                            comicViewModel.currentUsers!.role != 'admin')
+                            comicViewModel.currentUsers?.role != 'admin')
                           PopupMenuButton<int>(
                               icon: Icon(
                                 Icons.report,
@@ -129,28 +133,57 @@ class _TotalCommentCardState extends State<TotalCommentCard> {
                                 color: AppColor.selectColor,
                               ),
                               onSelected: (item) {
-                                NotificationViewModel notiViewModel =
-                                    NotificationViewModel();
-                                notiViewModel.currentChapter =
-                                    comicViewModel.currentChapter;
-                                notiViewModel.viewContext = context;
-                                notiViewModel.currentStory =
-                                    comicViewModel.currentStory;
-                                notiViewModel.comment = widget.comment;
-                                notiViewModel.postNotificationByAdmin();
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return PopUpWidget(
-                                        icon: Image.asset(
-                                            "assets/ic_success.png"),
-                                        title: 'Đã gửi báo cáo',
-                                        leftText: 'Xác nhận',
-                                        onLeftTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    });
+                                if (AppSP.get(AppSPKey.currrentUser) != null &&
+                                    AppSP.get(AppSPKey.currrentUser) != '') {
+                                  NotificationViewModel notiViewModel =
+                                      NotificationViewModel();
+                                  notiViewModel.currentChapter =
+                                      comicViewModel.currentChapter;
+                                  notiViewModel.viewContext = context;
+                                  notiViewModel.currentStory =
+                                      comicViewModel.currentStory;
+                                  notiViewModel.comment = widget.comment;
+                                  notiViewModel.postNotificationByAdmin();
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PopUpWidget(
+                                          icon: Image.asset(
+                                              "assets/ic_success.png"),
+                                          title: 'Đã gửi báo cáo',
+                                          leftText: 'Xác nhận',
+                                          onLeftTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      });
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PopUpWidget(
+                                          icon: Image.asset(
+                                              "assets/ic_error.png"),
+                                          title:
+                                              'Bạn cần đăng nhập để báo cáo bình luận',
+                                          leftText: 'Đăng nhập',
+                                          onLeftTap: () {
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage(),
+                                                ));
+                                          },
+                                          twoButton: true,
+                                          onRightTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          rightText: 'Hủy',
+                                        );
+                                      });
+                                }
                               },
                               itemBuilder: (context) => [
                                     PopupMenuItem<int>(

@@ -9,6 +9,11 @@ import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../../app/app_sp.dart';
+import '../../../app/app_sp_key.dart';
+import '../../../widget/pop_up.dart';
+import '../../authentication/login.page.dart';
+
 class CommentBottom extends StatefulWidget {
   CommentBottom(
       {super.key,
@@ -113,12 +118,43 @@ class _CommentBottomState extends State<CommentBottom> {
                                   icon: const Icon(Icons.send,
                                       color: AppColor.extraColor),
                                   onPressed: () {
-                                    viewModel.postComment(
-                                        viewModel.currentStory.storyId,
-                                        viewModel.currentChapter!.chapterId,
-                                        viewModel.commentController.text);
-                                    viewModel.commentController.clear();
-                                    viewModel.getCommentByChapter();
+                                    if (AppSP.get(AppSPKey.currrentUser) !=
+                                            null &&
+                                        AppSP.get(AppSPKey.currrentUser) !=
+                                            '') {
+                                      viewModel.postComment(
+                                          viewModel.currentStory.storyId,
+                                          viewModel.currentChapter!.chapterId,
+                                          viewModel.commentController.text);
+                                      viewModel.commentController.clear();
+                                      viewModel.getCommentByChapter();
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return PopUpWidget(
+                                              icon: Image.asset(
+                                                  "assets/ic_error.png"),
+                                              title:
+                                                  'Bạn cần đăng nhập để bình luận',
+                                              leftText: 'Đăng nhập',
+                                              onLeftTap: () {
+                                                Navigator.pop(context);
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          LoginPage(),
+                                                    ));
+                                              },
+                                              twoButton: true,
+                                              onRightTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              rightText: 'Hủy',
+                                            );
+                                          });
+                                    }
                                   },
                                 ),
                               ],
