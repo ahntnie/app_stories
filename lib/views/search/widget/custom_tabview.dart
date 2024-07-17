@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/mystories.vm.dart';
@@ -5,6 +7,9 @@ import 'package:app_stories/views/comic/widget/custom/items/ranked.items.widget.
 import 'package:app_stories/views/stories/widget/stories_card.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app/app_sp.dart';
+import '../../../app/app_sp_key.dart';
+import '../../../models/user_model.dart';
 import '../../../view_model/comic.vm.dart';
 import '../../../view_model/search_stories.vm.dart';
 import '../../stories/stories_view/stories.page.dart';
@@ -12,8 +17,12 @@ import '../../stories/stories_view/stories.page.dart';
 class CustomTabView extends StatefulWidget {
   final String title;
   final SearchSotriesViewModel viewModel;
+  final ComicViewModel comicViewModel;
 
-  CustomTabView({required this.title, required this.viewModel});
+  CustomTabView(
+      {required this.title,
+      required this.viewModel,
+      required this.comicViewModel});
 
   @override
   _CustomTabViewState createState() => _CustomTabViewState();
@@ -87,7 +96,16 @@ class _CustomTabViewState extends State<CustomTabView>
                 data: story,
                 onTap: () {
                   ComicViewModel comicViewModel = ComicViewModel();
+                  comicViewModel.currentUsers =
+                      AppSP.get(AppSPKey.currrentUser) != null &&
+                              AppSP.get(AppSPKey.currrentUser) != ''
+                          ? Users.fromJson(
+                              jsonDecode(AppSP.get(AppSPKey.currrentUser)))
+                          : null;
+                  if (comicViewModel.currentUsers != null)
+                    comicViewModel.idUser = comicViewModel.currentUsers!.id;
                   comicViewModel.currentStory = story;
+                  comicViewModel.checkFavourite();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

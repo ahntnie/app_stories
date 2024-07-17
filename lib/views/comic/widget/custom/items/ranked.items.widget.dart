@@ -38,9 +38,10 @@ class _RankedItemsState extends State<RankedItems> {
             //viewModel.viewContext = context;
             onTap: widget.onTap,
             child: Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 4.0),
+              decoration: BoxDecoration(
+                  color: AppColor.buttonColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              margin: const EdgeInsets.all(8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

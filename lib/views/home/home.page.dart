@@ -9,6 +9,7 @@ import 'package:app_stories/view_model/search_stories.vm.dart';
 import 'package:app_stories/views/comic/comic.page.dart';
 import 'package:app_stories/views/profile/profile.page.dart';
 import 'package:app_stories/views/search/search.page.dart';
+import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/nav_bar.dart';
 import 'package:app_stories/widget/pop_up.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     homeViewModel = HomeViewModel();
-    loadStartTime();
+    //loadStartTime();
   }
 
   // @override
@@ -45,48 +46,48 @@ class _HomePageState extends State<HomePage> {
   //   loadStartTime();
   // }
 
-  Future<void> loadStartTime() async {
-    String? startTimeString = AppSP.get(AppSPKey.timeuse);
-    print(AppSP.get(AppSPKey.timeuse));
-    if (startTimeString != null) {
-      int startTimeMillis = int.tryParse(startTimeString) ??
-          DateTime.now().millisecondsSinceEpoch;
-      startTime = DateTime.fromMillisecondsSinceEpoch(startTimeMillis);
-      print(startTimeMillis);
-      checkTimeElapsed();
-    } else {
-      startTime = DateTime.now();
-      AppSP.set(AppSPKey.timeuse, startTime!.millisecondsSinceEpoch.toString());
-      startTimer();
-    }
-  }
+  // Future<void> loadStartTime() async {
+  //   String? startTimeString = AppSP.get(AppSPKey.timeuse);
+  //   print(AppSP.get(AppSPKey.timeuse));
+  //   if (startTimeString != null) {
+  //     int startTimeMillis = int.tryParse(startTimeString) ??
+  //         DateTime.now().millisecondsSinceEpoch;
+  //     startTime = DateTime.fromMillisecondsSinceEpoch(startTimeMillis);
+  //     print(startTimeMillis);
+  //     checkTimeElapsed();
+  //   } else {
+  //     startTime = DateTime.now();
+  //     AppSP.set(AppSPKey.timeuse, startTime!.millisecondsSinceEpoch.toString());
+  //     startTimer();
+  //   }
+  // }
 
-  void checkTimeElapsed() {
-    if (startTime != null) {
-      final elapsed = DateTime.now().difference(startTime!);
-      if (elapsed >= Duration(seconds: timeDuration)) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          setState(() {
-            showDialogs = true;
-          });
-          //      _showTimeoutDialog();
-        });
-      } else {
-        startTimer(duration: Duration(seconds: timeDuration) - elapsed);
-      }
-    }
-  }
+  // void checkTimeElapsed() {
+  //   if (startTime != null) {
+  //     final elapsed = DateTime.now().difference(startTime!);
+  //     if (elapsed >= Duration(seconds: timeDuration)) {
+  //       WidgetsBinding.instance.addPostFrameCallback((_) {
+  //         setState(() {
+  //           showDialogs = true;
+  //         });
+  //         //      _showTimeoutDialog();
+  //       });
+  //     } else {
+  //       startTimer(duration: Duration(seconds: timeDuration) - elapsed);
+  //     }
+  //   }
+  // }
 
-  void startTimer({Duration duration = const Duration(seconds: 3600)}) {
-    timer = Timer(duration, () {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          showDialogs = true;
-        });
-        //    _showTimeoutDialog();
-      });
-    });
-  }
+  // void startTimer({Duration duration = const Duration(seconds: 3600)}) {
+  //   timer = Timer(duration, () {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       setState(() {
+  //         showDialogs = true;
+  //       });
+  //       //    _showTimeoutDialog();
+  //     });
+  //   });
+  // }
 
   // void _showTimeoutDialog() {
   //   showDialog(
@@ -112,28 +113,30 @@ class _HomePageState extends State<HomePage> {
   //   );
   // }
 
-  Future<void> resetStartTime() async {
-    startTime = DateTime.now();
-    AppSP.set(AppSPKey.timeuse, startTime!.millisecondsSinceEpoch.toString());
-    startTimer();
-  }
+  // Future<void> resetStartTime() async {
+  //   startTime = DateTime.now();
+  //   AppSP.set(AppSPKey.timeuse, startTime!.millisecondsSinceEpoch.toString());
+  //   startTimer();
+  // }
 
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   timer?.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => homeViewModel,
-      builder: (context, viewModel, child) => Scaffold(
+      builder: (context, viewModel, child) => BasePage(
+        showAppBar: false,
+        showLeading: false,
         body: IndexedStack(
           index: viewModel.currentIndex,
           children: viewModel.getPages(),
         ),
-        bottomNavigationBar: HomeNavigationBar(
+        bottomNav: HomeNavigationBar(
           currentIndex: viewModel.currentIndex,
           onTabSelected: (index) => viewModel.setIndex(index),
         ),

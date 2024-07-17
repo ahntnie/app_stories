@@ -1,5 +1,6 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/category_model.dart';
+import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/views/search/widget/custom_tabview.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/search_textfield.dart';
@@ -11,14 +12,17 @@ import 'package:stacked/stacked.dart';
 import '../../view_model/home.vm.dart';
 import '../../view_model/search_stories.vm.dart';
 import '../../widget/loading_shimmer.dart';
-import '../stories/widget/stories_card.dart';
 import 'widget/drawer_search.dart';
 
 class SearchPage extends StatefulWidget {
   final HomeViewModel homeViewModel;
+  final ComicViewModel comicViewModel;
   final SearchSotriesViewModel viewModel;
   const SearchPage(
-      {super.key, required this.homeViewModel, required this.viewModel});
+      {super.key,
+      required this.homeViewModel,
+      required this.viewModel,
+      required this.comicViewModel});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -66,6 +70,7 @@ class _SearchPageState extends State<SearchPage> {
                       showFull: true,
                     )
                   : CustomTabView(
+                      comicViewModel: widget.comicViewModel,
                       title: '', //viewModel.currentCategory?.name ?? 'Tất cả',
                       viewModel: viewModel,
                     ));

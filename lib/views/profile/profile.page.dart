@@ -116,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 },
                               ),
                               CustomMenuButton(
-                                icon: Icons.favorite,
+                                icon: Icons.favorite_outline,
                                 text: 'Truyện đã theo dõi',
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
