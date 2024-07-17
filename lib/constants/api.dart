@@ -1,8 +1,8 @@
 class Api {
   static const String hostApi =
-      'https://loosely-resolved-octopus.ngrok-free.app/api';
+      'https://obliging-tetra-equally.ngrok-free.app/api';
   static const String hostImage =
-      'https://loosely-resolved-octopus.ngrok-free.app';
+      'https://obliging-tetra-equally.ngrok-free.app';
 
   //Story
   static const String postStory = '/stories';
@@ -20,6 +20,7 @@ class Api {
   //Favourite
   static const String postLike = '/favourite-story';
   static const String unLike = '/delete-favourite-story';
+  static const String getStoryFavourite = '/get-favourite-story';
 
   //Category
   static const String getCategories = '/categories';

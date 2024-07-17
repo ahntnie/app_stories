@@ -120,7 +120,6 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                                 notiViewModel.viewContext = context;
                                 notiViewModel.currentStory =
                                     viewModel.currentStory;
-                                // notiViewModel.comment = widget.comment;
                                 notiViewModel
                                     .postNotificationReportStoryByAdmin();
                                 showDialog(
@@ -129,7 +128,7 @@ class _ComicDetailPageState extends State<ComicDetailPage> {
                                       return PopUpWidget(
                                         icon: Image.asset(
                                             "assets/ic_success.png"),
-                                        title: 'Đã gửi phản hồi',
+                                        title: 'Đã gửi báo cáo truyện',
                                         leftText: 'Xác nhận',
                                         onLeftTap: () {
                                           Navigator.pop(context);
