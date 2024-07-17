@@ -7,4 +7,5 @@ class Img {
   static String imgLogo = 'assets/ic_logo.png';
   static String imgBook = 'assets/ic_book.png';
   static String imgAVT = 'assets/avt.png'; // test
+  static String wait = "assets/ic_load.json";
 }

@@ -27,6 +27,7 @@ class ComicViewModel extends BaseViewModel {
   Chapter? currentChapter;
   List<Story> storiesIsActive = [];
   List<Story> storiesNew = [];
+  List<dynamic> storiesFavourite = [];
   StoryRequest request = StoryRequest();
   List<Category> categories = [];
   TextEditingController titleController = TextEditingController();
@@ -36,6 +37,7 @@ class ComicViewModel extends BaseViewModel {
   TextEditingController commentController = TextEditingController();
   TextEditingController commenStorytController = TextEditingController();
   StoryRequest storyRequest = StoryRequest();
+  bool isCategoriesVisible = false;
   late Map<String, dynamic> _commentModel;
   Map<String, dynamic>? get commentModel => _commentModel;
   String idUser = '';
@@ -55,6 +57,7 @@ class ComicViewModel extends BaseViewModel {
     categories = await CategoryRequest().getCategories();
     await getCommentByStory();
     await getStoryNew();
+    //await getStoryFavourite();
     setBusy(false);
     notifyListeners();
   }
@@ -73,6 +76,7 @@ class ComicViewModel extends BaseViewModel {
   }
 
   Future<void> getStoryActive([bool nextPage = false]) async {
+    print(idUser);
     if (nextPage) {
       pageIndex++;
       List<Story> storiesNextPage = await request.getStoriesIsActive(pageIndex);
@@ -80,11 +84,30 @@ class ComicViewModel extends BaseViewModel {
       notifyListeners();
     } else {
       storiesIsActive = await request.getStoriesIsActive(pageIndex);
+      print(storiesIsActive);
     }
   }
 
   Future<void> getStoryNew() async {
     storiesNew = await request.getStoriesNew();
+  }
+
+  Future<void> getStoryFavourite() async {
+    currentUsers = Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
+    idUser = currentUsers!.id;
+    // print('id user: $idUser');
+    Response response = await apiService
+        .getRequest('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
+    print('dataa: ${response.data}');
+
+    //print(idUser);
+    final responseData = jsonDecode(jsonEncode(response.data));
+    //print(responseData);
+    List<dynamic> lstStory = responseData['data'];
+
+    storiesFavourite = lstStory.map((e) => Story.fromJson(e)).toList();
+    print(storiesFavourite);
+    // notifyListeners();
   }
 
   Future<void> postFavourite(int? storyID) async {
@@ -180,6 +203,7 @@ class ComicViewModel extends BaseViewModel {
   }
 
   nextDetailStory() async {
+    categories = currentStory.categories!;
     checkFavourite();
     Navigator.push(
         viewContext,

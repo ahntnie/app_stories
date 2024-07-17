@@ -195,7 +195,8 @@ class SignUpViewModel extends BaseViewModel {
 
   bool _isValidEmail(String email) {
     // Biểu thức chính quy để kiểm tra định dạng email
-    const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    //const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    const pattern = r'^[\w-\.]+@gmail\.com$';
     final regex = RegExp(pattern);
     return regex.hasMatch(email);
   }

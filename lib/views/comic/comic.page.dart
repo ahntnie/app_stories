@@ -69,15 +69,34 @@ class _ComicPageState extends State<ComicPage> {
                             );
                           }),
                     ),
-                    SectionHeader(
-                      title: 'Phân loại truyện',
-                      onPressed: () {
-                        widget.homeViewModel.setIndex(1);
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          viewModel.isCategoriesVisible =
+                              !viewModel.isCategoriesVisible;
+                        });
                       },
+                      child: SectionHeader(
+                        title: 'Phân loại truyện',
+                        onPressed: () {
+                          widget.homeViewModel.setIndex(1);
+                        },
+                      ),
                     ),
-                    CategoriesItems(
-                        homeViewModel: widget.homeViewModel,
-                        categories: viewModel.categories.take(6).toList()),
+
+                    AnimatedSize(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: viewModel.isCategoriesVisible
+                          ? CategoriesItems(
+                              homeViewModel: widget.homeViewModel,
+                              categories: viewModel.categories.take(6).toList(),
+                            )
+                          : Container(),
+                    ),
+                    // CategoriesItems(
+                    //     homeViewModel: widget.homeViewModel,
+                    //     categories: viewModel.categories.take(6).toList()),
                     SectionHeader(
                       title: 'BXH hot',
                       onPressed: () {
