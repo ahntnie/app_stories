@@ -79,20 +79,49 @@ class _SearchPageState extends State<SearchPage> {
                   viewModel.searchStories();
                 },
               ),
-              body: viewModel.isBusy
-                  ? GradientLoadingWidget(
-                      showFull: true,
-                    )
-                  : SmartRefresher(
-                      controller: _refreshController,
-                      onRefresh: _onRefresh,
-                      //onLoading: _onLoading,
-                     // enablePullUp: true,
-                      child: CustomTabView(
-                        comicViewModel: widget.comicViewModel,
-                        title:
-                            '', //viewModel.currentCategory?.name ?? 'Tất cả',
-                        viewModel: viewModel,
+              body: viewModel.stories.isNotEmpty
+                  ? viewModel.isBusy
+                      ? GradientLoadingWidget(
+                          showFull: true,
+                        )
+                      : SmartRefresher(
+                          controller: _refreshController,
+                          onRefresh: _onRefresh,
+                          //onLoading: _onLoading,
+                          // enablePullUp: true,
+                          child: CustomTabView(
+                            comicViewModel: widget.comicViewModel,
+                            title:
+                                '', //viewModel.currentCategory?.name ?? 'Tất cả',
+                            viewModel: viewModel,
+                          ),
+                        )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/ic_empty.png'),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Dữ liệu trống',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const Text(
+                            'Chưa có dữ liệu ở thời điểm hiện tại',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 4,
+                          )
+                        ],
                       ),
                     ));
         });
