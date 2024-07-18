@@ -74,6 +74,23 @@ class PostStoriesViewModel extends BaseViewModel {
               },
             );
           });
+    } else if (storyNameController.text.isEmpty ||
+        summaryController.text.isEmpty ||
+        coverImage == null ||
+        chaptersImages.isEmpty ||
+        copyrightDocumentsImages.isEmpty) {
+      showDialog(
+          context: viewContext,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Yêu cầu nhập đầy đủ dữ liệu',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
     } else {
       chaptersImages = [];
       coverImage = null;

@@ -116,12 +116,12 @@ class LoginViewModel extends BaseViewModel {
       //   await signInAndCheckDevice(
       //       emailController.text, passwordController.text);
       // }
-      setBusy(false);
     } on FirebaseAuthException catch (e) {
       if (e.code == "không tồn tại") {
         print("Không tìm thấy user");
       }
     }
+    setBusy(false);
     notifyListeners();
     return user;
   }

@@ -37,24 +37,53 @@ class _FavouriteStoryState extends State<FavouriteStory> {
             isLoading: viewModel.isBusy,
             showAppBar: true,
             title: 'Truyện đã theo dõi',
-            body: SmartRefresher(
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              child: ListView.builder(
-                  itemCount: viewModel.storiesFavourite.length,
-                  itemBuilder: (context, index) {
-                    return RankedItems(
-                        comicViewModel: viewModel,
-                        data: viewModel.storiesFavourite[index],
-                        onTap: () {
-                          viewModel.currentStory =
-                              viewModel.storiesFavourite[index];
-                          viewModel.viewContext = context;
-                          viewModel.checkFavourite();
-                          viewModel.nextDetailStory();
-                        });
-                  }),
-            ),
+            body: viewModel.storiesFavourite.isNotEmpty
+                ? SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: _onRefresh,
+                    child: ListView.builder(
+                        itemCount: viewModel.storiesFavourite.length,
+                        itemBuilder: (context, index) {
+                          return RankedItems(
+                              comicViewModel: viewModel,
+                              data: viewModel.storiesFavourite[index],
+                              onTap: () {
+                                viewModel.currentStory =
+                                    viewModel.storiesFavourite[index];
+                                viewModel.viewContext = context;
+                                viewModel.checkFavourite();
+                                viewModel.nextDetailStory();
+                              });
+                        }),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/ic_empty.png'),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Dữ liệu trống',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Text(
+                          'Chưa có dữ liệu ở thời điểm hiện tại',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 4,
+                        )
+                      ],
+                    ),
+                  ),
           );
         });
   }

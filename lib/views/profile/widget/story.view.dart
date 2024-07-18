@@ -37,24 +37,53 @@ class _ViewStoryState extends State<ViewStory> {
             isLoading: viewModel.isBusy,
             showAppBar: true,
             title: 'Lịch sử đọc truyện',
-            body: SmartRefresher(
-              controller: _refreshController,
-              onRefresh: () => _onRefresh(viewModel),
-              child: ListView.builder(
-                  itemCount: viewModel.listStory.length,
-                  itemBuilder: (context, index) {
-                    return RankedItems(
-                        comicViewModel: widget.comicViewModel,
-                        data: viewModel.listStory[index],
-                        onTap: () {
-                          widget.comicViewModel.viewContext = context;
-                          widget.comicViewModel.currentStory =
-                              viewModel.listStory[index];
-                          widget.comicViewModel.checkFavourite();
-                          widget.comicViewModel.nextDetailStory();
-                        });
-                  }),
-            ),
+            body: viewModel.listStory.isNotEmpty
+                ? SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: () => _onRefresh(viewModel),
+                    child: ListView.builder(
+                        itemCount: viewModel.listStory.length,
+                        itemBuilder: (context, index) {
+                          return RankedItems(
+                              comicViewModel: widget.comicViewModel,
+                              data: viewModel.listStory[index],
+                              onTap: () {
+                                widget.comicViewModel.viewContext = context;
+                                widget.comicViewModel.currentStory =
+                                    viewModel.listStory[index];
+                                widget.comicViewModel.checkFavourite();
+                                widget.comicViewModel.nextDetailStory();
+                              });
+                        }),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/ic_empty.png'),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Dữ liệu trống',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Text(
+                          'Chưa có dữ liệu ở thời điểm hiện tại',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 4,
+                        )
+                      ],
+                    ),
+                  ),
           );
         });
   }
