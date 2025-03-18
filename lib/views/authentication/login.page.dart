@@ -8,10 +8,7 @@ import 'package:app_stories/styles/app_img.dart';
 import 'package:app_stories/view_model/login.vm.dart';
 import 'package:app_stories/views/authentication/widget/textfield_authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../models/user_model.dart';
@@ -215,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width /
-                                                20,
+                                                30,
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height /
@@ -226,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                                           "Đăng nhập với Google",
                                           style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 28,
+                                              fontSize: 25,
                                               fontWeight: AppFontWeight.bold),
                                         ),
                                       ],

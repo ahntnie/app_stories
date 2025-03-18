@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:label="app_stories"
         android:name="${applicationName}"
@@ -19,6 +20,8 @@
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
+              android:name="io.flutter.embedding.android.ImageDecoder"
+              android:value="false" 
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

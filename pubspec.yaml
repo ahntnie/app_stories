@@ -55,6 +55,7 @@ dependencies:
   flutter_email_sender: ^6.0.3
   pull_to_refresh: ^2.0.0
   flutter_slidable: ^3.1.1
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:

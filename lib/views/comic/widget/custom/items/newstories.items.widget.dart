@@ -1,10 +1,7 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
-import 'package:app_stories/view_model/browse_stories.vm.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class NewStoriesItems extends StatelessWidget {
   const NewStoriesItems({super.key, required this.data, required this.onTap});

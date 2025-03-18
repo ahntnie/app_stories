@@ -1,8 +1,6 @@
 class Api {
-  static const String hostApi =
-      'https://loosely-resolved-octopus.ngrok-free.app/api';
-  static const String hostImage =
-      'https://loosely-resolved-octopus.ngrok-free.app';
+  static const String hostApi = 'https://dev.gtglobal.id.vn/api';
+  static const String hostImage = 'https://dev.gtglobal.id.vn';
 
   //Story
   static const String postStory = '/stories';

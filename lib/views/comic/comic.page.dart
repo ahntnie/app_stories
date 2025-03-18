@@ -103,16 +103,15 @@ class _ComicPageState extends State<ComicPage> {
                         ),
                       ),
                       AnimatedSize(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        child: viewModel.isCategoriesVisible
-                            ? CategoriesItems(
-                                homeViewModel: widget.homeViewModel,
-                                categories:
-                                    viewModel.categories.take(6).toList(),
-                              )
-                            : Container(),
-                      ),
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: viewModel.isCategoriesVisible
+                              ? Container()
+                              : CategoriesItems(
+                                  homeViewModel: widget.homeViewModel,
+                                  categories:
+                                      viewModel.categories.take(6).toList(),
+                                )),
                       SectionHeader(
                         title: 'BXH hot',
                         onPressed: () {
