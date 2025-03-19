@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:app_stories/constants/app_color.dart';
-import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
+import 'package:app_stories/constants/themes/theme.serivce.dart';
 import 'package:app_stories/styles/app_img.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
-import 'package:app_stories/view_model/mystories.vm.dart';
 import 'package:app_stories/view_model/profile.vm.dart';
-import 'package:app_stories/views/browse_stories/browse_stories.page.dart';
 import 'package:app_stories/views/managerstories/managerstories.dart';
 import 'package:app_stories/views/profile/widget/acount.view.dart';
 import 'package:app_stories/views/profile/widget/custom/menuitem.widget.dart';
@@ -14,15 +14,12 @@ import 'package:app_stories/views/profile/widget/story.favourite.widget.dart';
 import 'package:app_stories/views/profile/widget/story.view.dart';
 import 'package:app_stories/views/report/report.page.dart';
 import 'package:app_stories/views/stories/my_stories.page.dart';
-import 'package:app_stories/views/stories/post_stories.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:app_stories/widget/next_login_page.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import '../../app/app_sp.dart';
 import '../../app/app_sp_key.dart';
@@ -43,6 +40,21 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late ComicViewModel comicViewModel;
+  final themeService = GetIt.instance<ThemeService>(); // Lấy ThemeService
+  bool isDarkMode = false;
+  @override
+  void initState() {
+    super.initState();
+    isDarkMode = themeService.isDarkMode;
+  }
+
+  void toggleTheme(bool value) {
+    setState(() {
+      isDarkMode = value;
+    });
+    themeService.toggleTheme(); // Gọi hàm đổi theme
+  }
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -62,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context, viewModel, child) {
         return BasePage(
           showLeading: false,
-          title: 'Cá nhân',
+          title: 'CÁ NHÂN',
           showLogout: (AppSP.get(AppSPKey.currrentUser) != null &&
                   AppSP.get(AppSPKey.currrentUser) != '')
               ? true
@@ -77,35 +89,92 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.05,
+                                    MediaQuery.of(context).size.height * 0.02,
                               ),
                               Row(
                                 children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.07,
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              0.05,
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              0.01,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.008),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            gradient: const LinearGradient(
+                                              colors: [
+                                                AppColors.blueberry80,
+                                                AppColors.watermelon80
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                          ),
+                                          child: CircleAvatar(
+                                            radius: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.12,
+                                            backgroundColor:
+                                                context.primaryBackgroundColor,
+                                            child: CircleAvatar(
+                                              backgroundColor: context
+                                                  .primaryBackgroundColor,
+                                              radius: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.115,
+                                              backgroundImage:
+                                                  AssetImage(Img.imgAVT),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.04,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                viewModel.currentUser!.name
+                                                    .toString(),
+                                                style: AppTheme.titleMedium18),
+                                            SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.005),
+                                            Text(
+                                                viewModel.currentUser!.email
+                                                    .toString(),
+                                                style: AppTheme.titleMedium18),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  CircleAvatar(
-                                    backgroundImage: AssetImage(Img.imgAVT),
-                                    minRadius: 45,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.1,
-                                  ),
-                                  Text(
-                                    viewModel.currentUser!.name.toString(),
-                                    style: TextStyle(
-                                        color: AppColor.extraColor,
-                                        fontSize: AppFontSize.sizeMedium),
-                                  )
                                 ],
                               ),
                               SizedBox(
-                                height: MediaQuery.of(context).size.width * 0.1,
-                              ),
+                                  height: MediaQuery.of(context).size.height *
+                                      0.03),
                               CustomMenuButton(
-                                icon: Icons.security,
+                                icon: CupertinoIcons.lock_fill,
                                 text: 'Tài khoản và Bảo mật',
                                 onTap: () {
                                   // Navigator.pop(context);
@@ -118,7 +187,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 },
                               ),
                               CustomMenuButton(
-                                icon: Icons.favorite_outline,
+                                showLead: false,
+                                icon: CupertinoIcons.sun_max_fill,
+                                text: 'Chế độ sáng tối',
+                                switchValue: isDarkMode,
+                                onSwitchChanged: toggleTheme,
+                                onTap: () {},
+                              ),
+                              CustomMenuButton(
+                                icon: CupertinoIcons.heart_fill,
                                 text: 'Truyện đã theo dõi',
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -128,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 },
                               ),
                               CustomMenuButton(
-                                icon: Icons.history,
+                                icon: CupertinoIcons.timer,
                                 text: 'Lịch sử đọc truyện',
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -139,22 +216,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               if (viewModel.currentUser!.role != 'admin') ...[
                                 CustomMenuButton(
-                                  icon: Icons.feedback,
-                                  text: 'Phản hồi ý kiến',
-                                  onTap: () {},
-                                ),
-                                CustomMenuButton(
-                                  icon: Icons.info,
+                                  icon: CupertinoIcons.info,
                                   text: 'Giới thiệu về chúng tôi',
                                   onTap: () {},
                                 ),
                                 CustomMenuButton(
-                                  icon: Icons.lock,
+                                  icon: CupertinoIcons.lock,
                                   text: 'Chính sách bảo mật',
                                   onTap: () {},
                                 ),
                                 CustomMenuButton(
-                                  icon: Icons.description,
+                                  icon: CupertinoIcons.bookmark_fill,
                                   text: 'Điều khoản dịch vụ',
                                   onTap: () {},
                                 ),
@@ -163,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   viewModel.currentUser!.role == 'author') ...[
                                 if (viewModel.currentUser!.role == 'author')
                                   CustomMenuButton(
-                                    icon: Icons.add_circle,
+                                    icon: CupertinoIcons.arrow_down_doc_fill,
                                     text: 'Quản lý truyện đăng',
                                     onTap: () {
                                       Navigator.push(
@@ -175,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 if (viewModel.currentUser!.role == 'author')
                                   CustomMenuButton(
-                                    icon: Icons.menu_book_sharp,
+                                    icon: CupertinoIcons.doc_chart_fill,
                                     text: 'Thống kê',
                                     onTap: () {
                                       Navigator.push(

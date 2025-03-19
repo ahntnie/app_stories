@@ -1,17 +1,12 @@
-import 'dart:async';
-
-import 'package:app_stories/constants/app_color.dart';
-import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/styles/app_img.dart';
-import 'package:app_stories/view_model/comic.vm.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/login.vm.dart';
 import 'package:app_stories/view_model/notification.vm.dart';
-import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:app_stories/views/splash/splash.page.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:app_stories/models/notification_model.dart'
-    as notification_model;
 
 import '../app/app_sp.dart';
 import '../app/app_sp_key.dart';
@@ -72,138 +67,154 @@ class _BasePageState extends State<BasePage> {
     return SafeArea(
       child: Scaffold(
         endDrawer: widget.drawer,
-        backgroundColor: AppColor.primary,
+        backgroundColor: context.primaryBackgroundColor,
         appBar: widget.showAppBar
-            ? AppBar(
-                leading: widget.showLeading
-                    ? IconButton(
-                        onPressed: widget.onPressedLeading ??
-                            () {
-                              Navigator.pop(context);
-                            },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ))
-                    : null,
-                toolbarHeight: 100,
-                backgroundColor: AppColor.darkPrimary,
-                title: widget.appBar ??
-                    (widget.showLogo
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(80),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20), // Bo góc trái
+                    bottomRight: Radius.circular(20), // Bo góc phải
+                  ),
+                  child: AppBar(
+                    flexibleSpace: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.blueberry80, // Màu 1
+                            AppColors.watermelon80, // Màu 2
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                    ),
+                    leading: widget.showLeading
+                        ? IconButton(
+                            onPressed: widget.onPressedLeading ??
+                                () {
+                                  Navigator.pop(context);
+                                },
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: context.primaryTextColor,
+                            ))
+                        : null,
+                    toolbarHeight: 80,
+                    title: widget.appBar ??
+                        (widget.showLogo
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Image.asset(
-                                    Img.imgLogo,
-                                    width: 70,
-                                    height: 70,
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        Img.imgLogo,
+                                        width: 50,
+                                        height: 50,
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text('TRUYENHAY',
+                                          style: AppTheme.titleExtraLarge24)
+                                    ],
                                   ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const Text(
-                                    'TRUYENHAY',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: AppFontWeight.bold,
-                                    ),
-                                  )
                                 ],
-                              ),
-                            ],
-                          )
-                        : Center(
-                            child: Text(
-                              widget.title ?? '',
-                              style: const TextStyle(
-                                  color: AppColor.extraColor,
-                                  fontWeight: AppFontWeight.bold),
-                            ),
-                          )),
-                actions: widget.actions ??
-                    [
-                      widget.showLogo
-                          ? ViewModelBuilder.reactive(
-                              viewModelBuilder: () => notificationViewModel,
-                              onViewModelReady: (viewModel) async {
-                                if (AppSP.get(AppSPKey.currrentUser) != null &&
-                                    AppSP.get(AppSPKey.currrentUser) != '') {
-                                  await viewModel.getNotificationByUserId();
-                                  // Timer.periodic(Duration(minutes: 1),
-                                  //     (timer) async {
-                                  //   print('Vào lấy thông báo');
-                                  //   await viewModel.getNotificationByUserId();
-                                  // });
-                                }
-                              },
-                              builder: (context, viewModel, child) {
-                                if (AppSP.get(AppSPKey.currrentUser) != null &&
-                                    AppSP.get(AppSPKey.currrentUser) != '') {}
+                              )
+                            : Text(widget.title ?? '',
+                                style: AppTheme.titleExtraLarge24)),
+                    actions: widget.actions ??
+                        [
+                          widget.showLogo
+                              ? ViewModelBuilder.reactive(
+                                  viewModelBuilder: () => notificationViewModel,
+                                  onViewModelReady: (viewModel) async {
+                                    if (AppSP.get(AppSPKey.currrentUser) !=
+                                            null &&
+                                        AppSP.get(AppSPKey.currrentUser) !=
+                                            '') {
+                                      await viewModel.getNotificationByUserId();
+                                      // Timer.periodic(Duration(minutes: 1),
+                                      //     (timer) async {
+                                      //   print('Vào lấy thông báo');
+                                      //   await viewModel.getNotificationByUserId();
+                                      // });
+                                    }
+                                  },
+                                  builder: (context, viewModel, child) {
+                                    if (AppSP.get(AppSPKey.currrentUser) !=
+                                            null &&
+                                        AppSP.get(AppSPKey.currrentUser) !=
+                                            '') {}
 
-                                return IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NotificationPage(
-                                                    notificationViewModel:
-                                                        viewModel,
-                                                  )));
-                                    },
-                                    icon: Stack(
-                                      children: [
-                                        const Icon(
-                                          Icons.notifications_none_outlined,
-                                          color: AppColor.extraColor,
-                                          size: 30,
-                                        ),
-                                        if (viewModel.unReadNotify != 0)
-                                          Positioned(
-                                            left: 12,
-                                            child: Container(
-                                              height: 20,
-                                              width: 20,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.red,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  viewModel.unReadNotify
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
+                                    return IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      NotificationPage(
+                                                        notificationViewModel:
+                                                            viewModel,
+                                                      )));
+                                        },
+                                        icon: Stack(
+                                          children: [
+                                            Icon(
+                                              Icons.notifications_none_outlined,
+                                              color: context.primaryTextColor,
+                                              size: 30,
+                                            ),
+                                            if (viewModel.unReadNotify != 0)
+                                              Positioned(
+                                                left: 12,
+                                                child: Container(
+                                                  height: 20,
+                                                  width: 20,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.red,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      viewModel.unReadNotify
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                      ],
-                                    ));
-                              },
-                            )
-                          : widget.showLogout
-                              ? IconButton(
-                                  onPressed: () {
-                                    LoginViewModel().signOut();
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SplashPage()),
-                                      (router) => false,
-                                    );
+                                          ],
+                                        ));
                                   },
-                                  icon: const Icon(
-                                    Icons.logout,
-                                    color: AppColor.extraColor,
-                                    size: 30,
-                                  ))
-                              : const SizedBox()
-                    ],
+                                )
+                              : widget.showLogout
+                                  ? IconButton(
+                                      onPressed: () {
+                                        LoginViewModel().signOut();
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SplashPage()),
+                                          (router) => false,
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.logout,
+                                        color: context.primaryTextColor,
+                                        size: 30,
+                                      ))
+                                  : const SizedBox()
+                        ],
+                  ),
+                ),
               )
             : null,
         body: widget.isLoading

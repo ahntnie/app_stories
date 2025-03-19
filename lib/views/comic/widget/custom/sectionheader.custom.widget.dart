@@ -1,6 +1,10 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
+import 'package:app_stories/widget/nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SectionHeader extends StatelessWidget {
   SectionHeader({super.key, required this.title, required this.onPressed});
@@ -15,17 +19,15 @@ class SectionHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-                fontSize: AppFontSize.sizeMedium,
-                fontWeight: AppFontWeight.bold,
-                color: AppColor.extraColor),
+            style: AppTheme.titleMedium18,
           ),
           TextButton(
             onPressed: onPressed,
             child: Text('Xem thêm',
-                style: TextStyle(
-                    color: AppColor.inwellColor,
-                    fontSize: AppFontSize.sizeSmall)),
+                style: GoogleFonts.nunito(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: context.primaryTextColor)),
           ),
         ],
       ),

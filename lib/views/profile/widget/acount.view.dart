@@ -1,5 +1,6 @@
 import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/profile/widget/custom/accountitem.widget.dart';
+import 'package:app_stories/views/profile/widget/custom/menuitem.widget.dart';
 import 'package:app_stories/widget/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -21,7 +22,6 @@ class _AccountViewState extends State<AccountView> {
           viewModel.viewContext = context;
         },
         builder: (context, viewModel, child) {
-          print('Load lại giao diện: ${viewModel.currentUser!.name}');
           return BasePage(
               title: 'Tài khoản và bảo mật',
               body: Container(
@@ -46,7 +46,7 @@ class _AccountViewState extends State<AccountView> {
                                 ? 'Tôi đã đủ 18 tuổi trở lên'
                                 : 'Tôi chưa đủ 18 tuổi',
                             onTap: () {
-                              viewModel.showBirthDateDialog();
+                              viewModel.showBirthDateDialog(context);
                             },
                           ),
                           CustomMenuAccount(

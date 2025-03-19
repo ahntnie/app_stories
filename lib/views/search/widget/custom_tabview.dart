@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/mystories.vm.dart';
 import 'package:app_stories/views/comic/widget/custom/items/ranked.items.widget.dart';
 import 'package:app_stories/views/stories/widget/stories_card.dart';
@@ -55,9 +58,9 @@ class _CustomTabViewState extends State<CustomTabView>
             Tab(text: 'Hoàn Thành'),
             Tab(text: 'Đang tiến hành'),
           ],
-          labelColor: Colors.red,
-          unselectedLabelColor: Colors.white,
-          indicatorColor: Colors.red,
+          labelColor: context.primaryTextColor,
+          unselectedLabelColor: context.primaryTextColor,
+          indicatorColor: AppColors.watermelon100,
           isScrollable: false,
           indicatorWeight: 0.5,
           indicatorSize: TabBarIndicatorSize.tab,
@@ -83,13 +86,7 @@ class _CustomTabViewState extends State<CustomTabView>
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                  color: AppColor.extraColor,
-                  fontSize: AppFontSize.sizeLarge,
-                  fontWeight: AppFontWeight.bold),
-            ),
+            child: Text(widget.title, style: AppTheme.titleExtraLarge24),
           ),
           ...stories.map((story) => RankedItems(
                 comicViewModel: widget.comicViewModel,

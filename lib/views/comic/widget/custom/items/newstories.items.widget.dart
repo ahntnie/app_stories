@@ -1,4 +1,5 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:flutter/material.dart';
@@ -16,17 +17,19 @@ class NewStoriesItems extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Image.network(
-              data.coverImage!.first,
-              width: 100,
-              height: 150,
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+              child: Image.network(
+                data.coverImage!.first,
+                width: 120,
+                height: 150,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(data.title!,
-                style: TextStyle(
-                    fontWeight: AppFontWeight.bold,
-                    fontSize: AppFontSize.sizeSmall,
-                    color: AppColor.extraColor)),
+            Text(
+              data.title!,
+              style: AppTheme.titleSmall16,
+            ),
           ],
         ),
       ),

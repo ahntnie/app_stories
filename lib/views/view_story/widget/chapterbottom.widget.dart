@@ -39,7 +39,7 @@ class _BottomChapterState extends State<BottomChapter> {
               padding: const EdgeInsets.only(
                   right: 20, left: 20, top: 30, bottom: 10),
               child: SearchTextField(
-                seatchController: TextEditingController(),
+                searchController: TextEditingController(),
                 onChanged: () {},
               ),
             ),

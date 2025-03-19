@@ -1,6 +1,7 @@
 import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/category_model.dart';
 import 'package:app_stories/models/story_model.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/views/search/widget/custom_tabview.dart';
 import 'package:app_stories/widget/base_page.dart';
@@ -65,25 +66,23 @@ class _SearchPageState extends State<SearchPage> {
                     onPressed: () {
                       Scaffold.of(context).openEndDrawer();
                     },
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.tune,
-                      color: AppColor.extraColor,
+                      color: context.primaryTextColor,
                       size: 30,
                     ),
                   ),
                 ),
               ],
               appBar: SearchTextField(
-                seatchController: viewModel.searchController,
+                searchController: viewModel.searchController,
                 onChanged: () {
                   viewModel.searchStories();
                 },
               ),
               body: viewModel.stories.isNotEmpty
                   ? viewModel.isBusy
-                      ? GradientLoadingWidget(
-                          showFull: true,
-                        )
+                      ? GradientLoadingWidget()
                       : SmartRefresher(
                           controller: _refreshController,
                           onRefresh: _onRefresh,
@@ -91,8 +90,7 @@ class _SearchPageState extends State<SearchPage> {
                           // enablePullUp: true,
                           child: CustomTabView(
                             comicViewModel: widget.comicViewModel,
-                            title:
-                                '', //viewModel.currentCategory?.name ?? 'Tất cả',
+                            title: viewModel.currentCategory?.name ?? 'Tất cả',
                             viewModel: viewModel,
                           ),
                         )

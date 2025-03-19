@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_stories/constants/themes/theme.serivce.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,5 +37,6 @@ final class DependencyInjection {
       final iOSDeviceInfo = await deviceInfoPlugin.iosInfo;
       getIt.registerSingleton(iOSDeviceInfo);
     }
+    getIt.registerSingleton<ThemeService>(ThemeService());
   }
 }

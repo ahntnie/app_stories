@@ -1,7 +1,11 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
+import 'package:app_stories/views/profile/widget/custom/material_ink_well.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class CustomMenuAccount extends StatelessWidget {
   final String text;
@@ -17,37 +21,33 @@ class CustomMenuAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColor.buttonColor, // Màu nền của nút
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-        ),
-        onPressed: onTap,
+    return MaterialInkWell(
+      onTap: onTap,
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: [
-            Text(
-              text,
-              style: TextStyle(
-                color: AppColor.extraColor,
-                fontSize: AppFontSize.sizeSmall,
+            Expanded(
+              child: Text(
+                text,
+                style: AppTheme.bodyLarge16,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
                 text1,
-                style: TextStyle(
-                  color: AppColor.extraColor,
-                  fontSize: AppFontSize.sizeSmall,
-                ),
+                style: AppTheme.bodyLarge16,
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, color: AppColor.extraColor),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedArrowRight01,
+                color: context.primaryTextColor,
+              ),
+            ),
           ],
         ),
       ),

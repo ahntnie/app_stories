@@ -7,6 +7,7 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/views/authentication/signup.page.dart';
 import 'package:app_stories/views/home/home.page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -244,113 +245,24 @@ class LoginViewModel extends BaseViewModel {
   }
 
   void showFailedIsActiveSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(
-              Icons.warning_rounded,
-              color: AppColor.selectColor,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'Tài khoản chưa được duyệt',
-              style: TextStyle(fontSize: AppFontSize.sizeMedium),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
-      ),
-    );
+    context.showSuccessSnackBar('Tài khoản chưa được duyệt');
   }
 
 //thông báo thất bại
   void showFailedSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(
-              Icons.warning_rounded,
-              color: AppColor.selectColor,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'Đăng nhập thất bại.',
-              style: TextStyle(fontSize: AppFontSize.sizeMedium),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
-      ),
-    );
+    context.showErrorSnackBar('Đăng nhập thất bại');
   }
 
   void showFailedSnackBarName(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(
-              Icons.warning_rounded,
-              color: AppColor.selectColor,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'Tên đăng nhập không chính xác!',
-              style: TextStyle(fontSize: AppFontSize.sizeMedium),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
-      ),
-    );
+    context.showWarningSnackBar('Tên đăng nhập không chính xác');
   }
 
   void showFailedSnackBarEmpty(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(
-              Icons.warning_rounded,
-              color: AppColor.selectColor,
-            ),
-            const SizedBox(width: 5),
-            Expanded(
-              child: Text(
-                'Tên đăng nhập hoặc mật khẩu không được bỏ trống!',
-                style: TextStyle(fontSize: AppFontSize.sizeMedium),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                softWrap: true,
-              ),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
-      ),
-    );
+    context
+        .showErrorSnackBar('Tên đăng nhập hoặc mật khẩu không được bỏ trống!');
   }
 
   void showFailedSnackBarPassword(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(
-              Icons.warning_rounded,
-              color: AppColor.selectColor,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'Mật khẩu không chính xác!',
-              style: TextStyle(fontSize: AppFontSize.sizeMedium),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
-      ),
-    );
+    context.showErrorSnackBar('Mật khẩu không chính xác!');
   }
 }
