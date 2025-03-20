@@ -15,6 +15,7 @@ import 'package:app_stories/views/profile/widget/story.view.dart';
 import 'package:app_stories/views/report/report.page.dart';
 import 'package:app_stories/views/stories/my_stories.page.dart';
 import 'package:app_stories/widget/base_page.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:app_stories/widget/next_login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   AppSP.get(AppSPKey.currrentUser) != '')
               ? Container(
                   child: viewModel.isBusy
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const Center(child: GradientLoadingWidget())
                       : SingleChildScrollView(
                           child: Column(
                             children: [

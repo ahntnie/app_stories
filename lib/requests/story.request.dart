@@ -277,9 +277,9 @@ class StoryRequest {
     Users currentUsers =
         Users.fromJson(jsonDecode(AppSP.get(AppSPKey.currrentUser)));
     String idUser = currentUsers.id;
-    Response response = await ApiService()
-        .getRequest('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
-    print('${Api.hostApi}${Api.getStoryFavourite}/$idUser');
+    Response response =
+        await ApiService().getRequest('${Api.hostApi}${Api.storyView}$idUser');
+    print('${Api.hostApi}${Api.storyView}/$idUser');
     print('hahaha: ${response.data}');
     final responseData = jsonDecode(jsonEncode(response.data));
     List<dynamic> lstStory = responseData['data'];

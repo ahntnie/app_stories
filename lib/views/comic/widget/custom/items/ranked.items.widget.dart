@@ -1,9 +1,12 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
 import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -39,6 +42,7 @@ class _RankedItemsState extends State<RankedItems> {
           onTap: widget.onTap,
           child: Container(
             decoration: BoxDecoration(
+              border: Border.all(color: AppColors.mono40),
               color: context.primaryBackgroundColor, // Nền card tối ưu
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
@@ -71,9 +75,7 @@ class _RankedItemsState extends State<RankedItems> {
                     ),
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
-                      return Center(
-                          child: CircularProgressIndicator(
-                              color: AppColor.selectColor));
+                      return Center(child: GradientLoadingWidget());
                     },
                   ),
                 ),
@@ -106,24 +108,24 @@ class _RankedItemsState extends State<RankedItems> {
                       // Các chỉ số: View - Favourite - Comment
                       Row(
                         children: [
-                          const Icon(Icons.visibility,
-                              color: Colors.orange, size: 18),
+                          Icon(CupertinoIcons.eye_fill,
+                              color: AppColors.cempedak100, size: 18),
                           const SizedBox(width: 4),
                           Text(
                             widget.data.totalView.toString(),
                             style: AppTheme.titleTiny12,
                           ),
                           const SizedBox(width: 14),
-                          const Icon(Icons.favorite,
-                              color: AppColor.selectColor, size: 18),
+                          const Icon(CupertinoIcons.heart_circle_fill,
+                              color: AppColors.rambutan100, size: 18),
                           const SizedBox(width: 4),
                           Text(
                             '${widget.data.favouriteUser!.length}',
                             style: AppTheme.titleTiny12,
                           ),
                           const SizedBox(width: 14),
-                          const Icon(Icons.comment,
-                              color: Colors.blue, size: 18),
+                          const Icon(CupertinoIcons.chat_bubble_2_fill,
+                              color: AppColors.blueberry100, size: 18),
                           const SizedBox(width: 4),
                           Text(
                             '${widget.data.totalComment}',

@@ -1,3 +1,5 @@
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_color.dart';
@@ -33,12 +35,11 @@ class _CustomButtonState extends State<CustomButton> {
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
-            color: widget.color ?? AppColor.buttonColor,
+            color: widget.color ?? AppColors.watermelon100,
             borderRadius: BorderRadius.circular(10)),
         margin: const EdgeInsets.symmetric(vertical: 5),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-        child:
-            widget.isLoading ? const CircularProgressIndicator() : widget.title,
+        child: widget.isLoading ? const GradientLoadingWidget() : widget.title,
       ),
     );
   }

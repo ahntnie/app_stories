@@ -108,7 +108,7 @@ class _ViewStoryPageState extends State<ViewStoryPage> {
                                                   .height /
                                               2,
                                           child: const Center(
-                                            child: CircularProgressIndicator(),
+                                            child: GradientLoadingWidget(),
                                           ),
                                         );
                                       }

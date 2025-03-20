@@ -61,6 +61,8 @@ extension ThemeModeExtension on BuildContext {
   }
 
   void showErrorSnackBar(String text) {
-    ScaffoldMessenger.of(this).showSnackBar(CustomSnackBar.error(text: text));
+    ScaffoldMessenger.of(this).showSnackBar(CustomSnackBar.error(
+      text: text,
+    ));
   }
 }

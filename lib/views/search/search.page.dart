@@ -1,4 +1,5 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/category_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/utils/build_context_extension.dart';
@@ -99,23 +100,13 @@ class _SearchPageState extends State<SearchPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset('assets/ic_empty.png'),
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Dữ liệu trống',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            child: Text('Dữ liệu trống',
+                                style: AppTheme.titleLarge20),
                           ),
-                          const Text(
-                            'Chưa có dữ liệu ở thời điểm hiện tại',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
+                          Text('Chưa có dữ liệu ở thời điểm hiện tại',
+                              style: AppTheme.titleLarge20),
                           SizedBox(
                             height: MediaQuery.of(context).size.height / 4,
                           )

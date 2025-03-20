@@ -1,5 +1,7 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/chapter_model.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +24,13 @@ class _ChapterCardState extends State<ChapterCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onPressed,
-      //  () {
-     
-      // },
       child: Container(
         height: 100,
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        // margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-            color: AppColor.primary, borderRadius: BorderRadius.circular(10)),
+            border: Border.all(color: context.primaryTextColor),
+            color: context.primaryBackgroundColor,
+            borderRadius: BorderRadius.circular(10)),
         child: Row(
           children: [
             Padding(
@@ -47,11 +48,11 @@ class _ChapterCardState extends State<ChapterCard> {
               children: [
                 Text(
                   'Chapter ${widget.chapter.chapterNumber}',
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: AppTheme.titleMedium18,
                 ),
                 Text(
                   widget.chapter.title,
-                  style: const TextStyle(color: Colors.white, fontSize: 15),
+                  style: AppTheme.titleSmall16,
                 )
               ],
             )

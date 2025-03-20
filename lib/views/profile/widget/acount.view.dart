@@ -2,6 +2,7 @@ import 'package:app_stories/view_model/profile.vm.dart';
 import 'package:app_stories/views/profile/widget/custom/accountitem.widget.dart';
 import 'package:app_stories/views/profile/widget/custom/menuitem.widget.dart';
 import 'package:app_stories/widget/base_page.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -27,7 +28,7 @@ class _AccountViewState extends State<AccountView> {
               body: Container(
                 child: viewModel.isBusy
                     ? const Center(
-                        child: CircularProgressIndicator(),
+                        child: GradientLoadingWidget(),
                       )
                     : Column(
                         children: [

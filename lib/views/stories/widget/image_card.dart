@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 
 import '../view_image.page.dart';
@@ -22,7 +23,7 @@ class ImageCard extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        const CircularProgressIndicator(),
+        const GradientLoadingWidget(),
         InkWell(
           onTap: () {
             Navigator.push(
@@ -45,7 +46,7 @@ class ImageCard extends StatelessWidget {
                 )
               : Image.network(
                   isLoad ? urlImageWithTimestamp : urlImage!,
-                 // urlImageWithTimestamp,
+                  // urlImageWithTimestamp,
                   //urlImage!,
                   width: MediaQuery.of(context).size.width / 4,
                   fit: BoxFit.fill,
@@ -59,7 +60,7 @@ class ImageCard extends StatelessWidget {
                       return SizedBox(
                         width: MediaQuery.of(context).size.width / 4,
                         child: const Center(
-                          child: CircularProgressIndicator(),
+                          child: GradientLoadingWidget(),
                         ),
                       );
                     }

@@ -1,4 +1,5 @@
 import 'package:app_stories/constants/api.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
@@ -40,7 +41,7 @@ class _ImageListScreenState extends State<ImageListScreen> {
         title: const Text('Image List'),
       ),
       body: _images.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: GradientLoadingWidget())
           : ListView.builder(
               itemCount: _images.length,
               itemBuilder: (context, index) {

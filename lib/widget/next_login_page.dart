@@ -1,3 +1,5 @@
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -19,12 +21,13 @@ class NextLoginPage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: AppTheme.titleLarge20,
           ),
           CustomButton(
+              color: AppColors.watermelon100,
               title: Text(
                 'Đăng nhập',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: AppTheme.titleLarge20,
               ),
               onPressed: () {
                 Navigator.push(

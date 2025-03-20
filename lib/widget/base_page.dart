@@ -66,6 +66,7 @@ class _BasePageState extends State<BasePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        // resizeToAvoidBottomInset: false,
         endDrawer: widget.drawer,
         backgroundColor: context.primaryBackgroundColor,
         appBar: widget.showAppBar
@@ -117,7 +118,7 @@ class _BasePageState extends State<BasePage> {
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      Text('TRUYENHAY',
+                                      Text('TRUYENDUI',
                                           style: AppTheme.titleExtraLarge24)
                                     ],
                                   ),

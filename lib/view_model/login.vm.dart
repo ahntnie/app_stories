@@ -183,27 +183,27 @@ class LoginViewModel extends BaseViewModel {
     await checkForNewDeviceAndSendEmail();
   }
 
-  void validatePassword() {
-    final accountPassword = passwordController.text.trim();
-    if (accountPassword.isEmpty) {
-      accountPasswordError = 'Mật khẩu không được bỏ trống';
-    } else if (accountPassword.length < 8 ||
-        !accountPassword.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      accountPasswordError = 'Mật khẩu tối đa 8 kí tự và chứa kí tự đặc biệt';
+  void validatePassword(String value) {
+    if (value.isEmpty) {
+      accountPasswordError = 'Mật khẩu không được để trống';
+    } else if (value.length < 8) {
+      accountPasswordError = 'Mật khẩu phải có ít nhất 8 ký tự';
+    } else if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      accountPasswordError = 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt';
     } else {
-      accountPasswordError = '';
+      accountPasswordError =
+          ""; // Dùng null thay vì chuỗi rỗng để biểu thị không có lỗi
     }
     notifyListeners();
   }
 
-  void validateEmail() {
-    final email = emailController.text.trim();
-    if (email.isEmpty) {
-      emailError = 'Email không được bỏ trống';
-    } else if (!_isValidEmail(email)) {
+  void validateEmail(String value) {
+    if (value.isEmpty) {
+      emailError = 'Email không được để trống';
+    } else if (!_isValidEmail(value)) {
       emailError = 'Email không hợp lệ';
     } else {
-      emailError = '';
+      emailError = ""; // Dùng null thay vì chuỗi rỗng
     }
     notifyListeners();
   }

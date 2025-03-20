@@ -3,6 +3,7 @@ import 'package:app_stories/constants/app_color.dart';
 import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/views/authentication/login.page.dart';
 import 'package:app_stories/widget/loading_shimmer.dart';
 
@@ -169,65 +170,51 @@ class SignUpViewModel extends BaseViewModel {
   //   } catch (e) {}
   // }
 
-  void validateAccountName() {
-    final accountName = accountNameController.text;
-    if (accountName.isEmpty) {
-      accountNameError = 'Tên tài khoản không được bỏ trống';
-    } else if (accountName.length < 8) {
-      accountNameError = 'Tên tài khoản phải tối đa 8 kí tự';
+  void validateAccountName(String value) {
+    if (value.isEmpty) {
+      accountNameError = 'Tên tài khoản không được để trống';
+    } else if (value.length < 8) {
+      accountNameError =
+          'Tên tài khoản phải có ít nhất 8 ký tự'; // Sửa thông báo
     } else {
-      accountNameError = '';
+      accountNameError = ''; // Dùng null thay vì ''
     }
     notifyListeners();
   }
 
-  void validaterePassword() {
+  void validatePassword(String value) {
+    if (value.isEmpty) {
+      accountPasswordError = 'Mật khẩu không được để trống';
+    } else if (value.length < 8) {
+      accountPasswordError =
+          'Mật khẩu phải có ít nhất 8 ký tự'; // Sửa thông báo
+    } else if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      accountPasswordError = 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt';
+    } else {
+      accountPasswordError = ''; // Dùng null thay vì ''
+    }
+    notifyListeners();
+  }
+
+  void validateRepassword(String value) {
     final password = passwordController.text.trim();
-    if (password.isEmpty) {
-      accountPasswordError = 'Mật khẩu không được bỏ trống';
-    } else {
-      accountPasswordError = '';
-    }
-    notifyListeners();
-  }
-
-//hàm kiểm tra tên password
-  void validatePassword() {
-    final accountPassword = passwordController.text.trim();
-    if (accountPassword.isEmpty) {
-      accountPasswordError = 'Mật khẩu không được bỏ trống';
-    } else if (accountPassword.length < 8 ||
-        !accountPassword.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      accountPasswordError = 'Mật khẩu tối đa 8 kí tự và chứa kí tự đặc biệt';
-    } else {
-      accountPasswordError = '';
-    }
-    notifyListeners();
-  }
-//hàm kiểm tra password có trùng với password trước hay không
-
-  void validateRepassword() {
-    final repassword = repasswordController.text.trim();
-    if (repassword.isEmpty) {
-      repasswordError = 'Mật khẩu không được bỏ trống';
-    } else if (repassword != passwordController.text) {
+    if (value.isEmpty) {
+      repasswordError = 'Mật khẩu không được để trống';
+    } else if (value != password) {
       repasswordError = 'Mật khẩu không khớp';
     } else {
-      repasswordError = '';
+      repasswordError = ''; // Dùng null thay vì ''
     }
     notifyListeners();
   }
 
-//hàm kiểm tra email có hợp lệ hay không
-  void checkEmail() {}
-  void validateEmail() {
-    final email = emailController.text.trim();
-    if (email.isEmpty) {
-      emailError = 'Email không được bỏ trống';
-    } else if (!_isValidEmail(email)) {
+  void validateEmail(String value) {
+    if (value.isEmpty) {
+      emailError = 'Email không được để trống';
+    } else if (!_isValidEmail(value)) {
       emailError = 'Email không hợp lệ';
     } else {
-      emailError = '';
+      emailError = ''; // Dùng null thay vì ''
     }
     notifyListeners();
   }
@@ -302,23 +289,6 @@ class SignUpViewModel extends BaseViewModel {
 
 //thông báo thất bại
   void showFailedSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(
-              Icons.warning_rounded,
-              color: AppColor.selectColor,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              'Đăng ký thất bại',
-              style: TextStyle(fontSize: AppFontSize.sizeMedium),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 2), // Thời gian hiển thị SnackBar
-      ),
-    );
+    context.showErrorSnackBar('Đăng ký thất bại');
   }
 }

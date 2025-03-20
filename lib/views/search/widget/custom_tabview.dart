@@ -80,42 +80,59 @@ class _CustomTabViewState extends State<CustomTabView>
   }
 
   Widget _buildStoriesList(List<dynamic> stories) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(widget.title, style: AppTheme.titleExtraLarge24),
-          ),
-          ...stories.map((story) => RankedItems(
-                comicViewModel: widget.comicViewModel,
-                data: story,
-                onTap: () {
-                  widget.comicViewModel.currentUsers =
-                      AppSP.get(AppSPKey.currrentUser) != null &&
-                              AppSP.get(AppSPKey.currrentUser) != ''
-                          ? Users.fromJson(
-                              jsonDecode(AppSP.get(AppSPKey.currrentUser)))
-                          : null;
-                  if (widget.comicViewModel.currentUsers != null)
-                    widget.comicViewModel.idUser =
-                        widget.comicViewModel.currentUsers!.id;
-                  print(
-                      'Số like: ${widget.comicViewModel.currentStory.favouriteUser!.length}');
-                  widget.comicViewModel.currentStory = story;
-                  widget.comicViewModel.checkFavourite();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ComicDetailPage(
-                                data: story,
-                                viewModel: widget.comicViewModel,
-                              )));
-                },
-              )),
-        ],
-      ),
-    );
+    return stories.isNotEmpty
+        ? SingleChildScrollView(
+            child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(widget.title, style: AppTheme.titleExtraLarge24),
+              ),
+              ...stories.map((story) => RankedItems(
+                    comicViewModel: widget.comicViewModel,
+                    data: story,
+                    onTap: () {
+                      widget.comicViewModel.currentUsers =
+                          AppSP.get(AppSPKey.currrentUser) != null &&
+                                  AppSP.get(AppSPKey.currrentUser) != ''
+                              ? Users.fromJson(
+                                  jsonDecode(AppSP.get(AppSPKey.currrentUser)))
+                              : null;
+                      if (widget.comicViewModel.currentUsers != null)
+                        widget.comicViewModel.idUser =
+                            widget.comicViewModel.currentUsers!.id;
+                      print(
+                          'Số like: ${widget.comicViewModel.currentStory.favouriteUser!.length}');
+                      widget.comicViewModel.currentStory = story;
+                      widget.comicViewModel.checkFavourite();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ComicDetailPage(
+                                    data: story,
+                                    viewModel: widget.comicViewModel,
+                                  )));
+                    },
+                  )),
+            ],
+          ))
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/ic_empty.png'),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text('Dữ liệu trống', style: AppTheme.titleLarge20),
+                ),
+                Text('Chưa có dữ liệu ở thời điểm hiện tại',
+                    style: AppTheme.titleLarge20),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 4,
+                )
+              ],
+            ),
+          );
   }
 }

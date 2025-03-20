@@ -1,4 +1,6 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/category_model.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
@@ -21,13 +23,10 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       padding: EdgeInsets.all(2.0),
       // Khoảng cách từ chữ đến viền container
       decoration: BoxDecoration(
-          border: Border.all(color: AppColor.inwellColor),
+          color: AppColors.rambutan70,
+          border: Border.all(color: AppColors.rambutan70),
           borderRadius: BorderRadius.circular(5)),
-      child: Text(
-        widget.category.name!,
-        style: TextStyle(
-            color: AppColor.extraColor, fontSize: AppFontSize.sizeSmall),
-      ),
+      child: Text(widget.category.name!, style: AppTheme.titleSmall16),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:app_stories/styles/app_font.dart';
 import 'package:app_stories/view_model/browse_stories.vm.dart';
 import 'package:app_stories/views/stories/post_chapter.page.dart';
 import 'package:app_stories/widget/custom_button.dart';
+import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -57,12 +58,7 @@ class _StoryCardState extends State<StoryCard> {
                       return SizedBox(
                         width: MediaQuery.of(context).size.width / 4,
                         child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
+                          child: GradientLoadingWidget(),
                         ),
                       );
                     }

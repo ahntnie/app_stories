@@ -1,4 +1,5 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/styles/app_font.dart';
 import 'package:flutter/material.dart';
 
@@ -20,8 +21,7 @@ class _ExpandableTextState extends State<ExpandableText> {
       children: <Widget>[
         Text(
           widget.text,
-          style: TextStyle(
-              color: AppColor.extraColor, fontSize: AppFontSize.sizeSmall),
+          style: AppTheme.titleSmall16,
           maxLines: isExpanded ? null : 2,
           overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
         ),

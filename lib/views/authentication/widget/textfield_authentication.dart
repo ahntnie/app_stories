@@ -1,3 +1,5 @@
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -28,20 +30,14 @@ class CustomTextField extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text(
-            labelText,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: Text(labelText, style: AppTheme.titleLarge20),
         ),
         const SizedBox(height: 8.0),
         Container(
           decoration: BoxDecoration(
+            border: Border.all(color: AppColors.mono40),
             borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
+            color: Colors.transparent,
           ),
           child: TextField(
             controller: controller,
@@ -58,7 +54,7 @@ class CustomTextField extends StatelessWidget {
                       onTap: onSuffixIconTap,
                       child: Icon(
                         obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: Colors.black,
+                        color: AppColors.mono100,
                       ),
                     )
                   : null,

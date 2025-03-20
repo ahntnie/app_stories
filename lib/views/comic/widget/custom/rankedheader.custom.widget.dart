@@ -1,3 +1,4 @@
+import 'package:app_stories/constants/colors/app_colors.dart';
 import 'package:app_stories/view_model/comic.vm.dart';
 import 'package:app_stories/views/comic/widget/custom/items/ranked.items.widget.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,9 @@ class _RankedHeaderState extends State<RankedHeader> {
             length: 3,
             child: Column(
               children: [
-                const TabBar(
-                  labelColor: Colors.red,
+                TabBar(
+                  indicatorColor: AppColors.watermelon100,
+                  labelColor: AppColors.watermelon100,
                   unselectedLabelColor: Colors.grey,
                   tabs: [
                     Tab(text: 'Top ngày'),
@@ -41,12 +43,11 @@ class _RankedHeaderState extends State<RankedHeader> {
                   child: TabBarView(
                     children: [
                       SingleChildScrollView(
-                        child: Column(
+                        child:
+                         Column(
                           children: List.generate(
                               viewModel.storiesIsActive.length, (index) {
                             return RankedItems(
-                              // chapter: viewModel.currentChapter =
-                              //     viewModel.currentChapter!,
                               comicViewModel: viewModel,
                               tabName: 'Top ngày',
                               data: viewModel.storiesIsActive[index],
@@ -101,24 +102,6 @@ class _RankedHeaderState extends State<RankedHeader> {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await viewModel.getStoryActive(true);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 10),
-                    ),
-                    child: const Text('Xem thêm >'),
                   ),
                 ),
               ],

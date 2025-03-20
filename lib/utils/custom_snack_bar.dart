@@ -2,7 +2,6 @@ import 'package:app_stories/constants/colors/app_colors.dart';
 import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:flutter/material.dart';
 
-
 class CustomSnackBar extends SnackBar {
   CustomSnackBar.success({
     super.key,

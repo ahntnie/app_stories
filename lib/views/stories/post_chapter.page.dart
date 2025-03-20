@@ -365,7 +365,7 @@ class _PostChapterPageState extends State<PostChapterPage> {
                     color: AppColor.buttonColor,
                     alignment: Alignment.center,
                     child: viewModel.isBusy
-                        ? CircularProgressIndicator()
+                        ? GradientLoadingWidget()
                         : const Text(
                             'Cập nhật',
                             style: TextStyle(
