@@ -1,3 +1,5 @@
+import 'package:app_stories/constants/colors/app_theme.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/views/stories/widget/custom_paint.dart';
 import 'package:flutter/material.dart';
 
@@ -20,14 +22,15 @@ class CustomTextField extends StatelessWidget {
         CustomPaint(
           painter: UnderlinePainter(
             lines: maxLines,
-            color: Colors.white,
+            color: context.primaryTextColor,
           ),
           child: TextField(
             enabled: enabled,
             maxLines: maxLines,
-            cursorColor: Colors.white,
+            cursorColor: context.primaryTextColor,
             controller: controller,
-            style: const TextStyle(color: Colors.white),
+            style:
+                AppTheme.titleSmall16.copyWith(color: context.primaryTextColor),
             decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.transparent),

@@ -1,12 +1,11 @@
-import 'package:app_stories/constants/api.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
-import 'package:app_stories/view_model/browse_stories.vm.dart';
-import 'package:app_stories/views/stories/post_chapter.page.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:app_stories/widget/loading_shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../constants/app_color.dart';
 import '../../../view_model/mystories.vm.dart';
@@ -35,12 +34,19 @@ class _StoryCardState extends State<StoryCard> {
         widget.onTap();
       },
       child: Container(
-        height: MediaQuery.of(context).size.height / 4,
         decoration: BoxDecoration(
-          color: AppColor.buttonColor,
-          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.mono40),
+          color: context.primaryBackgroundColor, // Nền card tối ưu
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         margin: const EdgeInsets.only(top: 20),
         child: Row(
           children: [
@@ -66,9 +72,9 @@ class _StoryCardState extends State<StoryCard> {
                   errorBuilder: (BuildContext context, Object exception,
                       StackTrace? stackTrace) {
                     print('Lỗi: $exception');
-                    return const Text(
+                    return Text(
                       'Failed to load image',
-                      style: TextStyle(color: Colors.white),
+                      style: AppTheme.titleSmall16,
                     );
                   },
                   width: MediaQuery.of(context).size.width / 4,
@@ -86,22 +92,15 @@ class _StoryCardState extends State<StoryCard> {
                 children: [
                   Text(
                     widget.data.title!,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTheme.titleExtraLarge24,
                   ),
                   const SizedBox(
                     height: 30,
                   ),
                   Text(
                     'Chapter ${widget.data.chapterCount!.toString()}',
-                    style: const TextStyle(
-                      fontSize: 17,
-                      color: Color(0xFF676565),
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTheme.titleMedium18
+                        .copyWith(color: AppColors.mono60),
                   ),
                   SizedBox(
                     height: 20,
@@ -117,15 +116,13 @@ class _StoryCardState extends State<StoryCard> {
                             child: CustomButton(
                                 enable: widget.data.isCompleted! ? false : true,
                                 color: !widget.data.isCompleted!
-                                    ? AppColor.primary
-                                    : AppColor.buttonColor,
+                                    ? AppColor.successColor
+                                    : AppColors.rambutan100,
                                 title: Text(
                                   widget.data.isCompleted!
                                       ? "Đã hoàn thành"
                                       : 'Hoàn thành',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: AppFontSize.sizeSmall),
+                                  style: AppTheme.titleSmall16,
                                 ),
                                 onPressed: () {
                                   widget.viewModel.currentStory = widget.data;
@@ -134,58 +131,118 @@ class _StoryCardState extends State<StoryCard> {
                           ),
                         ),
                       if (widget.data.active == 0)
-                        const Align(
+                        Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            'Đang chờ duyệt',
-                            style: TextStyle(color: Colors.white),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.orange,
+                                  width: 1.5), // Chờ duyệt: màu cam
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Đang chờ duyệt',
+                              style: AppTheme.titleSmall16,
+                            ),
                           ),
                         ),
                       if (widget.data.active == 2)
-                        const Align(
+                        Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            'Đã vô hiệu hóa',
-                            style: TextStyle(color: Colors.white),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.red,
+                                  width: 1.5), // Vô hiệu hóa: màu đỏ
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Đã vô hiệu hóa',
+                              style: AppTheme.titleSmall16,
+                            ),
                           ),
                         ),
                       if (widget.data.active == 3)
-                        const Align(
+                        Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            'Đang chờ duyệt lại',
-                            style: TextStyle(color: Colors.white),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.yellow,
+                                  width: 1.5), // Chờ duyệt lại: màu vàng
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Đang chờ duyệt lại',
+                              style: AppTheme.titleSmall16,
+                            ),
                           ),
                         ),
                     ]
                   ],
                   if (widget.viewModel.currentUser.role == 'admin') ...[
                     if (widget.data.active == 0)
-                      const Align(
+                      Align(
                         alignment: Alignment.centerRight,
-                        child: Text(
-                          'Đang chờ duyệt',
-                          style: TextStyle(color: Colors.white),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.orange,
+                                width: 1.5), // Chờ duyệt: màu cam
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'Đang chờ duyệt',
+                            style: AppTheme.titleSmall16,
+                          ),
                         ),
                       ),
                     if (widget.data.active == 3 &&
                         widget.data.author!.name !=
                             widget.viewModel.currentUser.name)
-                      const Align(
+                      Align(
                         alignment: Alignment.centerRight,
-                        child: Text(
-                          'Đã duyệt',
-                          style: TextStyle(color: Colors.white),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.green,
+                                width: 1.5), // Đã duyệt: màu xanh
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'Đã duyệt',
+                            style: AppTheme.titleSmall16,
+                          ),
                         ),
                       ),
                     if (widget.data.active == 2 &&
                         widget.data.author!.name !=
                             widget.viewModel.currentUser.name)
-                      const Align(
+                      Align(
                         alignment: Alignment.centerRight,
-                        child: Text(
-                          'Đã vô hiệu hóa',
-                          style: TextStyle(color: Colors.white),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.red,
+                                width: 1.5), // Vô hiệu hóa: màu đỏ
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'Đã vô hiệu hóa',
+                            style: AppTheme.titleSmall16,
+                          ),
                         ),
                       ),
                     if (widget.data.active == 1 &&
@@ -195,11 +252,10 @@ class _StoryCardState extends State<StoryCard> {
                         alignment: Alignment.centerRight,
                         child: CustomButton(
                           color: AppColor.selectColor,
-                          //isLoading: viewModel.isBusy,
                           onPressed: widget.onPressed!,
-                          title: const Text(
+                          title: Text(
                             'Vô hiệu hóa truyện',
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            style: AppTheme.titleLarge20,
                           ),
                         ),
                       ),

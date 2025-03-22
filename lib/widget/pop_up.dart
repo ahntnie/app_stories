@@ -1,5 +1,6 @@
+import 'package:app_stories/constants/colors/app_colors.dart';
 import 'package:flutter/material.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_color.dart';
 
 class PopUpWidget extends StatelessWidget {
@@ -25,77 +26,78 @@ class PopUpWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      elevation: 10,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Container(
-        decoration: const BoxDecoration(
-            color: AppColor.primary,
-            borderRadius: BorderRadius.all(Radius.circular(6))),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.rambutan70,
+              AppColors.watermelon80,
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: SizedBox(
-                height: 100,
-                child: icon,
-              ),
+            SizedBox(
+              height: 80,
+              child: icon,
             ),
+            const SizedBox(height: 10),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
+              style: GoogleFonts.nunito(
+                color: AppColors.mono0,
                 fontSize: 22,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
               ),
             ),
             const SizedBox(height: 20),
-            const Divider(
-              height: 3,
-              color: Colors.white,
+            Container(
+              height: 1,
+              color: AppColors.mono0.withOpacity(0.5),
             ),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: onLeftTap,
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(6)),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          leftText ?? 'XÁC NHẬN',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 26),
-                        ),
-                      ),
-                    ),
+                  child: _buildButton(
+                    text: leftText ?? 'XÁC NHẬN',
+                    onTap: onLeftTap,
+                    borderRadius: twoButton
+                        ? const BorderRadius.only(
+                            bottomLeft: Radius.circular(20))
+                        : const BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
                   ),
                 ),
                 if (twoButton)
+                  const SizedBox(width: 10), // Khoảng cách giữa 2 nút
+                if (twoButton)
                   Expanded(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: onRightTap,
-                        borderRadius: const BorderRadius.only(
-                            bottomRight: Radius.circular(6)),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            rightText ?? 'HỦY',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 26),
-                          ),
-                        ),
-                      ),
+                    child: _buildButton(
+                      text: rightText ?? 'HỦY',
+                      onTap: onRightTap,
+                      borderRadius: const BorderRadius.only(
+                          bottomRight: Radius.circular(20)),
                     ),
                   ),
               ],
@@ -105,38 +107,36 @@ class PopUpWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-class PopUpPaymenSuccessWidget extends StatelessWidget {
-  const PopUpPaymenSuccessWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopUpWidget(
-      icon: Image.asset(
-        "assets/images/ic_success.png",
+  Widget _buildButton({
+    required String text,
+    required Function()? onTap,
+    required BorderRadius borderRadius,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: borderRadius,
+        splashColor: AppColors.mono0.withOpacity(0.3),
+        highlightColor: AppColors.mono0.withOpacity(0.1),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: borderRadius,
+            color: AppColors.mono0.withOpacity(0.1),
+          ),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunito(
+              color: AppColors.mono0,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
-      title: "Giao dịch thành công",
-      onLeftTap: () {
-        Navigator.of(context).pop();
-      },
-    );
-  }
-}
-
-class PopUpPaymenFailWidget extends StatelessWidget {
-  const PopUpPaymenFailWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopUpWidget(
-      icon: Image.asset(
-        "assets/images/ic_error.png",
-      ),
-      title: "Giao dịch không thành công",
-      onLeftTap: () {
-        Navigator.of(context).pop();
-      },
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:app_stories/app/app_sp.dart';
 import 'package:app_stories/app/app_sp_key.dart';
 import 'package:app_stories/constants/api.dart';
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/user_model.dart';
 import 'package:app_stories/services/api_service.dart';
 import 'package:app_stories/styles/app_font.dart';
@@ -191,8 +193,7 @@ class LoginViewModel extends BaseViewModel {
     } else if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       accountPasswordError = 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt';
     } else {
-      accountPasswordError =
-          ""; // Dùng null thay vì chuỗi rỗng để biểu thị không có lỗi
+      accountPasswordError = "";
     }
     notifyListeners();
   }
@@ -209,7 +210,6 @@ class LoginViewModel extends BaseViewModel {
   }
 
   bool _isValidEmail(String email) {
-    // Biểu thức chính quy để kiểm tra định dạng email
     const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
     final regex = RegExp(pattern);
     return regex.hasMatch(email);
@@ -220,14 +220,23 @@ class LoginViewModel extends BaseViewModel {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: AppColor.successColor),
-            const SizedBox(width: 5),
-            Text(
-              'Đăng nhập thành công.',
-              style: TextStyle(fontSize: AppFontSize.sizeMedium),
+            const Icon(Icons.check, size: 24, color: AppColors.mono0),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Đăng nhập thành công',
+                style: AppTheme.bodyMedium14.copyWith(color: AppColors.mono0),
+              ),
             ),
           ],
         ),
+        backgroundColor: AppColors.watermelon100,
+        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 32),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 1), // Thời gian hiển thị SnackBar
         onVisible: () {
           // Sau khi SnackBar hiển thị

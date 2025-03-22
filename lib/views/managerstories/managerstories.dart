@@ -35,7 +35,7 @@ class _ManagerStoriesState extends State<ManagerStories> {
         builder: (context, viewModel, child) {
           return BasePage(
             showAppBar: true,
-            title: 'Quản lí truyện',
+            title: 'Quản lý truyện',
             body: viewModel.isBusy
                 ? Center(child: GradientLoadingWidget())
                 : SmartRefresher(

@@ -61,8 +61,8 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: screenHeight * 0.2, // 15% chiều cao
-                          width: screenWidth * 0.25, // 25% chiều rộng
+                          height: screenHeight * 0.2, 
+                          width: screenWidth * 0.25, 
                           child: Image.asset('assets/ic_logo.png'),
                         ),
                         SizedBox(height: spacing * 1.5),

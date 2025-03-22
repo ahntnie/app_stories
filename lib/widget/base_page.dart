@@ -110,10 +110,13 @@ class _BasePageState extends State<BasePage> {
                                 children: [
                                   Row(
                                     children: [
-                                      Image.asset(
-                                        Img.imgLogo,
-                                        width: 50,
-                                        height: 50,
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.asset(
+                                          Img.imgLogo,
+                                          width: 50,
+                                          height: 50,
+                                        ),
                                       ),
                                       const SizedBox(
                                         width: 10,

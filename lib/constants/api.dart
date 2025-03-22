@@ -1,11 +1,11 @@
 class Api {
-  // static const String hostApi = 'https://dev.gtglobal.id.vn/api';
-  // static const String hostImage = 'https://dev.gtglobal.id.vn';
+  static const String hostApi = 'https://dev.gtglobal.id.vn/api';
+  static const String hostImage = 'https://dev.gtglobal.id.vn';
 
-  static const String hostApi =
-      'https://obliging-tetra-equally.ngrok-free.app/api';
-  static const String hostImage =
-      'https://obliging-tetra-equally.ngrok-free.app';
+  // static const String hostApi =
+  //     'https://obliging-tetra-equally.ngrok-free.app/api';
+  // static const String hostImage =
+  //     'https://obliging-tetra-equally.ngrok-free.app';
   //Story
   static const String postStory = '/stories';
   static const String getMyStories = '/stories';

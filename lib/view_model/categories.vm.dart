@@ -22,20 +22,37 @@ class CategoriesViewModel extends BaseViewModel {
 
   addCategory() async {
     setBusy(true);
-    await request.addCategory(nameController.text, descriptionController.text);
-    showDialog(
-        context: context,
-        builder: (context) {
-          return PopUpWidget(
-            icon: Image.asset("assets/ic_success.png"),
-            title: 'Thêm thể loại thành công',
-            leftText: 'Xác nhận',
-            onLeftTap: () {
-              Navigator.pop(context);
-            },
-          );
-        });
-    await getAllCategory();
+    if (nameController.text.isEmpty || nameController.text == '') {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_error.png"),
+              title: 'Vui lòng tên thể loại',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
+      await getAllCategory();
+    } else {
+      await request.addCategory(
+          nameController.text, descriptionController.text);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return PopUpWidget(
+              icon: Image.asset("assets/ic_success.png"),
+              title: 'Thêm thể loại thành công',
+              leftText: 'Xác nhận',
+              onLeftTap: () {
+                Navigator.pop(context);
+              },
+            );
+          });
+      await getAllCategory();
+    }
   }
 
   deleteCategory(int id) async {

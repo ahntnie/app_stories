@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context, viewModel, child) {
         return BasePage(
           showLeading: false,
-          title: 'CÁ NHÂN',
+          title: 'TÔI',
           showLogout: (AppSP.get(AppSPKey.currrentUser) != null &&
                   AppSP.get(AppSPKey.currrentUser) != '')
               ? true
@@ -287,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 CustomMenuButton(
                                   icon: Icons.description,
-                                  text: 'Quản lí thể loại',
+                                  text: 'Quản lý thể loại',
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -298,7 +298,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 CustomMenuButton(
                                   icon: Icons.menu_book,
-                                  text: 'Quản lí truyện đăng',
+                                  text: 'Quản lý truyện đăng',
                                   onTap: () {
                                     Navigator.push(
                                         context,

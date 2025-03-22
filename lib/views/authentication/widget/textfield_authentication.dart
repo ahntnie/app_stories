@@ -30,7 +30,8 @@ class CustomTextField extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.topLeft,
-          child: Text(labelText, style: AppTheme.titleLarge20),
+          child: Text(labelText,
+              style: AppTheme.titleLarge20.copyWith(color: AppColors.mono0)),
         ),
         const SizedBox(height: 8.0),
         Container(
@@ -41,9 +42,12 @@ class CustomTextField extends StatelessWidget {
           ),
           child: TextField(
             controller: controller,
+            style: AppTheme.titleSmall16.copyWith(color: AppColors.mono0),
             obscureText: obscureText,
             onChanged: onChanged,
             decoration: InputDecoration(
+              hintStyle:
+                  AppTheme.titleSmall16.copyWith(color: AppColors.mono40),
               hintText: hintText,
               border: const OutlineInputBorder(
                 borderSide: BorderSide.none,

@@ -1,6 +1,9 @@
 import 'package:app_stories/constants/app_color.dart';
+import 'package:app_stories/constants/colors/app_colors.dart';
+import 'package:app_stories/constants/colors/app_theme.dart';
 import 'package:app_stories/models/story_model.dart';
 import 'package:app_stories/styles/app_font.dart';
+import 'package:app_stories/utils/build_context_extension.dart';
 import 'package:app_stories/view_model/post_stories.vm.dart';
 import 'package:app_stories/widget/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -42,28 +45,24 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'Tên truyện: ',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
+                        Text('Tên truyện: ', style: AppTheme.titleMedium18),
                         const SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: TextField(
-                            cursorColor: Colors.white,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            cursorColor: AppColors.mono0,
+                            style: AppTheme.titleMedium18
+                                .copyWith(color: context.primaryTextColor),
                             enabled: false,
                             controller: viewModel.titleController,
                             textAlignVertical: TextAlignVertical.bottom,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: AppColors.mono0),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: AppColors.mono0),
                               ),
                             ),
                           ),
@@ -73,28 +72,25 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'Thể loại truyện: ',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
+                        Text('Thể loại truyện: ',
+                            style: AppTheme.titleMedium18),
                         const SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: TextField(
-                            cursorColor: Colors.white,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            cursorColor: AppColors.mono0,
+                            style: AppTheme.titleMedium18
+                                .copyWith(color: context.primaryTextColor),
                             enabled: false,
                             controller: viewModel.genreController,
                             textAlignVertical: TextAlignVertical.bottom,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: AppColors.mono0),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: AppColors.mono0),
                               ),
                             ),
                           ),
@@ -104,28 +100,24 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'Tên tác giả: ',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
+                        Text('Tên tác giả: ', style: AppTheme.titleMedium18),
                         const SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: TextField(
-                            cursorColor: Colors.white,
+                            cursorColor: AppColors.mono0,
                             controller: viewModel.authorNameController,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: AppTheme.titleMedium18
+                                .copyWith(color: context.primaryTextColor),
                             enabled: false,
                             textAlignVertical: TextAlignVertical.bottom,
                             decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: AppColors.mono0),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                borderSide: BorderSide(color: AppColors.mono0),
                               ),
                             ),
                           ),
@@ -138,10 +130,7 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Tóm tắt truyện: ',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
+                        Text('Tóm tắt truyện: ', style: AppTheme.titleMedium18),
                         const SizedBox(
                           width: 10,
                         ),
@@ -155,10 +144,8 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    const Text(
-                      'Các giấy tờ liên quan đến bản quyền:',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
+                    Text('Các giấy tờ liên quan đến bản quyền:',
+                        style: AppTheme.titleMedium18),
                     if (widget.data.licenseImage!.isNotEmpty)
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -178,10 +165,7 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    const Text(
-                      'Ảnh bìa truyện',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
+                    Text('Ảnh bìa truyện', style: AppTheme.titleMedium18),
                     Align(
                       alignment: Alignment.center,
                       child: ImageCard(
@@ -192,10 +176,7 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    const Text(
-                      'Chap đầu tiên',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
+                    Text('Chap đầu tiên', style: AppTheme.titleMedium18),
                     if (widget.data.chapters!.first.images.isNotEmpty)
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -226,9 +207,8 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                           children: [
                             Text(
                               "Đã từ chối duyệt",
-                              style: TextStyle(
-                                  color: AppColor.extraColor,
-                                  fontSize: AppFontSize.sizeMedium),
+                              style: AppTheme.titleMedium18
+                                  .copyWith(color: AppColors.rambutan100),
                             )
                           ],
                         ),
@@ -240,9 +220,8 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                           children: [
                             Text(
                               "Truyện đã được phê duyệt thành công",
-                              style: TextStyle(
-                                  color: AppColor.extraColor,
-                                  fontSize: AppFontSize.sizeMedium),
+                              style: AppTheme.titleMedium18
+                                  .copyWith(color: AppColors.watermelon100),
                             )
                           ],
                         ),
@@ -254,9 +233,8 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                           children: [
                             Text(
                               "Truyện đã bị vô hiệu hóa",
-                              style: TextStyle(
-                                  color: AppColor.extraColor,
-                                  fontSize: AppFontSize.sizeMedium),
+                              style: AppTheme.titleMedium18
+                                  .copyWith(color: AppColors.cempedak100),
                             )
                           ],
                         ),
@@ -272,23 +250,17 @@ class _DetailStoryPageState extends State<DetailStoryPage> {
                               onPressed: () async {
                                 await viewModel.approveStory();
                               },
-                              title: const Text(
-                                'Phê duyệt truyện',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
+                              title: Text('Phê duyệt truyện',
+                                  style: AppTheme.titleLarge20),
                             ),
                             CustomButton(
-                              color: AppColor.unConfirmColor,
+                              color: AppColors.rambutan100,
                               isLoading: viewModel.isBusy,
                               onPressed: () async {
                                 await viewModel.noApproveStory();
                               },
-                              title: const Text(
-                                'Không duyệt',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
+                              title: Text('Không duyệt',
+                                  style: AppTheme.titleLarge20),
                             ),
                           ],
                         ),

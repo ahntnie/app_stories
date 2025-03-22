@@ -66,7 +66,7 @@ class _ComicPageState extends State<ComicPage> {
                         },
                       ),
                       SizedBox(
-                        height: 260,
+                        height: 200,
                         child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: viewModel.storiesNew.length,

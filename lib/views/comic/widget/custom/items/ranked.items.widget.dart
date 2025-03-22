@@ -49,12 +49,12 @@ class _RankedItemsState extends State<RankedItems> {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
                   blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            padding: const EdgeInsets.all(10),
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.all(10),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
